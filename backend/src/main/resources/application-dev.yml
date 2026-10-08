@@ -1,0 +1,40 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:tryitcafe;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER:org.h2.Driver}
+    username: ${SPRING_DATASOURCE_USERNAME:sa}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+app:
+  media:
+    allow-local-fallback: ${ALLOW_LOCAL_MEDIA_FALLBACK:true}
+  jwt:
+    # Explicit dev-only key for local integration tests and rapid onboarding (overridden in prod)
+    secret: ${JWT_SECRET:dev_secret_key_for_local_testing_only_must_be_overridden_in_prod_at_least_64_bytes!}
+  cloudinary:
+    cloud-name: ${CLOUDINARY_CLOUD_NAME:demo}
+    api-key: ${CLOUDINARY_API_KEY:123456789012345}
+    api-secret: ${CLOUDINARY_API_SECRET:abcdefghijklmnopqrstuvwxyz1}
+  google:
+    client-id: ${GOOGLE_CLIENT_ID:}
+    client-secret: ${GOOGLE_CLIENT_SECRET:}
+  seed:
+    enabled: ${APP_SEED_ENABLED:true}
+    sample-data: ${APP_SEED_SAMPLE_DATA:false}
+    owner-phone: ${OWNER_INITIAL_PHONE:9999999999}
+    owner-password: ${OWNER_INITIAL_PASSWORD:Owner@TryIt2026}
+    customer-phone: ${CUSTOMER_INITIAL_PHONE:9876543210}
+    customer-password: ${CUSTOMER_INITIAL_PASSWORD:Customer@TryIt2026}
+    whatsapp-number: ${WHATSAPP_NUMBER:}
+    phone-number: ${PHONE_NUMBER:}

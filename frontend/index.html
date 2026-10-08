@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/jpeg" href="/assets/Logo.jpeg" />
+    <link rel="apple-touch-icon" href="/assets/Logo.jpeg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://accounts.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob: https://res.cloudinary.com https://images.unsplash.com https://lh3.googleusercontent.com http://localhost:* http://127.0.0.1:*; connect-src 'self' http://localhost:* http://127.0.0.1:* https://accounts.google.com https://api.cloudinary.com; frame-src https://accounts.google.com; object-src 'none'; base-uri 'self';" />
+    
+    <!-- SEO Meta Tags -->
+    <title>Tryit Cafe & Kitchen | Delicious Bites, Pastas, Burgers & Sizzlers</title>
+    <meta name="description" content="Welcome to Tryit Cafe & Kitchen. Explore our delicious menu of pastas, burgers, rolls, biryanis and shakes. Order directly via WhatsApp for instant preparation!" />
+    <meta name="keywords" content="Tryit Cafe, Tryit Kitchen, cafe food, pastas, burgers, biryani, rolls, online order whatsapp, restaurant" />
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Google Identity Services (GIS) / OAuth 2.0 Web Client -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <!-- Preload Critical LCP Hero Image -->
+    <link rel="preload" as="image" href="/assets/Hero_mobile.jpg" media="(max-width: 640px)" fetchpriority="high" />
+    <link rel="preload" as="image" href="/assets/Hero.jpg" media="(min-width: 641px)" fetchpriority="high" />
+  </head>
+  <body class="bg-[#FDF6EE] text-[#23120B] antialiased selection:bg-[#FE8E2A] selection:text-white">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

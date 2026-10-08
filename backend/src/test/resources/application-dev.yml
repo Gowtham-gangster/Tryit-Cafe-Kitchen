@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:tryit_cafe_dev_db;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  h2:
+    console:
+      enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+
+app:
+  media:
+    allow-local-fallback: true
+  jwt:
+    secret: dev_secret_key_for_local_testing_only_must_be_overridden_in_prod_at_least_64_bytes!
+  cloudinary:
+    cloud-name: demo
+    api-key: "123456789012345"
+    api-secret: abcdefghijklmnopqrstuvwxyz1
+  google:
+    client-id: ""
+    client-secret: ""
+  seed:
+    enabled: true
+    sample-data: true
+    owner-phone: "9999999999"
+    owner-password: "Owner@TryIt2026"
+    customer-phone: "9876543210"
+    customer-password: "Customer@TryIt2026"
+    whatsapp-number: "8977774885"
+    phone-number: "8977774885"
