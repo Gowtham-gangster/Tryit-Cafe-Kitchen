@@ -79,6 +79,27 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error("File size exceeds the maximum limit. Maximum allowed size is 10MB for images and 50MB for videos."));
     }
 
+    @ExceptionHandler(org.springframework.web.multipart.MultipartException.class)
+    public ResponseEntity<ApiResponse<Void>> handleMultipartException(org.springframework.web.multipart.MultipartException ex) {
+        log.warn("Multipart request error: {}", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error("Invalid multipart request: " + (ex.getMessage() != null ? ex.getMessage() : "Failed to process multipart upload")));
+    }
+
+    @ExceptionHandler(org.springframework.web.multipart.support.MissingServletRequestPartException.class)
+    public ResponseEntity<ApiResponse<Void>> handleMissingServletRequestPart(org.springframework.web.multipart.support.MissingServletRequestPartException ex) {
+        log.warn("Missing required multipart file part: {}", ex.getRequestPartName());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error("Required multipart file part '" + ex.getRequestPartName() + "' is missing"));
+    }
+
+    @ExceptionHandler(org.springframework.web.bind.MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiResponse<Void>> handleMissingServletRequestParameter(org.springframework.web.bind.MissingServletRequestParameterException ex) {
+        log.warn("Missing required request parameter: {}", ex.getParameterName());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error("Required request parameter '" + ex.getParameterName() + "' is missing"));
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ApiResponse<Void>> handleIllegalArgument(IllegalArgumentException ex) {
         log.warn("Illegal argument: {}", ex.getMessage());

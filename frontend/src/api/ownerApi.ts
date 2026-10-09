@@ -104,7 +104,12 @@ export const ownerApi = {
 
     const res = await apiClient.post<ApiResponse<{ url: string; publicId: string }>>(
       '/owner/upload-media',
-      formData
+      formData,
+      {
+        headers: {
+          'Content-Type': undefined,
+        },
+      }
     );
     return res.data.data;
   },

@@ -44,8 +44,21 @@ export const apiClient = axios.create({
   },
 });
 
-// Request interceptor: Attach JWT token if available
+// Request interceptor: Attach JWT token if available & handle multipart FormData
 apiClient.interceptors.request.use((config) => {
+  // If data is FormData, remove preset Content-Type so Axios & the browser can attach the proper multipart boundary
+  if (config.data instanceof FormData) {
+    if (config.headers) {
+      if (typeof (config.headers as any).delete === 'function') {
+        (config.headers as any).delete('Content-Type');
+        (config.headers as any).delete('content-type');
+      } else {
+        delete (config.headers as any)['Content-Type'];
+        delete (config.headers as any)['content-type'];
+      }
+    }
+  }
+
   const isOwnerScope = 
     config.url?.includes('/owner') || 
     (typeof window !== 'undefined' && window.location.pathname.startsWith('/owner'));
