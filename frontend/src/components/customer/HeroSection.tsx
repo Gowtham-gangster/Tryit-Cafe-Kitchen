@@ -5,6 +5,7 @@ import { useSettingsStore } from '../../store/useSettingsStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useDesktopTilt } from '../../utils/useDesktopTilt';
 import { cafeConfig } from '../../config/business';
+import { InstagramIcon } from '../common/BrandIcons';
 
 // Canonical permanent static hero assets
 const HERO_IMAGE_SRC = '/assets/Hero.jpg';
@@ -46,24 +47,7 @@ const SparkleGlint: React.FC<{ shouldReduceMotion?: boolean | null }> = ({ shoul
   );
 };
 
-const InstagramIcon: React.FC<{ size?: number; className?: string }> = ({ size = 18, className = '' }) => (
-  <svg
-    viewBox="0 0 24 24"
-    width={size}
-    height={size}
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={`shrink-0 ${className}`}
-    aria-hidden="true"
-  >
-    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-  </svg>
-);
+
 
 export const HeroSection: React.FC = () => {
   const { settings, isOnlineOrderingOpen } = useSettingsStore();
@@ -249,7 +233,7 @@ export const HeroSection: React.FC = () => {
               </div>
             ) : (
               <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-white/10 border border-white/20 text-[#FFF8F0] text-[11px] sm:text-xs font-semibold uppercase tracking-wider backdrop-blur-md shadow-2xs">
-                <Sparkles size={13} className="text-[#FE8E2A]" />
+                <span className="text-xs">✨</span>
                 <span>Welcome to Tryit Cafe</span>
               </div>
             )}
@@ -308,7 +292,7 @@ export const HeroSection: React.FC = () => {
               onClick={() => scrollToSection('menu')}
               className="group px-4.5 min-[390px]:px-5 sm:px-7 py-2.5 sm:py-3 rounded-xl bg-[#FE8E2A] hover:bg-[#E67616] active:bg-[#C65A08] text-white font-bold text-xs min-[390px]:text-sm sm:text-base inline-flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer h-10.5 sm:h-12 select-none shrink-0"
             >
-              <Utensils size={15} className="sm:size-[17px] transition-transform duration-200 group-hover:translate-x-0.5 shrink-0" />
+              <span className="text-sm sm:text-base shrink-0">🍽️</span>
               <span>Explore Menu</span>
             </motion.button>
 
@@ -335,7 +319,7 @@ export const HeroSection: React.FC = () => {
               className="group px-4 min-[390px]:px-4.5 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-semibold text-xs min-[390px]:text-sm sm:text-base inline-flex items-center justify-center gap-2 backdrop-blur-xs transition-all cursor-pointer h-10.5 sm:h-12 select-none shrink-0"
               aria-label="Connect Us on Instagram"
             >
-              <InstagramIcon size={15} className="sm:size-[16px] text-[#FE8E2A] transition-transform duration-200 group-hover:scale-110 shrink-0" />
+              <InstagramIcon size={17} className="text-white group-hover:scale-110 transition-transform" />
               <span>Connect Us</span>
             </motion.a>
           </div>
@@ -356,9 +340,9 @@ export const HeroSection: React.FC = () => {
                   variants={featureIconVariants}
                   initial="hidden"
                   animate="visible"
-                  className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-[#FE8E2A] shrink-0 group-hover:bg-[#FE8E2A]/20 transition-all"
+                  className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#FE8E2A]/20 transition-all text-sm sm:text-base"
                 >
-                  <Heart size={13} className="sm:size-4 group-hover:scale-110 transition-transform" />
+                  <span>❤️</span>
                 </motion.div>
                 <div className="min-w-0 flex-1">
                   <p className="text-[11px] sm:text-xs text-stone-400 font-medium leading-tight">Fresh Kitchen</p>
@@ -379,9 +363,9 @@ export const HeroSection: React.FC = () => {
                   variants={featureIconVariants}
                   initial="hidden"
                   animate="visible"
-                  className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-emerald-400 shrink-0 group-hover:bg-emerald-500/20 transition-all"
+                  className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-emerald-500/20 transition-all text-sm sm:text-base"
                 >
-                  <Award size={13} className="sm:size-4 group-hover:scale-110 transition-transform" />
+                  <span>✨</span>
                 </motion.div>
                 <div className="min-w-0 flex-1">
                   <p className="text-[11px] sm:text-xs text-stone-400 font-medium leading-tight">Quality</p>
@@ -402,9 +386,9 @@ export const HeroSection: React.FC = () => {
                   variants={featureIconVariants}
                   initial="hidden"
                   animate="visible"
-                  className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 border border-white/10 flex items-center justify-center text-[#FE8E2A] shrink-0 group-hover:bg-[#FE8E2A]/20 transition-all"
+                  className="w-7 h-7 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/10 border border-white/10 flex items-center justify-center shrink-0 group-hover:bg-[#FE8E2A]/20 transition-all text-sm sm:text-base"
                 >
-                  <Clock size={13} className="sm:size-4 group-hover:scale-110 transition-transform" />
+                  <span>⏰</span>
                 </motion.div>
                 <div className="min-w-0 flex-1">
                   <p className="text-[11px] sm:text-xs text-stone-400 font-medium leading-tight">Convenient</p>

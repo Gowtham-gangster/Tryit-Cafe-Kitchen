@@ -13,6 +13,7 @@ import { useSettingsStore } from '../../store/useSettingsStore';
 import { useToastStore } from '../../store/useToastStore';
 import { GoogleMap } from '../common/GoogleMap';
 import { RevealCard } from '../common/RevealCard';
+import { WhatsAppIcon } from '../common/BrandIcons';
 import { getWhatsAppBusinessNumber } from '../../utils/whatsapp';
 import { cafeConfig } from '../../config/business';
 import {
@@ -198,7 +199,7 @@ export const LocationAndHoursSection: React.FC = () => {
         >
           {/* Eyebrow */}
           <div className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-extrabold uppercase tracking-widest text-[#FE8E2A] mb-2 px-3 py-1 rounded-full bg-[#FE8E2A]/10 border border-[#FE8E2A]/20">
-            <Compass size={13} className="text-[#FE8E2A]" />
+            <span>🧭</span>
             <span>FIND US</span>
           </div>
 
@@ -223,8 +224,8 @@ export const LocationAndHoursSection: React.FC = () => {
               <div className="p-5 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#FFFBF7] border border-[#EEDDCC] shadow-sm flex flex-col justify-between h-full space-y-5">
               {/* Address Header */}
               <div>
-                <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#FE8E2A] mb-3">
-                  <MapPin size={15} />
+                <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#FE8E2A] mb-3">
+                  <span>📍</span>
                   <span>LOCATION</span>
                 </div>
 
@@ -269,7 +270,7 @@ export const LocationAndHoursSection: React.FC = () => {
                   className="w-full py-2.5 sm:py-3 px-4 rounded-xl bg-[#FE8E2A] hover:bg-[#E67616] active:bg-[#C65A08] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm shadow-[#FE8E2A]/20 transition-all cursor-pointer min-h-[38px] sm:min-h-[42px] group"
                   aria-label="Get directions to Tryit Cafe on Google Maps"
                 >
-                  <Navigation size={15} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
+                  <span className="text-sm">🧭</span>
                   <span>Get Directions</span>
                   <ArrowUpRight size={14} className="opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
                 </motion.a>
@@ -284,7 +285,7 @@ export const LocationAndHoursSection: React.FC = () => {
                       className="py-2 sm:py-2.5 px-3 rounded-xl bg-[#FDF6EE] hover:bg-[#FBEFE1] border border-[#EEDDCC] hover:border-[#FE8E2A]/40 text-[#2B1408] text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[36px] sm:min-h-[38px]"
                       aria-label={`Call Tryit Cafe at ${displayPhone}`}
                     >
-                      <Phone size={14} className="text-[#FE8E2A] shrink-0" />
+                      <span className="text-sm">📞</span>
                       <span className="truncate">Call Cafe</span>
                     </motion.a>
                   ) : (
@@ -298,7 +299,7 @@ export const LocationAndHoursSection: React.FC = () => {
                       className="py-2 sm:py-2.5 px-3 rounded-xl bg-[#FDF6EE] hover:bg-[#FBEFE1] border border-[#EEDDCC] hover:border-[#FE8E2A]/40 text-[#2B1408] text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[36px] sm:min-h-[38px] active:scale-98"
                       aria-label="Call cafe info"
                     >
-                      <Phone size={14} className="text-[#FE8E2A] shrink-0" />
+                      <span className="text-sm">📞</span>
                       <span className="truncate">Call Cafe</span>
                     </button>
                   )}
@@ -313,7 +314,7 @@ export const LocationAndHoursSection: React.FC = () => {
                       className="py-2 sm:py-2.5 px-3 rounded-xl bg-[#FDF6EE] hover:bg-[#FBEFE1] border border-[#EEDDCC] hover:border-[#FE8E2A]/40 text-[#2B1408] text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[36px] sm:min-h-[38px]"
                       aria-label="Message Tryit Cafe on WhatsApp"
                     >
-                      <MessageCircle size={14} className="text-[#FE8E2A] shrink-0" />
+                      <WhatsAppIcon size={16} className="text-[#25D366] shrink-0" />
                       <span className="truncate">WhatsApp</span>
                     </motion.a>
                   ) : (
@@ -325,7 +326,7 @@ export const LocationAndHoursSection: React.FC = () => {
                       className="py-2 sm:py-2.5 px-3 rounded-xl bg-[#FDF6EE] border border-[#EEDDCC] text-[#7A5C4A] text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-h-[36px] sm:min-h-[38px]"
                       aria-label="WhatsApp unavailable"
                     >
-                      <MessageCircle size={14} className="text-[#7A5C4A] shrink-0" />
+                      <WhatsAppIcon size={16} className="text-[#25D366] shrink-0 opacity-60" />
                       <span className="truncate">WhatsApp</span>
                     </button>
                   )}
@@ -373,8 +374,8 @@ export const LocationAndHoursSection: React.FC = () => {
           >
             {/* 1. SECTION TITLE */}
             <div className="flex items-center gap-2 mb-2">
-              <div className="w-5 h-5 rounded-md bg-[#FE8E2A]/10 border border-[#FE8E2A]/20 flex items-center justify-center shrink-0 text-[#FE8E2A]">
-                <Clock size={12} aria-hidden="true" />
+              <div className="w-5 h-5 rounded-md bg-[#FE8E2A]/10 border border-[#FE8E2A]/20 flex items-center justify-center shrink-0 text-xs">
+                <span>⏰</span>
               </div>
               <h3
                 id="opening-hours-title-mobile"
@@ -392,8 +393,8 @@ export const LocationAndHoursSection: React.FC = () => {
                   : 'bg-rose-50/70 border-rose-200/80'
               }`}
             >
-              <div className="w-7 h-7 rounded-lg bg-white/90 border border-[#EEDDCC]/70 text-[#FE8E2A] flex items-center justify-center shrink-0 shadow-2xs">
-                <Clock size={14} className="text-[#FE8E2A]" aria-hidden="true" />
+              <div className="w-7 h-7 rounded-lg bg-white/90 border border-[#EEDDCC]/70 flex items-center justify-center shrink-0 shadow-2xs text-xs">
+                <span>⏰</span>
               </div>
               <div className="flex-1 min-w-0">
                 {/* Live Status indicator */}
@@ -520,8 +521,8 @@ export const LocationAndHoursSection: React.FC = () => {
             {/* Card Header: Title & Live Status */}
             <div className="flex items-center justify-between gap-4 pb-5 border-b border-[#EEDDCC]">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-2xl bg-[#FDF6EE] border border-[#EEDDCC] text-[#FE8E2A] flex items-center justify-center shrink-0">
-                  <Clock size={19} />
+                <div className="w-11 h-11 rounded-2xl bg-[#FDF6EE] border border-[#EEDDCC] flex items-center justify-center shrink-0 text-xl">
+                  <span>⏰</span>
                 </div>
                 <div>
                   <span

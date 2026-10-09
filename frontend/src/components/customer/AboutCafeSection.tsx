@@ -1,19 +1,13 @@
 import React, { useMemo } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
-  Sparkles,
-  Coffee,
-  UtensilsCrossed,
-  MessageCircle,
-  MapPin,
-  Clock,
   ArrowUpRight,
-  Heart,
 } from 'lucide-react';
 import { useSettingsStore } from '../../store/useSettingsStore';
 import { RevealCard } from '../common/RevealCard';
 import { cafeConfig } from '../../config/business';
 import { formatBusinessHoursRange } from '../../utils/timeFormat';
+import { WhatsAppIcon } from '../common/BrandIcons';
 
 // Canonical official cafe hero asset reused for About section
 const HERO_IMAGE_SRC = '/assets/Hero.jpg';
@@ -106,7 +100,7 @@ export const AboutCafeSection: React.FC = () => {
         >
           {/* Eyebrow */}
           <div className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#FE8E2A] mb-2 px-3 py-1 rounded-full bg-[#FE8E2A]/10 border border-[#FE8E2A]/20">
-            <Sparkles size={13} className="text-[#FE8E2A]" />
+            <span>✨</span>
             <span>ABOUT TRYIT CAFE & KITCHEN</span>
           </div>
 
@@ -142,7 +136,7 @@ export const AboutCafeSection: React.FC = () => {
 
               {/* Location Tag Pill */}
               <div className="absolute bottom-3.5 left-3.5 bg-[#2B1408]/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 text-white flex items-center gap-1.5 shadow-sm group-hover:-translate-y-1 group-hover:shadow-md transition-all duration-300">
-                <Coffee size={13} className="text-[#FE8E2A]" />
+                <span>📍</span>
                 <span className="text-[11px] font-semibold">Gandi Maisamma, Hyderabad</span>
               </div>
             </div>
@@ -157,7 +151,7 @@ export const AboutCafeSection: React.FC = () => {
             className="lg:col-span-6 space-y-3.5 sm:space-y-4"
           >
             <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#FE8E2A]">
-              <Coffee size={14} />
+              <span>☕</span>
               <span>WHERE GOOD TIMES HAPPEN</span>
             </div>
 
@@ -271,7 +265,7 @@ export const AboutCafeSection: React.FC = () => {
                   className="w-full h-full p-4 rounded-2xl bg-[#FDF6EE] border border-[#EEDDCC] hover:border-[#FE8E2A]/40 hover:-translate-y-1 transition-all text-left group cursor-pointer active:scale-98"
                 >
                   <div className="flex items-center gap-1.5 text-[#FE8E2A] mb-1.5">
-                    <MapPin size={15} />
+                    <span className="text-sm">📍</span>
                     <span className="text-[10px] font-extrabold uppercase tracking-wider">
                       LOCATION
                     </span>
@@ -289,7 +283,7 @@ export const AboutCafeSection: React.FC = () => {
               <RevealCard index={1} delay={0.18} yOffset={20} scaleInitial={0.97} enableHover={false}>
                 <div className="w-full h-full p-4 rounded-2xl bg-[#FDF6EE] border border-[#EEDDCC] text-left">
                   <div className="flex items-center gap-1.5 text-[#FE8E2A] mb-1.5">
-                    <Clock size={15} />
+                    <span className="text-sm">⏰</span>
                     <span className="text-[10px] font-extrabold uppercase tracking-wider">
                       DAILY HOURS
                     </span>
@@ -311,9 +305,9 @@ export const AboutCafeSection: React.FC = () => {
                   rel="noopener noreferrer"
                   className="w-full h-full p-4 rounded-2xl bg-[#FDF6EE] border border-[#EEDDCC] hover:border-[#FE8E2A]/40 hover:-translate-y-1 transition-all text-left group cursor-pointer active:scale-98 block"
                 >
-                  <div className="flex items-center gap-1.5 text-[#FE8E2A] mb-1.5">
-                    <MessageCircle size={15} />
-                    <span className="text-[10px] font-extrabold uppercase tracking-wider">
+                  <div className="flex items-center gap-1.5 mb-1.5">
+                    <WhatsAppIcon size={16} className="text-[#25D366] shrink-0" />
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#FE8E2A]">
                       ORDER AHEAD
                     </span>
                   </div>

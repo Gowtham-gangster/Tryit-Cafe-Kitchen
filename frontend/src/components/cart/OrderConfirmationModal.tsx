@@ -23,6 +23,7 @@ import { Modal } from '../common/Modal';
 import { dispatchWhatsAppOrder } from '../../utils/whatsapp';
 import { FoodTypeBadge } from '../common/FoodTypeBadge';
 import { OrderItemRow } from './OrderItemRow';
+import { WhatsAppIcon } from '../common/BrandIcons';
 import { useSettingsStore } from '../../store/useSettingsStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useMenuStore } from '../../store/useMenuStore';
@@ -1073,7 +1074,7 @@ export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
                   onClick={handleContinueToWhatsApp}
                   className="w-full sm:w-2/3 py-3.5 rounded-2xl bg-[#FE8E2A] hover:bg-[#E67616] text-white font-extrabold text-sm flex items-center justify-center gap-2.5 shadow-lg shadow-[#FE8E2A]/25 active:scale-98 transition cursor-pointer min-h-[48px] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <MessageCircle size={19} />
+                  <WhatsAppIcon size={20} className="text-white shrink-0" />
                   <span>Order on WhatsApp →</span>
                 </button>
               ) : (

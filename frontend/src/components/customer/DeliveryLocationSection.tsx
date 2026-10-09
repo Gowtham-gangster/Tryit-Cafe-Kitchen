@@ -38,12 +38,12 @@ export const DeliveryLocationSection: React.FC<DeliveryLocationSectionProps> = (
   const getLocationIcon = (label: string) => {
     switch (label?.toLowerCase()) {
       case 'work':
-        return <Briefcase size={16} className="text-[#2B1408] shrink-0" />;
+        return <span className="text-sm">💼</span>;
       case 'other':
-        return <Package size={16} className="text-[#7A5C4A] shrink-0" />;
+        return <span className="text-sm">📦</span>;
       case 'home':
       default:
-        return <Home size={16} className="text-[#FE8E2A] shrink-0" />;
+        return <span className="text-sm">🏠</span>;
     }
   };
 
@@ -61,7 +61,7 @@ export const DeliveryLocationSection: React.FC<DeliveryLocationSectionProps> = (
             {/* Left: Location Information */}
             <div className="flex items-center gap-3 min-w-0">
               <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-[#FBEFE1] text-[#FE8E2A] border border-[#FE8E2A]/20 flex items-center justify-center shrink-0">
-                <MapPin size={20} className="stroke-[2.2]" />
+                <span className="text-lg">📍</span>
               </div>
 
               <div className="min-w-0 flex-1">

@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ExternalLink, Navigation } from 'lucide-react';
 import { loadGoogleMapsApi } from '../../services/googleMapsLoader';
 
 /**
@@ -168,8 +167,9 @@ export const GoogleMap: React.FC<GoogleMapProps> = ({
         className="absolute top-3 left-3 z-10 px-2.5 py-1.5 rounded-xl bg-white/95 hover:bg-white active:scale-95 text-[#2B1408] hover:text-[#FE8E2A] text-xs font-bold shadow-md border border-[#EEDDCC] flex items-center gap-1.5 transition-all select-none backdrop-blur-xs"
         aria-label="Open TryIt Cafe location in Google Maps"
       >
+        <span>🗺️</span>
         <span>Open in Maps</span>
-        <ExternalLink size={12} className="text-[#FE8E2A]" />
+        <span className="text-xs opacity-75">↗</span>
       </a>
 
       {/* Recenter Button when moved around */}
@@ -181,7 +181,7 @@ export const GoogleMap: React.FC<GoogleMapProps> = ({
           title="Recenter map to TryIt Cafe"
           aria-label="Recenter map to TryIt Cafe"
         >
-          <Navigation size={12} className="text-[#FE8E2A]" />
+          <span>🎯</span>
           <span>Recenter</span>
         </button>
       )}

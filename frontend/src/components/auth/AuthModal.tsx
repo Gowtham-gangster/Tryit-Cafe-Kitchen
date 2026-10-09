@@ -489,7 +489,7 @@ export const AuthModal: React.FC = () => {
                   value={email}
                   disabled
                   readOnly
-                  icon={<Mail className="w-4 h-4 text-[#8A6E5C]" />}
+                  icon={<span className="text-sm">✉️</span>}
                   className="opacity-70 cursor-not-allowed bg-[#FDF6EE]"
                 />
 
@@ -499,7 +499,7 @@ export const AuthModal: React.FC = () => {
                     placeholder="e.g. 9876543210"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    icon={<Phone className="w-4 h-4 text-[#8A6E5C]" />}
+                    icon={<span className="text-sm">📞</span>}
                     required
                   />
                   <span className="text-[10px] text-[#8A6E5C] mt-1 block">
@@ -537,7 +537,7 @@ export const AuthModal: React.FC = () => {
                       </>
                     ) : (
                       <>
-                        <Navigation className="w-4 h-4 text-[#FE8E2A]" />
+                        <span className="text-sm">📍</span>
                         <span>Use My Current Location</span>
                       </>
                     )}
@@ -718,7 +718,7 @@ export const AuthModal: React.FC = () => {
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   error={formErrors.phone}
-                  icon={<Phone className="w-4 h-4 text-stone-400" />}
+                  icon={<span className="text-sm">📞</span>}
                 />
 
                 {mode === 'register' && (
@@ -729,7 +729,7 @@ export const AuthModal: React.FC = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     error={formErrors.email}
-                    icon={<Mail className="w-4 h-4 text-stone-400" />}
+                    icon={<span className="text-sm">✉️</span>}
                     required
                   />
                 )}

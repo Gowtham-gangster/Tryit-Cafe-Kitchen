@@ -2,13 +2,6 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion, useReducedMotion } from 'framer-motion';
 import {
-  Heart,
-  Phone,
-  MessageCircle,
-  Mail,
-  MapPin,
-  Navigation,
-  ArrowUpRight,
   ArrowRight,
 } from 'lucide-react';
 import { useSettingsStore } from '../../store/useSettingsStore';
@@ -16,29 +9,7 @@ import { useToastStore } from '../../store/useToastStore';
 import { cafeConfig } from '../../config/business';
 import { useCustomerNavigation } from '../../utils/navigation';
 import { prefetchLegalPages } from '../../routes/routePrefetch';
-
-// Clean standard SVG Instagram icon matching Lucide style
-const InstagramIcon: React.FC<{ size?: number; className?: string }> = ({
-  size = 20,
-  className = '',
-}) => (
-  <svg
-    viewBox="0 0 24 24"
-    width={size}
-    height={size}
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={`shrink-0 ${className}`}
-    aria-hidden="true"
-  >
-    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-  </svg>
-);
+import { WhatsAppIcon, InstagramIcon } from '../common/BrandIcons';
 
 export const Footer: React.FC = () => {
   const { settings } = useSettingsStore();
@@ -62,44 +33,9 @@ export const Footer: React.FC = () => {
 
   const contactActions = [
     {
-      id: 'whatsapp',
-      label: 'WhatsApp Orders',
-      icon: (
-        <MessageCircle
-          size={16}
-          className="text-[#FE8E2A] group-hover:scale-[1.05] transition-transform shrink-0"
-        />
-      ),
-      href: whatsappUrl || undefined,
-      external: true,
-      ariaLabel: 'Order via WhatsApp',
-      available: !!whatsappUrl,
-      onUnavailable: () =>
-        toastInfo('WhatsApp ordering is temporarily unavailable.'),
-    },
-    {
-      id: 'instagram',
-      label: 'Instagram',
-      icon: (
-        <InstagramIcon
-          size={16}
-          className="text-[#FE8E2A] group-hover:scale-[1.05] transition-transform shrink-0"
-        />
-      ),
-      href: instagramUrl,
-      external: true,
-      ariaLabel: 'Visit Tryit Cafe on Instagram',
-      available: true,
-    },
-    {
       id: 'call',
       label: 'Call Cafe',
-      icon: (
-        <Phone
-          size={16}
-          className="text-[#FE8E2A] group-hover:scale-[1.05] transition-transform shrink-0"
-        />
-      ),
+      icon: <span className="text-sm shrink-0" aria-hidden="true">📞</span>,
       href: phoneUrl || undefined,
       external: false,
       ariaLabel: displayPhone ? `Call Tryit Cafe at ${displayPhone}` : 'Call Tryit Cafe',
@@ -110,14 +46,29 @@ export const Footer: React.FC = () => {
         ),
     },
     {
+      id: 'whatsapp',
+      label: 'WhatsApp',
+      icon: <WhatsAppIcon size={16} className="text-[#25D366] shrink-0" />,
+      href: whatsappUrl || undefined,
+      external: true,
+      ariaLabel: 'Order via WhatsApp',
+      available: !!whatsappUrl,
+      onUnavailable: () =>
+        toastInfo('WhatsApp ordering is temporarily unavailable.'),
+    },
+    {
+      id: 'instagram',
+      label: 'Instagram',
+      icon: <InstagramIcon size={16} className="text-[#E1306C] shrink-0" />,
+      href: instagramUrl,
+      external: true,
+      ariaLabel: 'Visit Tryit Cafe on Instagram',
+      available: true,
+    },
+    {
       id: 'email',
       label: 'Email Us',
-      icon: (
-        <Mail
-          size={16}
-          className="text-[#FE8E2A] group-hover:scale-[1.05] transition-transform shrink-0"
-        />
-      ),
+      icon: <span className="text-sm shrink-0" aria-hidden="true">✉️</span>,
       href: emailUrl || undefined,
       external: false,
       ariaLabel: displayEmail ? `Email Tryit Cafe at ${displayEmail}` : 'Email Tryit Cafe',
@@ -206,9 +157,6 @@ export const Footer: React.FC = () => {
               <p className="text-xs sm:text-[13px] text-[#C7B5A7] leading-relaxed">
                 At Tryit Cafe & Kitchen, we serve freshly brewed coffee, refreshing beverages, delicious fast food, crunchy snacks, thick shakes, and wholesome meals in a clean, comfortable, and friendly atmosphere.
               </p>
-              <p className="text-[11px] sm:text-xs text-[#A89284] leading-relaxed">
-                Whether meeting friends, spending time with family, working, or unwinding with great coffee—we are here to make every visit memorable. Try it once, and you will love coming back!
-              </p>
             </div>
 
             {/* Feature Highlights Badges */}
@@ -228,7 +176,7 @@ export const Footer: React.FC = () => {
             </div>
 
             <div className="inline-flex items-center gap-2 text-xs font-bold text-[#A89284] pt-1">
-              <MapPin size={14} className="text-[#FE8E2A] shrink-0" />
+              <span>📍</span>
               <span>Gandi Maisamma, Hyderabad</span>
             </div>
           </div>
@@ -260,49 +208,55 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* ========================================================== */}
-          {/* C. VISIT US (3 Cols on Desktop)                            */}
+          {/* C. VISIT US (Parallel text on left & button on right)      */}
           {/* ========================================================== */}
-          <div className="lg:col-span-3 space-y-3.5 pt-4 sm:pt-0 border-t border-[#3B1E12]/50 md:border-t-0">
-            <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#FE8E2A] block">
-              VISIT US
+          <div className="lg:col-span-3 space-y-3 pt-4 sm:pt-0 border-t border-[#3B1E12]/50 md:border-t-0">
+            <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#FE8E2A] flex items-center gap-1.5">
+              <span>📍</span>
+              <span>VISIT US</span>
             </span>
 
-            <div className="space-y-1">
-              <p className="text-xs sm:text-sm font-bold text-white">
-                {cafeName}
-              </p>
-              <p className="text-xs text-[#C7B5A7]">
-                Gandi Maisamma
-              </p>
-              <p className="text-xs text-[#C7B5A7]">
-                Hyderabad, Telangana
-              </p>
-            </div>
+            {/* Mobile: Parallel layout. Desktop (md+): Stacked vertically with button down */}
+            <div className="flex flex-row md:flex-col items-center md:items-start justify-between md:justify-start gap-2.5 sm:gap-3 md:gap-3.5">
+              <div className="space-y-0.5 min-w-0 flex-1 md:flex-initial text-left">
+                <p className="text-xs sm:text-sm font-bold text-white truncate md:whitespace-normal">
+                  {cafeName}
+                </p>
+                <p className="text-xs text-[#C7B5A7]">
+                  Gandi Maisamma
+                </p>
+                <p className="text-xs text-[#C7B5A7]">
+                  Hyderabad, Telangana
+                </p>
+              </div>
 
-            <div className="pt-1">
-              <a
-                href={googleMapsLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-[#FE8E2A]/15 border border-white/10 hover:border-[#FE8E2A]/40 text-xs font-bold text-[#FE8E2A] transition-all group cursor-pointer min-h-[44px]"
-                aria-label="Get directions to TryIt Cafe on Google Maps"
-              >
-                <Navigation size={13} className="text-[#FE8E2A] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                <span>Get Directions</span>
-                <ArrowUpRight size={13} className="opacity-70 group-hover:opacity-100 transition-opacity" />
-              </a>
+              <div className="shrink-0 md:pt-1">
+                <a
+                  href={googleMapsLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-xl bg-white/5 hover:bg-[#FE8E2A]/15 border border-white/10 hover:border-[#FE8E2A]/40 text-xs font-bold text-[#FE8E2A] transition-all group cursor-pointer min-h-[38px] sm:min-h-[40px] shadow-xs active:scale-95 whitespace-nowrap"
+                  aria-label="Get directions to TryIt Cafe on Google Maps"
+                >
+                  <span className="text-sm">🧭</span>
+                  <span>Get Directions</span>
+                  <span className="text-xs opacity-70 group-hover:opacity-100 transition-opacity">↗</span>
+                </a>
+              </div>
             </div>
           </div>
 
           {/* ========================================================== */}
-          {/* D. CONNECT WITH US (Compact Touch-Friendly Action Rows)    */}
+          {/* D. CONNECT WITH US                                         */}
           {/* ========================================================== */}
           <div className="lg:col-span-3 space-y-3 pt-4 sm:pt-0 border-t border-[#3B1E12]/50 md:border-t-0">
-            <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#FE8E2A] block">
-              CONNECT WITH US
+            <span className="text-[11px] font-extrabold uppercase tracking-widest text-[#FE8E2A] flex items-center gap-1.5">
+              <span>💬</span>
+              <span>CONNECT WITH US</span>
             </span>
 
-            <div className="flex flex-col gap-1.5 sm:gap-2">
+            {/* Mobile: 2-Column Grid. Desktop (md+): One by one only */}
+            <div className="grid grid-cols-2 md:grid-cols-1 gap-2 sm:gap-2.5">
               {contactActions.map((action, idx) => (
                 <motion.div
                   key={action.id}
@@ -322,47 +276,39 @@ export const Footer: React.FC = () => {
                       href={action.href}
                       target={action.external ? '_blank' : undefined}
                       rel={action.external ? 'noopener noreferrer' : undefined}
-                      className="w-full flex items-center justify-between min-h-[40px] sm:min-h-[42px] px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 active:scale-[0.985] border border-white/10 hover:border-[#FE8E2A]/40 transition-all duration-200 cursor-pointer group text-left"
+                      className="w-full flex items-center justify-between min-h-[40px] px-2.5 sm:px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 active:scale-[0.985] border border-white/10 hover:border-[#FE8E2A]/40 transition-all duration-200 cursor-pointer group text-left"
                       aria-label={action.ariaLabel}
                     >
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <div className="w-7 h-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                          {action.icon}
-                        </div>
-                        <span className="text-xs sm:text-[13px] font-semibold text-white group-hover:text-[#FE8E2A] transition-colors truncate">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        {action.icon}
+                        <span className="text-xs font-semibold text-white group-hover:text-[#FE8E2A] transition-colors truncate">
                           {action.label}
                         </span>
                       </div>
-                      <div className="w-5 h-5 rounded-md flex items-center justify-center text-[#A89284] group-hover:text-[#FE8E2A] transition-colors shrink-0">
-                        <ArrowRight
-                          size={14}
-                          className="group-hover:translate-x-0.5 transition-transform duration-200"
-                          aria-hidden="true"
-                        />
-                      </div>
+                      <ArrowRight
+                        size={12}
+                        className="text-[#A89284] group-hover:text-[#FE8E2A] group-hover:translate-x-0.5 transition-all shrink-0 ml-1"
+                        aria-hidden="true"
+                      />
                     </a>
                   ) : (
                     <button
                       type="button"
                       onClick={action.onUnavailable}
-                      className="w-full flex items-center justify-between min-h-[40px] sm:min-h-[42px] px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/10 active:scale-[0.985] border border-white/10 hover:border-[#FE8E2A]/40 transition-all duration-200 cursor-pointer group text-left"
+                      className="w-full flex items-center justify-between min-h-[40px] px-2.5 sm:px-3 py-2 rounded-xl bg-white/5 hover:bg-white/10 active:scale-[0.985] border border-white/10 hover:border-[#FE8E2A]/40 transition-all duration-200 cursor-pointer group text-left"
                       aria-label={action.ariaLabel}
                     >
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <div className="w-7 h-7 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0">
-                          {action.icon}
-                        </div>
-                        <span className="text-xs sm:text-[13px] font-semibold text-white group-hover:text-[#FE8E2A] transition-colors truncate">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        {action.icon}
+                        <span className="text-xs font-semibold text-white group-hover:text-[#FE8E2A] transition-colors truncate">
                           {action.label}
                         </span>
                       </div>
-                      <div className="w-5 h-5 rounded-md flex items-center justify-center text-[#A89284] group-hover:text-[#FE8E2A] transition-colors shrink-0">
-                        <ArrowRight
-                          size={14}
-                          className="group-hover:translate-x-0.5 transition-transform duration-200"
-                          aria-hidden="true"
-                        />
-                      </div>
+                      <ArrowRight
+                        size={12}
+                        className="text-[#A89284] group-hover:text-[#FE8E2A] group-hover:translate-x-0.5 transition-all shrink-0 ml-1"
+                        aria-hidden="true"
+                      />
                     </button>
                   )}
                 </motion.div>
@@ -399,7 +345,7 @@ export const Footer: React.FC = () => {
 
           <p className="flex items-center justify-center gap-1.5 font-medium text-[#A89284]">
             <span>Made with</span>
-            <Heart size={13} className="text-[#FE8E2A] fill-[#FE8E2A] shrink-0" aria-label="love" />
+            <span aria-label="love">🧡</span>
             <span>for food lovers.</span>
           </p>
         </div>

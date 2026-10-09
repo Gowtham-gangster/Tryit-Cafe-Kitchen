@@ -598,7 +598,7 @@ export const DeliveryLocationPicker: React.FC<DeliveryLocationPickerProps> = ({
                   {isDetectingGps ? (
                     <Loader2 size={22} className="animate-spin" />
                   ) : (
-                    <Navigation size={22} />
+                    <span className="text-xl">📍</span>
                   )}
                 </div>
                 <div className="min-w-0 flex-1">
@@ -807,8 +807,8 @@ export const DeliveryLocationPicker: React.FC<DeliveryLocationPickerProps> = ({
                     {/* Distance from Cafe - Enhanced Status Card */}
                     <div className="p-3 rounded-xl bg-[#FDF6EE] border border-[#EEDDCC] flex items-center justify-between gap-3 text-xs">
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <div className="w-8 h-8 rounded-xl bg-[#FBEFE1] border border-[#EEDDCC] text-[#FE8E2A] flex items-center justify-center shrink-0 shadow-2xs">
-                          <Navigation size={14} className="rotate-45" />
+                        <div className="w-8 h-8 rounded-xl bg-[#FBEFE1] border border-[#EEDDCC] flex items-center justify-center shrink-0 shadow-2xs">
+                          <span className="text-sm">🧭</span>
                         </div>
                         <div className="min-w-0">
                           <span className="text-[10px] uppercase font-bold tracking-wider text-[#7A5C4A] block leading-tight">

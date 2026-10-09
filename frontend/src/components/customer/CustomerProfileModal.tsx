@@ -455,7 +455,7 @@ export const CustomerProfileModal: React.FC<CustomerProfileModalProps> = ({ isOp
                         Phone Number
                       </span>
                       <span className="font-semibold text-stone-800 flex items-center gap-1.5 mt-0.5">
-                        <Phone size={13} className="text-amber-600" />
+                        <span>📞</span>
                         {user.phone || 'Provided via WhatsApp'}
                       </span>
                     </div>
@@ -466,7 +466,7 @@ export const CustomerProfileModal: React.FC<CustomerProfileModalProps> = ({ isOp
                           Email
                         </span>
                         <span className="font-semibold text-stone-800 flex items-center gap-1.5 mt-0.5">
-                          <Mail size={13} className="text-amber-600" />
+                          <span>✉️</span>
                           {user.email}
                         </span>
                       </div>
@@ -600,7 +600,7 @@ export const CustomerProfileModal: React.FC<CustomerProfileModalProps> = ({ isOp
                           </>
                         ) : (
                           <>
-                            <Navigation size={14} className="text-amber-600" />
+                            <span>📍</span>
                             <span>Use Current Location</span>
                           </>
                         )}
@@ -679,7 +679,7 @@ export const CustomerProfileModal: React.FC<CustomerProfileModalProps> = ({ isOp
               {/* Locations List */}
               {locations.length === 0 ? (
                 <div className="p-6 rounded-2xl border border-dashed border-stone-300 bg-stone-50/60 text-center space-y-2">
-                  <MapPin className="w-8 h-8 text-stone-400 mx-auto" />
+                  <span className="text-3xl block text-center mx-auto">📍</span>
                   <p className="text-xs font-bold text-stone-700">No delivery locations saved yet.</p>
                   <p className="text-[11px] text-stone-500">
                     Add your home or work address for seamless delivery distance calculation.
