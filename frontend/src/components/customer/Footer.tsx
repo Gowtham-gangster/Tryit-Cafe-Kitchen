@@ -202,11 +202,32 @@ export const Footer: React.FC = () => {
               </div>
             </div>
 
-            <p className="text-xs sm:text-sm text-[#C7B5A7] max-w-sm leading-relaxed">
-              Good food, cozy moments, and a place worth coming back to.
-            </p>
+            <div className="space-y-2 max-w-sm">
+              <p className="text-xs sm:text-[13px] text-[#C7B5A7] leading-relaxed">
+                At Tryit Cafe & Kitchen, we serve freshly brewed coffee, refreshing beverages, delicious fast food, crunchy snacks, thick shakes, and wholesome meals in a clean, comfortable, and friendly atmosphere.
+              </p>
+              <p className="text-[11px] sm:text-xs text-[#A89284] leading-relaxed">
+                Whether meeting friends, spending time with family, working, or unwinding with great coffee—we are here to make every visit memorable. Try it once, and you will love coming back!
+              </p>
+            </div>
 
-            <div className="inline-flex items-center gap-2 text-xs font-bold text-[#A89284]">
+            {/* Feature Highlights Badges */}
+            <div className="flex flex-wrap gap-1.5 pt-0.5">
+              <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-[#E5D5C5] bg-white/6 border border-white/10 px-2 py-0.5 rounded-lg">
+                ☕ Fresh Coffee & Brews
+              </span>
+              <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-[#E5D5C5] bg-white/6 border border-white/10 px-2 py-0.5 rounded-lg">
+                🍔 Snacks & Fast Food
+              </span>
+              <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-[#E5D5C5] bg-white/6 border border-white/10 px-2 py-0.5 rounded-lg">
+                🥤 Shakes & Mocktails
+              </span>
+              <span className="inline-flex items-center gap-1 text-[10.5px] font-semibold text-[#E5D5C5] bg-white/6 border border-white/10 px-2 py-0.5 rounded-lg">
+                ✨ Clean & Cozy Ambience
+              </span>
+            </div>
+
+            <div className="inline-flex items-center gap-2 text-xs font-bold text-[#A89284] pt-1">
               <MapPin size={14} className="text-[#FE8E2A] shrink-0" />
               <span>Gandi Maisamma, Hyderabad</span>
             </div>

@@ -8,6 +8,7 @@ import {
   MapPin,
   Clock,
   ArrowUpRight,
+  Heart,
 } from 'lucide-react';
 import { useSettingsStore } from '../../store/useSettingsStore';
 import { RevealCard } from '../common/RevealCard';
@@ -16,8 +17,6 @@ import { formatBusinessHoursRange } from '../../utils/timeFormat';
 
 // Canonical official cafe hero asset reused for About section
 const HERO_IMAGE_SRC = '/assets/Hero.jpg';
-
-
 
 export const AboutCafeSection: React.FC = () => {
   const { settings } = useSettingsStore();
@@ -61,29 +60,34 @@ export const AboutCafeSection: React.FC = () => {
     }
   };
 
-  // 3 Compact Highlights
+  // 4 Core Highlights aligned with cafe offerings
   const highlights = [
     {
       icon: UtensilsCrossed,
-      title: 'Freshly Prepared',
-      desc: 'Made fresh for every craving.',
+      title: 'Freshly Prepared Food',
+      desc: 'Delicious fast food, flavorful snacks, and satisfying meals cooked fresh to order.',
     },
     {
       icon: Coffee,
-      title: 'Cozy Atmosphere',
-      desc: 'A relaxed space to eat, chat and unwind.',
+      title: 'Premium Coffee & Brews',
+      desc: 'Freshly brewed aromatic coffee, teas, and soothing hot drinks crafted for every mood.',
     },
     {
-      icon: MessageCircle,
-      title: 'Easy Ordering',
-      desc: 'Order your favorites directly through WhatsApp.',
+      icon: Sparkles,
+      title: 'Shakes & Mocktails',
+      desc: 'Thick indulgence shakes, chilled mocktails, and handcrafted beverages for every craving.',
+    },
+    {
+      icon: Heart,
+      title: 'Friendly & Cozy Ambience',
+      desc: 'A spotlessly clean, relaxed, and welcoming environment for friends, family, and remote work.',
     },
   ];
 
   return (
     <section
       id="about"
-      className="py-8 sm:py-10 lg:py-12 bg-[#FDF6EE] border-t border-[#EEDDCC] relative overflow-hidden scroll-mt-16 sm:scroll-mt-20"
+      className="py-8 sm:py-10 lg:py-12 bg-[#FDF6EE] border-t border-[#EEDDCC] relative overflow-hidden scroll-mt-16"
       aria-label="About Tryit Cafe & Kitchen"
     >
       {/* Subtle brand ambient accents */}
@@ -103,17 +107,17 @@ export const AboutCafeSection: React.FC = () => {
           {/* Eyebrow */}
           <div className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#FE8E2A] mb-2 px-3 py-1 rounded-full bg-[#FE8E2A]/10 border border-[#FE8E2A]/20">
             <Sparkles size={13} className="text-[#FE8E2A]" />
-            <span>ABOUT TRYIT CAFE</span>
+            <span>ABOUT TRYIT CAFE & KITCHEN</span>
           </div>
 
           {/* Heading */}
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#2B1408] font-serif tracking-tight leading-tight">
-            More Than Just Good Food
+            Fresh Food, Great Coffee &amp; Memorable Moments
           </h2>
 
           {/* Supporting Copy */}
           <p className="text-xs sm:text-sm lg:text-base text-[#7A5C4A] mt-1.5 max-w-xl mx-auto leading-relaxed">
-            A cozy neighborhood spot for good food, relaxed conversations, and moments worth coming back for.
+            A warm neighborhood gathering spot in Gandi Maisamma where great taste, quality beverages, and genuine hospitality meet.
           </p>
         </motion.div>
 
@@ -136,7 +140,7 @@ export const AboutCafeSection: React.FC = () => {
                 className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out will-change-transform"
               />
 
-              {/* Subtle Location Tag Pill with hover lift */}
+              {/* Location Tag Pill */}
               <div className="absolute bottom-3.5 left-3.5 bg-[#2B1408]/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 text-white flex items-center gap-1.5 shadow-sm group-hover:-translate-y-1 group-hover:shadow-md transition-all duration-300">
                 <Coffee size={13} className="text-[#FE8E2A]" />
                 <span className="text-[11px] font-semibold">Gandi Maisamma, Hyderabad</span>
@@ -154,22 +158,30 @@ export const AboutCafeSection: React.FC = () => {
           >
             <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#FE8E2A]">
               <Coffee size={14} />
-              <span>A PLACE FOR MOMENTS</span>
+              <span>WHERE GOOD TIMES HAPPEN</span>
             </div>
 
             <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#2B1408] font-serif leading-tight">
-              A Cozy Place to Slow Down
+              A Warm Space Designed for Everyone
             </h3>
 
             <p className="text-xs sm:text-sm lg:text-base text-[#7A5C4A] leading-relaxed">
-              From quick bites between classes to relaxed evenings with friends, Tryit Cafe & Kitchen is a place to enjoy freshly prepared food in a warm, easy-going atmosphere.
+              At Tryit Cafe &amp; Kitchen, we serve freshly brewed coffee, refreshing beverages, delicious fast food, crunchy snacks, thick shakes, and wholesome meals in a clean, comfortable, and friendly atmosphere.
             </p>
 
             <p className="text-xs sm:text-sm text-[#7A5C4A] leading-relaxed">
-              Whether you're stopping by for a comforting sandwich, signature cold shake, or sitting down for dinner, every dish is crafted with fresh ingredients and real care.
+              Whether you are meeting friends, spending time with family, working on projects, or simply looking for a relaxing place to enjoy good food and great coffee, we are here to make every visit memorable.
             </p>
 
-            <div className="pt-2">
+            {/* Motto Badge */}
+            <div className="p-3 rounded-xl bg-[#FFFBF7] border border-[#EEDDCC] inline-flex items-center gap-2 shadow-2xs">
+              <span className="w-2 h-2 rounded-full bg-[#FE8E2A]" />
+              <span className="text-xs font-extrabold text-[#2B1408] tracking-wide">
+                &ldquo;Try It Once. Come Back Again!&rdquo;
+              </span>
+            </div>
+
+            <div className="pt-1">
               <button
                 onClick={handleScrollToLocation}
                 className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#FE8E2A] hover:text-[#E67616] transition-colors cursor-pointer group"
@@ -182,7 +194,7 @@ export const AboutCafeSection: React.FC = () => {
         </div>
 
         {/* ========================================================== */}
-        {/* 3. WHY PEOPLE CHOOSE TRYIT (3 Compact Highlights)          */}
+        {/* 3. WHY PEOPLE CHOOSE TRYIT (4 Highlights Grid)            */}
         {/* ========================================================== */}
         <div className="mb-8 sm:mb-10">
           <div className="text-center mb-4 sm:mb-5">
@@ -191,13 +203,13 @@ export const AboutCafeSection: React.FC = () => {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 sm:gap-4 lg:gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
             {highlights.map((item, idx) => {
               const Icon = item.icon;
               return (
                 <RevealCard
                   key={idx}
-                  delay={idx * 0.09}
+                  delay={idx * 0.08}
                   yOffset={25}
                   scaleInitial={0.97}
                   enableHover={false}
@@ -205,12 +217,12 @@ export const AboutCafeSection: React.FC = () => {
                 >
                   <motion.div
                     whileHover={shouldReduceMotion ? undefined : { y: -4, scale: 1.015 }}
-                    className="p-4 sm:p-5 rounded-2xl bg-[#FFFBF7] border border-[#EEDDCC] shadow-xs hover:shadow-md hover:border-[#FE8E2A]/40 transition-all duration-300 flex items-start gap-3.5 h-full cursor-default"
+                    className="p-4 sm:p-5 rounded-2xl bg-[#FFFBF7] border border-[#EEDDCC] shadow-xs hover:shadow-md hover:border-[#FE8E2A]/40 transition-all duration-300 flex flex-col justify-between h-full cursor-default"
                   >
-                    <div className="w-10 h-10 rounded-xl bg-[#FDF6EE] border border-[#EEDDCC] text-[#FE8E2A] flex items-center justify-center shrink-0">
-                      <Icon size={18} />
-                    </div>
                     <div>
+                      <div className="w-10 h-10 rounded-xl bg-[#FDF6EE] border border-[#EEDDCC] text-[#FE8E2A] flex items-center justify-center shrink-0 mb-3">
+                        <Icon size={18} />
+                      </div>
                       <h4 className="text-sm sm:text-base font-bold text-[#2B1408] font-display">
                         {item.title}
                       </h4>
@@ -242,10 +254,10 @@ export const AboutCafeSection: React.FC = () => {
                 ALWAYS WELCOMING
               </span>
               <h4 className="text-xl sm:text-3xl font-extrabold text-[#2B1408] font-display leading-tight">
-                Come for the Food. Stay for the Vibe.
+                Try It Once. Come Back Again!
               </h4>
               <p className="text-xs sm:text-sm text-[#7A5C4A] leading-relaxed max-w-lg">
-                Whether you're grabbing a quick bite or spending time with friends, Tryit is made for relaxed moments, good conversations, and food you'll want to try again.
+                Visit us today in Gandi Maisamma and experience great taste, quality, and warm hospitality. Whether for morning brews, lunch combos, or evening hangout sessions, every visit is made special.
               </p>
             </div>
 
