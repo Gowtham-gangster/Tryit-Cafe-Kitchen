@@ -88,6 +88,11 @@ public class EnvironmentConfigValidator implements ApplicationRunner {
                 throw new IllegalStateException("CRITICAL CONFIGURATION ERROR: Missing required environment variable 'CLOUDINARY_API_SECRET' in production.");
             }
 
+            String sampleData = environment.getProperty("app.seed.sample-data");
+            if ("true".equalsIgnoreCase(sampleData)) {
+                throw new IllegalStateException("CRITICAL CONFIGURATION ERROR: 'APP_SEED_SAMPLE_DATA' cannot be true in production profile.");
+            }
+
             log.info("Production configuration validation passed: All critical infrastructure environment variables are properly configured.");
         } else {
             log.info("Development configuration active. Local dev profiles initialized.");

@@ -31,6 +31,7 @@ public class DataSeeder implements CommandLineRunner {
     private final BusinessSettingsRepository businessSettingsRepository;
     private final BusinessHoursRepository businessHoursRepository;
     private final PasswordEncoder passwordEncoder;
+    private final org.springframework.core.env.Environment environment;
 
     @Value("${app.seed.enabled:true}")
     private boolean seedEnabled;
@@ -65,7 +66,8 @@ public class DataSeeder implements CommandLineRunner {
             ReviewRepository reviewRepository,
             BusinessSettingsRepository businessSettingsRepository,
             BusinessHoursRepository businessHoursRepository,
-            PasswordEncoder passwordEncoder
+            PasswordEncoder passwordEncoder,
+            org.springframework.core.env.Environment environment
     ) {
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
@@ -76,72 +78,63 @@ public class DataSeeder implements CommandLineRunner {
         this.businessSettingsRepository = businessSettingsRepository;
         this.businessHoursRepository = businessHoursRepository;
         this.passwordEncoder = passwordEncoder;
+        this.environment = environment;
     }
 
     @Override
     @Transactional
     public void run(String... args) {
+        boolean isProd = Arrays.asList(environment.getActiveProfiles()).contains("prod");
+
+        if (isProd && seedSampleData) {
+            throw new IllegalStateException("CRITICAL PRODUCTION SECURITY ERROR: Sample data seeding (app.seed.sample-data=true) is strictly forbidden in production profile!");
+        }
+
         if (!seedEnabled) {
             log.info("Initial data seeding disabled by configuration.");
             return;
         }
-        seedAccounts();
+
+        seedAccounts(isProd);
         seedBusinessSettings();
-        if (seedSampleData) {
+        if (seedSampleData && !isProd) {
             seedMenuAndCategories();
             seedOffers();
             seedGallery();
             seedReviews();
             log.info("TryIt Cafe sample/dummy data seeding completed.");
         } else {
-            log.info("TryIt Cafe clean state: Accounts & Business Settings initialized without sample/dummy data.");
+            log.info("TryIt Cafe clean state: Accounts & Business Settings verified without sample/dummy data.");
         }
     }
 
-    private void seedAccounts() {
-        // Seed or Update Owner Account when configured
+    private void seedAccounts(boolean isProd) {
+        // Seed Owner Account when configured AND no owner currently exists
         if (defaultOwnerPhone != null && !defaultOwnerPhone.isBlank() && defaultOwnerPassword != null && !defaultOwnerPassword.isBlank()) {
-            List<User> existingOwners = userRepository.findAll().stream()
-                    .filter(u -> u.getRole() == UserRole.ROLE_OWNER)
-                    .toList();
-            for (User oldOwner : existingOwners) {
-                if (!defaultOwnerPhone.equals(oldOwner.getPhone())) {
-                    log.info("Removing obsolete owner account with phone: {}", oldOwner.getPhone());
-                    userRepository.delete(oldOwner);
-                }
-            }
-
-            Optional<User> ownerOpt = userRepository.findByPhone(defaultOwnerPhone);
-            if (ownerOpt.isEmpty()) {
+            if (userRepository.countByRole(UserRole.ROLE_OWNER) == 0) {
                 User owner = User.builder()
-                        .phone(defaultOwnerPhone)
+                        .phone(defaultOwnerPhone.trim())
                         .fullName("TryIt Cafe Owner")
                         .email("tryit.cafekichen@gmail.com")
-                        .passwordHash(passwordEncoder.encode(defaultOwnerPassword))
+                        .passwordHash(passwordEncoder.encode(defaultOwnerPassword.trim()))
                         .role(UserRole.ROLE_OWNER)
                         .active(true)
                         .build();
                 userRepository.save(owner);
-                log.info("Owner account provisioned from environment configuration with phone: {}", defaultOwnerPhone);
+                log.info("Owner account provisioned from environment configuration for phone: {}", defaultOwnerPhone);
             } else {
-                User owner = ownerOpt.get();
-                owner.setRole(UserRole.ROLE_OWNER);
-                owner.setEmail("tryit.cafekichen@gmail.com");
-                owner.setPasswordHash(passwordEncoder.encode(defaultOwnerPassword));
-                owner.setActive(true);
-                userRepository.save(owner);
-                log.info("Owner account credentials updated for phone: {}", defaultOwnerPhone);
+                log.info("Owner account already provisioned in database. Preserving existing owner credentials.");
             }
         }
 
-        // Seed Customer Test Account when configured (dev profile only)
-        if (defaultCustomerPhone != null && !defaultCustomerPhone.isBlank() && defaultCustomerPassword != null && !defaultCustomerPassword.isBlank()) {
-            if (userRepository.findByPhone(defaultCustomerPhone).isEmpty()) {
+        // Seed Customer Test Account ONLY in development profile
+        if (!isProd && defaultCustomerPhone != null && !defaultCustomerPhone.isBlank() && defaultCustomerPassword != null && !defaultCustomerPassword.isBlank()) {
+            if (userRepository.findByPhone(defaultCustomerPhone.trim()).isEmpty()) {
                 User customer = User.builder()
-                        .phone(defaultCustomerPhone)
+                        .phone(defaultCustomerPhone.trim())
                         .fullName("Demo Customer")
                         .email("customer@tryitcafe.com")
-                        .passwordHash(passwordEncoder.encode(defaultCustomerPassword))
+                        .passwordHash(passwordEncoder.encode(defaultCustomerPassword.trim()))
                         .role(UserRole.ROLE_CUSTOMER)
                         .active(true)
                         .build();
