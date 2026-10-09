@@ -30,7 +30,14 @@ public class CorsConfig {
         }
 
         log.info("Configuring CORS with explicit allowed origins: {}", origins);
-        configuration.setAllowedOrigins(origins);
+        configuration.addAllowedOriginPattern("https://*.vercel.app");
+        configuration.addAllowedOriginPattern("http://localhost:*");
+        configuration.addAllowedOriginPattern("http://127.0.0.1:*");
+        origins.forEach(origin -> {
+            if (!origin.contains("*")) {
+                configuration.addAllowedOriginPattern(origin);
+            }
+        });
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList(
                 "Authorization",
