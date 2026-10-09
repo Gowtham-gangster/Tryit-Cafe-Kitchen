@@ -149,9 +149,9 @@ export const MenuSection: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.45, ease: 'easeOut', delay: 0.08 }}
-            className="text-[28px] min-[390px]:text-[32px] sm:text-4xl font-extrabold text-[#2B1408] font-serif tracking-tight leading-tight"
+            className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#2B1408] font-serif tracking-tight leading-tight"
           >
-            Explore Our Digital Menu
+            Explore Our Cafe Menu
           </motion.h2>
 
           <motion.p
@@ -159,7 +159,7 @@ export const MenuSection: React.FC = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.45, ease: 'easeOut', delay: 0.16 }}
-            className="text-xs min-[390px]:text-sm text-[#7A5C4A] mt-1 font-medium leading-relaxed"
+            className="text-xs sm:text-sm lg:text-base text-[#7A5C4A] mt-1.5 font-medium leading-relaxed"
           >
             Freshly prepared favorites, made for every craving.
           </motion.p>

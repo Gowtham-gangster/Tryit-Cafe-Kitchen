@@ -190,32 +190,30 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProfile }) => {
           : 'bg-[#FFFBF7]/90 backdrop-blur-sm border-b border-[#EEDDCC]/70'
         }`}
     >
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
-        {/* Left: Brand Logo & Title (Flexible, responsive typography to fit full name cleanly) */}
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between gap-2 sm:gap-4">
+        {/* Left: Brand Logo & Title (Dedicated shrink-0 zone to guarantee zero collision) */}
         <motion.button
           type="button"
-          whileHover={{ scale: 1.02, y: -1 }}
+          whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => scrollTo('home')}
-          className="flex items-center gap-1.5 min-[375px]:gap-2 sm:gap-3 group text-left cursor-pointer flex-1 min-w-0 py-1"
+          className="flex items-center gap-2 sm:gap-2.5 group text-left cursor-pointer shrink-0 py-1 select-none"
           aria-label={`${cafeName} Home`}
         >
-          <div className="w-8 h-8 min-[375px]:w-9 min-[375px]:h-9 sm:w-11 sm:h-11 rounded-2xl bg-white p-1 shadow-xs border border-[#EEDDCC] flex items-center justify-center shrink-0 group-hover:shadow-md group-hover:border-[#FE8E2A]/50 transition-all">
+          <div className="w-8 h-8 sm:w-9 sm:h-9 xl:w-10 xl:h-10 rounded-xl bg-white p-1 shadow-2xs border border-[#EEDDCC] flex items-center justify-center shrink-0 group-hover:border-[#FE8E2A]/50 transition-colors">
             <img
               src="/assets/Logo.jpeg"
               alt={cafeName}
-              className="w-full h-full object-contain rounded-xl"
+              className="w-full h-full object-contain rounded-lg"
             />
           </div>
-          <div className="min-w-0 flex-1">
-            <span className="font-serif font-extrabold text-[13.5px] min-[360px]:text-[14.5px] min-[375px]:text-[15.5px] min-[390px]:text-base sm:text-lg xl:text-xl text-[#2B1408] tracking-tight block leading-tight whitespace-nowrap">
-              {cafeName}
-            </span>
-          </div>
+          <span className="font-serif font-bold text-[14px] min-[360px]:text-[15px] sm:text-base lg:text-[15px] xl:text-lg 2xl:text-xl text-[#2B1408] tracking-tight whitespace-nowrap">
+            {cafeName}
+          </span>
         </motion.button>
 
-        {/* Center: Desktop Navigation Links with responsive typography & active indicator */}
-        <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 2xl:gap-2">
+        {/* Center: Desktop Navigation Links with responsive font scaling & zero clipping */}
+        <nav className="hidden lg:flex items-center justify-center flex-1 mx-1 xl:mx-3 gap-0.5 xl:gap-1 2xl:gap-1.5 min-w-0">
           {navItems.map((item) => {
             const isActive = activeSection === item.id;
             return (
@@ -226,16 +224,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProfile }) => {
                 whileTap={{ scale: 0.98 }}
                 onClick={() => scrollTo(item.id)}
                 aria-current={isActive ? 'page' : undefined}
-                className={`relative px-3 py-1.5 xl:px-3.5 xl:py-2 rounded-xl text-[14.5px] xl:text-[15.5px] font-semibold transition-all duration-200 cursor-pointer select-none ${isActive
-                    ? 'text-[#E67616] bg-[#FFF0DF] font-bold shadow-xs'
-                    : 'text-[#2B1408] hover:text-[#E67616] hover:bg-[#FFF0DF]/70'
-                  }`}
+                className={`relative px-2 py-1 xl:px-2.5 xl:py-1.5 2xl:px-3 rounded-lg text-[13px] xl:text-[14px] 2xl:text-[14.5px] font-semibold transition-all duration-200 cursor-pointer select-none whitespace-nowrap ${
+                  isActive
+                    ? 'text-[#FE8E2A] bg-[#FFF0DF] font-bold shadow-2xs'
+                    : 'text-[#2B1408] hover:text-[#FE8E2A] hover:bg-[#FFF0DF]/70'
+                }`}
               >
                 <span>{item.label}</span>
                 {isActive && (
                   <motion.div
                     layoutId="activeNavIndicator"
-                    className="absolute bottom-0.5 left-2.5 right-2.5 h-[2.5px] bg-[#FE8E2A] rounded-full shadow-xs"
+                    className="absolute bottom-0 left-2 right-2 h-[2px] bg-[#FE8E2A] rounded-full"
                     transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                   />
                 )}
@@ -245,17 +244,17 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProfile }) => {
         </nav>
 
         {/* Right: Actions (Cart & Profile on desktop only; Hamburger menu on mobile) */}
-        <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
           {/* Cart Button (Desktop only - mobile uses bottom navigation) */}
           <motion.button
             type="button"
             whileHover={{ y: -1, scale: 1.02 }}
             whileTap={{ scale: 0.96 }}
             onClick={() => setIsCartOpen(true)}
-            className="hidden lg:flex relative px-4 py-2.5 rounded-2xl bg-[#FFF0DF] hover:bg-[#FFE4CC] text-[#2B1408] font-bold items-center justify-center gap-2 transition-all border border-[#EEDDCC] shadow-2xs min-h-[44px] min-w-[44px] cursor-pointer"
+            className="hidden lg:flex relative px-3 xl:px-3.5 py-1.5 xl:py-2 rounded-xl bg-[#FFF0DF] hover:bg-[#FFE4CC] text-[#2B1408] font-bold items-center justify-center gap-2 transition-all border border-[#EEDDCC] shadow-2xs h-9 sm:h-10 cursor-pointer"
             aria-label={`View Cart${totalCartCount > 0 ? `: ${totalCartCount} items` : ''}`}
           >
-            <ShoppingBag size={18} className="text-[#FE8E2A] shrink-0" />
+            <ShoppingBag size={17} className="text-[#FE8E2A] shrink-0" />
             <span className="text-xs uppercase tracking-wider font-extrabold text-[#2B1408]">Cart</span>
             {totalCartCount > 0 && (
               <motion.span
@@ -272,36 +271,35 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProfile }) => {
 
           {/* Customer Auth Button (Desktop only - mobile uses bottom navigation) */}
           {isCustomer ? (
-            <div className="hidden lg:flex items-center gap-1 sm:gap-2">
+            <div className="hidden lg:flex items-center gap-1.5">
               <motion.button
                 type="button"
                 whileHover={{ y: -1, scale: 1.02 }}
                 whileTap={{ scale: 0.96 }}
                 onClick={handleProfileClick}
-                className="flex items-center gap-2 px-3 py-2 rounded-2xl hover:bg-[#FDF6EE] text-left transition cursor-pointer border border-transparent hover:border-[#EEDDCC] min-h-[44px] min-w-[44px]"
+                className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-[#FDF6EE] text-left transition cursor-pointer border border-[#EEDDCC] bg-white h-9 sm:h-10"
                 aria-label="Open Profile"
               >
-                <div className="w-8 h-8 rounded-xl bg-[#FFF0DF] border border-[#FE8E2A]/30 text-[#2B1408] font-bold text-xs flex items-center justify-center shrink-0">
-                  <UserIcon size={16} className="text-[#FE8E2A]" />
+                <div className="w-6 h-6 rounded-lg bg-[#FFF0DF] border border-[#FE8E2A]/30 text-[#2B1408] font-bold text-xs flex items-center justify-center shrink-0">
+                  <UserIcon size={14} className="text-[#FE8E2A]" />
                 </div>
                 <div className="flex flex-col items-start min-w-0">
-                  <span className="text-xs font-bold text-[#2B1408] leading-tight truncate max-w-[120px]">
+                  <span className="text-xs font-bold text-[#2B1408] leading-tight truncate max-w-[100px]">
                     {user?.fullName}
                   </span>
-                  <span className="text-[10px] text-[#7A5C4A] font-medium">Customer</span>
                 </div>
               </motion.button>
 
               <motion.button
                 type="button"
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.92 }}
+                whileHover={{ scale: 1.06 }}
+                whileTap={{ scale: 0.94 }}
                 onClick={logout}
                 title="Sign Out"
-                className="p-2.5 rounded-xl text-stone-400 hover:text-red-600 hover:bg-red-50 transition min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer"
+                className="p-2 rounded-xl text-stone-400 hover:text-rose-600 hover:bg-rose-50 transition h-9 w-9 flex items-center justify-center cursor-pointer border border-[#EEDDCC]/60"
                 aria-label="Log out"
               >
-                <LogOut size={17} />
+                <LogOut size={16} />
               </motion.button>
             </div>
           ) : (
@@ -310,10 +308,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProfile }) => {
               whileHover={{ y: -1, scale: 1.02 }}
               whileTap={{ scale: 0.96 }}
               onClick={() => openAuthModal('login')}
-              className="hidden lg:flex px-4 py-2.5 rounded-2xl bg-[#2B1408] hover:bg-[#4A2B18] text-white text-xs font-bold items-center justify-center gap-1.5 transition-all shadow-xs min-h-[44px] min-w-[44px] cursor-pointer"
+              className="hidden lg:flex px-3.5 xl:px-4 py-1.5 xl:py-2 rounded-xl bg-[#2B1408] hover:bg-[#4A2B18] text-white text-xs font-bold items-center justify-center gap-1.5 transition-all shadow-2xs h-9 sm:h-10 cursor-pointer"
               aria-label="Sign In"
             >
-              <UserIcon size={16} className="text-[#FE8E2A] shrink-0" />
+              <UserIcon size={15} className="text-[#FE8E2A] shrink-0" />
               <span>Sign In</span>
             </motion.button>
           )}
@@ -322,10 +320,10 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProfile }) => {
           <button
             type="button"
             onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-            className="lg:hidden p-2.5 rounded-2xl text-[#2B1408] hover:bg-[#FDF6EE] transition min-h-[44px] min-w-[44px] flex items-center justify-center cursor-pointer border border-transparent hover:border-[#EEDDCC] shrink-0"
+            className="lg:hidden p-2 rounded-xl text-[#2B1408] hover:bg-[#FDF6EE] transition h-9 w-9 flex items-center justify-center cursor-pointer border border-[#EEDDCC] shrink-0"
             aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
           >
-            {isMobileMenuOpen ? <X size={20} /> : <MenuIcon size={20} />}
+            {isMobileMenuOpen ? <X size={19} /> : <MenuIcon size={19} />}
           </button>
         </div>
       </div>

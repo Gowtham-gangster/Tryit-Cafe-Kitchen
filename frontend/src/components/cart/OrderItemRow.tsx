@@ -34,7 +34,14 @@ export const FoodThumbnail: React.FC<FoodThumbnailProps> = ({
 }) => {
   const [hasError, setHasError] = useState(false);
 
-  const cleanSrc = src && src.trim().length > 0 ? src.trim() : null;
+  const cleanSrc =
+    src &&
+    src.trim().length > 0 &&
+    src.trim() !== '/Hero.jpg' &&
+    src.trim() !== 'Hero.jpg' &&
+    src.trim() !== '/assets/Hero.jpg'
+      ? src.trim()
+      : null;
 
   return (
     <div

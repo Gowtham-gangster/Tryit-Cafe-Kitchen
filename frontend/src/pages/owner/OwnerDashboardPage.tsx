@@ -13,8 +13,7 @@ import { OnlineOrderingControl } from '../../components/owner/OnlineOrderingCont
 import { Link } from 'react-router-dom';
 import { getOptimizedImageUrl } from '../../utils/imageUrl';
 import { useMenuStore } from '../../store/useMenuStore';
-
-const FALLBACK_DISH_IMAGE = '/Hero.jpg';
+import { FoodImage } from '../../components/common/FoodImage';
 
 export const OwnerDashboardPage: React.FC = () => {
   const [summary, setSummary] = useState<DashboardSummary | null>(null);
@@ -179,14 +178,10 @@ export const OwnerDashboardPage: React.FC = () => {
                 <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
                   {/* Dish Thumbnail */}
                   <div className="w-12 h-12 min-[380px]:w-14 min-[380px]:h-14 sm:w-14 sm:h-14 rounded-xl overflow-hidden bg-[#F5E6D3] shrink-0 border border-[#EEDDCC]/80 shadow-2xs relative">
-                    <img
-                      src={getOptimizedImageUrl(dish.imageUrl, 'ownerThumbnail') || FALLBACK_DISH_IMAGE}
+                    <FoodImage
+                      src={getOptimizedImageUrl(dish.imageUrl, 'ownerThumbnail')}
                       alt={dish.name}
-                      loading="lazy"
-                      decoding="async"
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).src = FALLBACK_DISH_IMAGE;
-                      }}
+                      foodType={dish.foodType}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>

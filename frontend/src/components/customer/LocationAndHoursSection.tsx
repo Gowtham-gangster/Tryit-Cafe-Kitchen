@@ -203,12 +203,12 @@ export const LocationAndHoursSection: React.FC = () => {
           </div>
 
           {/* Heading */}
-          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-[#2B1408] font-display tracking-tight">
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#2B1408] font-serif tracking-tight">
             Come Visit Tryit
           </h2>
 
           {/* Supporting Text */}
-          <p className="text-xs sm:text-sm lg:text-base text-[#7A5C4A] mt-2.5 max-w-xl mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm lg:text-base text-[#7A5C4A] mt-2 max-w-xl mx-auto leading-relaxed">
             Good food is better when shared. Drop by Tryit Cafe &amp; Kitchen or find us easily on the map.
           </p>
         </motion.div>
@@ -223,17 +223,17 @@ export const LocationAndHoursSection: React.FC = () => {
               <div className="p-5 sm:p-6 rounded-2xl sm:rounded-3xl bg-[#FFFBF7] border border-[#EEDDCC] shadow-sm flex flex-col justify-between h-full space-y-5">
               {/* Address Header */}
               <div>
-                <div className="inline-flex items-center gap-2 text-xs font-extrabold uppercase tracking-widest text-[#FE8E2A] mb-4">
+                <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#FE8E2A] mb-3">
                   <MapPin size={15} />
                   <span>LOCATION</span>
                 </div>
 
                 {/* Structured Address */}
-                <div className="space-y-1.5">
-                  <h3 className="text-xl sm:text-2xl font-black text-[#2B1408] font-display leading-tight">
-                    {cafeName.toUpperCase()}
+                <div className="space-y-1">
+                  <h3 className="text-xl sm:text-2xl font-bold text-[#2B1408] font-serif leading-tight">
+                    {cafeName}
                   </h3>
-                  <p className="text-sm sm:text-base font-bold text-[#FE8E2A]">
+                  <p className="text-sm sm:text-base font-semibold text-[#FE8E2A]">
                     Gandi Maisamma
                   </p>
                   <p className="text-xs sm:text-sm text-[#7A5C4A] leading-relaxed pt-1">
@@ -375,9 +375,9 @@ export const LocationAndHoursSection: React.FC = () => {
               </div>
               <h3
                 id="opening-hours-title-mobile"
-                className="text-[20px] font-extrabold uppercase tracking-wide text-[#FE8E2A] font-display"
+                className="text-lg font-bold uppercase tracking-wide text-[#FE8E2A] font-serif"
               >
-                OPENING HOURS
+                Opening Hours
               </h3>
             </div>
 
@@ -525,13 +525,13 @@ export const LocationAndHoursSection: React.FC = () => {
                 <div>
                   <span
                     id="opening-hours-title-desktop"
-                    className="text-[11px] font-extrabold uppercase tracking-widest text-[#FE8E2A] block"
+                    className="text-[11px] font-bold uppercase tracking-wider text-[#FE8E2A] block"
                   >
-                    OPENING HOURS
+                    Opening Hours
                   </span>
-                  <h4 className="text-base sm:text-lg font-bold text-[#2B1408] font-display flex items-center gap-2">
+                  <h4 className="text-base sm:text-lg font-bold text-[#2B1408] font-serif flex items-center gap-2">
                     <span>Open Today:</span>
-                    <span className="text-[#FE8E2A] font-extrabold">
+                    <span className="text-[#FE8E2A] font-bold">
                       {todayHoursText}
                     </span>
                   </h4>

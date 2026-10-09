@@ -92,45 +92,42 @@ export const AboutCafeSection: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
         {/* ========================================================== */}
-        {/* 1. SECTION HEADER                                          */}
-        {/* ========================================================== */}
+        {/* 1. SECTION HEADER */}
         <motion.div
-          initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 16 }}
+          initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.5, ease: 'easeOut' }}
+          transition={{ duration: 0.45, ease: 'easeOut' }}
           className="text-center max-w-2xl mx-auto mb-6 sm:mb-8"
         >
           {/* Eyebrow */}
-          <div className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-extrabold uppercase tracking-widest text-[#FE8E2A] mb-2 px-3 py-1 rounded-full bg-[#FE8E2A]/10 border border-[#FE8E2A]/20">
+          <div className="inline-flex items-center gap-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#FE8E2A] mb-2 px-3 py-1 rounded-full bg-[#FE8E2A]/10 border border-[#FE8E2A]/20">
             <Sparkles size={13} className="text-[#FE8E2A]" />
             <span>ABOUT TRYIT CAFE</span>
           </div>
 
           {/* Heading */}
-          <h2 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-[#2B1408] font-display tracking-tight">
-            More Than Just Good Food.
+          <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#2B1408] font-serif tracking-tight leading-tight">
+            More Than Just Good Food
           </h2>
 
           {/* Supporting Copy */}
-          <p className="text-xs sm:text-sm lg:text-base text-[#7A5C4A] mt-2.5 max-w-xl mx-auto leading-relaxed">
+          <p className="text-xs sm:text-sm lg:text-base text-[#7A5C4A] mt-1.5 max-w-xl mx-auto leading-relaxed">
             A cozy neighborhood spot for good food, relaxed conversations, and moments worth coming back for.
           </p>
         </motion.div>
 
-        {/* ========================================================== */}
-        {/* 2. HERO STORY BLOCK (Two-Column Layout)                    */}
-        {/* ========================================================== */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center mb-8 sm:mb-10">
-          {/* Left: Premium Cafe Image (~48% width on desktop) */}
+        {/* 2. HERO STORY BLOCK (Two-Column Layout) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-center mb-6 sm:mb-8">
+          {/* Left: Premium Cafe Image */}
           <motion.div
-            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.97 }}
+            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, scale: 0.98 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, ease: 'easeOut' }}
+            transition={{ duration: 0.45, ease: 'easeOut' }}
             className="lg:col-span-6 relative"
           >
-            <div className="relative rounded-3xl overflow-hidden aspect-[4/3] sm:aspect-[16/11] bg-stone-200 border border-[#EEDDCC] shadow-sm group">
+            <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden aspect-[4/3] sm:aspect-[16/11] bg-stone-200 border border-[#EEDDCC] shadow-2xs group">
               <img
                 src={HERO_IMAGE_SRC}
                 alt={`${cafeName} Ambience`}
@@ -139,28 +136,28 @@ export const AboutCafeSection: React.FC = () => {
                 className="w-full h-full object-cover object-center group-hover:scale-102 transition-transform duration-500 will-change-transform"
               />
 
-              {/* Subtle Location Tag Pill with desktop hover lift */}
-              <div className="absolute bottom-4 left-4 bg-[#2B1408]/85 backdrop-blur-md px-3.5 py-1.5 rounded-full border border-white/20 text-white flex items-center gap-1.5 shadow-md group-hover:-translate-y-1 group-hover:shadow-lg transition-all duration-300">
+              {/* Subtle Location Tag Pill */}
+              <div className="absolute bottom-3.5 left-3.5 bg-[#2B1408]/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 text-white flex items-center gap-1.5 shadow-sm">
                 <Coffee size={13} className="text-[#FE8E2A]" />
-                <span className="text-[11px] font-bold">Gandi Maisamma, Hyderabad</span>
+                <span className="text-[11px] font-semibold">Gandi Maisamma, Hyderabad</span>
               </div>
             </div>
           </motion.div>
 
-          {/* Right: Brand Story (~52% width on desktop) */}
+          {/* Right: Brand Story */}
           <motion.div
-            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 16 }}
+            initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
-            className="lg:col-span-6 space-y-4 sm:space-y-5"
+            transition={{ duration: 0.45, delay: 0.08, ease: 'easeOut' }}
+            className="lg:col-span-6 space-y-3.5 sm:space-y-4"
           >
-            <div className="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-[#FE8E2A]">
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#FE8E2A]">
               <Coffee size={14} />
               <span>A PLACE FOR MOMENTS</span>
             </div>
 
-            <h3 className="text-xl sm:text-3xl font-extrabold text-[#2B1408] font-display leading-tight">
+            <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold text-[#2B1408] font-serif leading-tight">
               A Cozy Place to Slow Down
             </h3>
 

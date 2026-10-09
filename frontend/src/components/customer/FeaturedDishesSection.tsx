@@ -105,7 +105,7 @@ export const FeaturedDishesSection: React.FC = () => {
             <span>Customer Favorites</span>
           </motion.div>
 
-          {/* Heading: 100ms delay, translateY 12px -> 0, opacity 0 -> 1, 32-36px mobile */}
+          {/* Heading */}
           <motion.h2
             initial={
               shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 12 }
@@ -115,14 +115,14 @@ export const FeaturedDishesSection: React.FC = () => {
             transition={{
               duration: 0.5,
               ease: 'easeOut',
-              delay: shouldReduceMotion ? 0 : 0.1,
+              delay: shouldReduceMotion ? 0 : 0.08,
             }}
-            className="text-[32px] min-[390px]:text-[34px] sm:text-4xl lg:text-5xl font-extrabold font-serif text-[#2B1408] tracking-tight mb-2 sm:mb-2.5 leading-tight"
+            className="text-2xl sm:text-3xl lg:text-4xl font-bold font-serif text-[#2B1408] tracking-tight mb-2 leading-tight"
           >
             Popular at Tryit
           </motion.h2>
 
-          {/* Description: 180ms delay, translateY 10px -> 0, opacity 0 -> 1, 15-16px */}
+          {/* Description */}
           <motion.p
             initial={
               shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 10 }
@@ -132,9 +132,9 @@ export const FeaturedDishesSection: React.FC = () => {
             transition={{
               duration: 0.5,
               ease: 'easeOut',
-              delay: shouldReduceMotion ? 0 : 0.18,
+              delay: shouldReduceMotion ? 0 : 0.16,
             }}
-            className="text-[15px] sm:text-base text-[#7A5C4A] max-w-md mx-auto leading-relaxed"
+            className="text-xs sm:text-sm lg:text-base text-[#7A5C4A] max-w-md mx-auto leading-relaxed"
           >
             Handpicked favorites our customers keep coming back for.
           </motion.p>

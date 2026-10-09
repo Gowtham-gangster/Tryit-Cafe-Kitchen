@@ -20,6 +20,7 @@ import { ConfirmDialog } from '../../components/ui/ConfirmDialog';
 import { useToastStore } from '../../store/useToastStore';
 import { useMenuStore } from '../../store/useMenuStore';
 import { getOptimizedImageUrl } from '../../utils/imageUrl';
+import { FoodImage } from '../../components/common/FoodImage';
 
 export const OwnerMenuPage: React.FC = () => {
   const [dishes, setDishes] = useState<MenuItem[]>([]);
@@ -379,14 +380,10 @@ export const OwnerMenuPage: React.FC = () => {
                     {index + 1}
                   </span>
                   <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg overflow-hidden bg-white shrink-0">
-                    <img
-                      src={
-                        getOptimizedImageUrl(dish.imageUrl, 'ownerThumbnail') ||
-                        '/Hero.jpg'
-                      }
+                    <FoodImage
+                      src={getOptimizedImageUrl(dish.imageUrl, 'ownerThumbnail')}
                       alt={dish.name}
-                      loading="lazy"
-                      decoding="async"
+                      foodType={dish.foodType}
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -546,15 +543,11 @@ export const OwnerMenuPage: React.FC = () => {
                 <div>
                   {/* Compact Food Image (16:10 aspect ratio) */}
                   <div className="relative aspect-[16/10] w-full rounded-xl sm:rounded-2xl overflow-hidden mb-2.5 bg-[#FDF6EE]">
-                    <img
-                      src={
-                        getOptimizedImageUrl(dish.imageUrl, 'menuCard') ||
-                        '/Hero.jpg'
-                      }
+                    <FoodImage
+                      src={getOptimizedImageUrl(dish.imageUrl, 'menuCard')}
                       alt={dish.name}
+                      foodType={dish.foodType}
                       className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-200"
-                      loading="lazy"
-                      decoding="async"
                     />
 
                     {/* Compact Overlay Badges */}

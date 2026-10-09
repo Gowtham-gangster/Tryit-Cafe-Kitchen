@@ -188,7 +188,7 @@ export const ReviewsSection: React.FC = () => {
               <span>CUSTOMER STORIES</span>
             </div>
 
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-[#2B1408] font-serif tracking-tight leading-tight">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#2B1408] font-serif tracking-tight leading-tight">
               What Our Customers Say
             </h2>
 

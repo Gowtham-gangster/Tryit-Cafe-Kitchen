@@ -6,7 +6,7 @@ import { useMenuStore } from '../../store/useMenuStore';
 import { useCartStore } from '../../store/useCartStore';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useSettingsStore } from '../../store/useSettingsStore';
-import { getOptimizedImageUrl } from '../../utils/imageUrl';
+import { FoodImage } from '../common/FoodImage';
 
 export const DishDetailModal: React.FC = () => {
   const { selectedDishModal, setSelectedDishModal, openAuthModal } = useMenuStore();
@@ -43,8 +43,6 @@ export const DishDetailModal: React.FC = () => {
     setSelectedDishModal(null);
   };
 
-  const fallbackImage = '/Hero.jpg';
-
   return (
     <Modal
       isOpen={!!selectedDishModal}
@@ -54,14 +52,11 @@ export const DishDetailModal: React.FC = () => {
     >
       <div className="-mt-6 -mx-6 mb-6">
         <div className="relative aspect-[16/10] w-full overflow-hidden bg-stone-100">
-          <img
-            src={getOptimizedImageUrl(selectedDishModal.imageUrl, 'menuDetail') || fallbackImage}
+          <FoodImage
+            src={selectedDishModal.imageUrl}
             alt={selectedDishModal.name}
-            decoding="async"
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).src = fallbackImage;
-            }}
-            className="w-full h-full object-cover object-center"
+            categoryName={selectedDishModal.categoryName}
+            preset="menuDetail"
           />
 
           <div className="absolute top-4 left-4 right-4 flex items-center justify-between">
