@@ -1015,14 +1015,7 @@ export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
                   </div>
 
                   <div className="flex items-center justify-between text-[#7A5C4A]">
-                    <div>
-                      <span className="block">Delivery Fee</span>
-                      <span className="text-[10px] text-[#7A5C4A]/80">
-                        {effectiveDistance <= freeDist
-                          ? `Free delivery up to ${freeDist} km`
-                          : `${ratePerKm ? `₹${ratePerKm}/km` : '₹5/km'} for full distance`}
-                      </span>
-                    </div>
+                    <span>Delivery Fee</span>
                     <span
                       className={`font-black ${
                         effectiveDeliveryCharge <= 0 ? 'text-emerald-600' : 'text-[#2B1408]'

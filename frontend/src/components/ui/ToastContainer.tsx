@@ -5,6 +5,7 @@ import { useToastStore, ToastItem } from '../../store/useToastStore';
 
 export const ToastContainer: React.FC = () => {
   const { toasts, removeToast } = useToastStore();
+  const visibleToasts = toasts.filter((toast) => toast.type !== 'success');
 
   const getIcon = (type: ToastItem['type']) => {
     switch (type) {
@@ -37,7 +38,7 @@ export const ToastContainer: React.FC = () => {
   return (
     <div className="fixed top-4 left-4 right-4 sm:left-auto sm:right-4 z-50 flex flex-col gap-2.5 max-w-sm pointer-events-none">
       <AnimatePresence>
-        {toasts.map((toast) => (
+        {visibleToasts.map((toast) => (
           <motion.div
             key={toast.id}
             initial={{ opacity: 0, y: -25, scale: 0.9 }}

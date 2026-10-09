@@ -23,6 +23,11 @@ interface ToastState {
 
 export const useToastStore = create<ToastState>((set) => {
   const showToast = (toast: Omit<ToastItem, 'id'>) => {
+    // Suppress all success toasts across mobile and desktop as requested
+    if (toast.type === 'success') {
+      return;
+    }
+
     const id = Math.random().toString(36).substring(2, 9);
     const newToast: ToastItem = { ...toast, id };
     set((state) => ({ toasts: [...state.toasts, newToast] }));
@@ -39,8 +44,9 @@ export const useToastStore = create<ToastState>((set) => {
     addToast: showToast,
     removeToast: (id) =>
       set((state) => ({ toasts: state.toasts.filter((t) => t.id !== id) })),
-    success: (message, title) =>
-      showToast({ type: 'success', message, title }),
+    success: () => {
+      // Intentionally suppressed: top success messages disabled for all actions
+    },
     error: (message, title) =>
       showToast({ type: 'error', message, title }),
     warning: (message, title) =>

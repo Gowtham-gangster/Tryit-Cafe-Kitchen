@@ -6,7 +6,6 @@ import { FoodTypeBadge } from '../common/FoodTypeBadge';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useCartStore } from '../../store/useCartStore';
 import { useMenuStore } from '../../store/useMenuStore';
-import { useToastStore } from '../../store/useToastStore';
 import { useSettingsStore } from '../../store/useSettingsStore';
 import { FoodImage } from '../common/FoodImage';
 
@@ -25,7 +24,6 @@ export const DishCard: React.FC<DishCardProps> = ({
   const { isAuthenticated, openAuthModal } = useAuthStore();
   const { items, addItem, updateQuantity, setPendingAction } = useCartStore();
   const { setSelectedDishModal } = useMenuStore();
-  const { success } = useToastStore();
   const { isOnlineOrderingOpen } = useSettingsStore();
 
   const orderingOpen = isOnlineOrderingOpen();
@@ -58,7 +56,6 @@ export const DishCard: React.FC<DishCardProps> = ({
 
     setJustAdded(true);
     addItem(currentDish, 1);
-    success(`${currentDish.name} added to cart!`);
 
     setTimeout(() => {
       setJustAdded(false);
