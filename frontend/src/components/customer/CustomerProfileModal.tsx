@@ -419,7 +419,30 @@ export const CustomerProfileModal: React.FC<CustomerProfileModalProps> = ({ isOp
                     </div>
                   </form>
                 ) : (
-                  <div className="space-y-2.5 text-xs">
+                  <div className="space-y-3 text-xs">
+                    <div className="flex items-center gap-3 pb-2 border-b border-stone-200/60">
+                      <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-[#FE8E2A]/30 bg-[#FFF0DF] flex items-center justify-center shrink-0 shadow-2xs">
+                        {user.profileImageUrl ? (
+                          <img
+                            src={user.profileImageUrl}
+                            alt={user.fullName}
+                            className="w-full h-full object-cover rounded-full"
+                            referrerPolicy="no-referrer"
+                          />
+                        ) : user.fullName?.trim() ? (
+                          <span className="text-lg font-black text-[#FE8E2A]">
+                            {user.fullName.trim().charAt(0).toUpperCase()}
+                          </span>
+                        ) : (
+                          <User size={22} className="text-[#FE8E2A]" />
+                        )}
+                      </div>
+                      <div className="min-w-0">
+                        <span className="font-bold text-stone-900 text-sm block truncate">{user.fullName}</span>
+                        <span className="text-[11px] text-stone-500 font-medium">Customer Account</span>
+                      </div>
+                    </div>
+
                     <div>
                       <span className="text-[10px] text-stone-400 uppercase tracking-wider block font-bold">
                         Full Name

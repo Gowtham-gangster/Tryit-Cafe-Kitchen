@@ -94,6 +94,9 @@ export const OffersCarousel: React.FC = () => {
                 ? offer.badgeText
                 : 'Special Offer';
 
+            // When exactly 4 offers exist (or total % 3 === 1), center the single card in the next desktop row
+            const isCenteredSolo = offers.length % 3 === 1 && idx === offers.length - 1;
+
             return (
               <motion.div
                 key={offer.id}
@@ -105,24 +108,97 @@ export const OffersCarousel: React.FC = () => {
                   delay: shouldReduceMotion ? 0 : Math.min(idx * 0.08, 0.3),
                   ease: 'easeOut',
                 }}
-                className="w-full h-full"
+                className={`w-full h-full ${isCenteredSolo ? 'lg:col-start-2' : ''}`}
               >
+                {/* Brown Card with Floating, Shadow Breathing, and Border Highlight */}
                 <motion.div
+                  animate={
+                    shouldReduceMotion
+                      ? undefined
+                      : {
+                          y: [0, -4, 0, 4, 0],
+                          borderColor: [
+                            'rgba(254, 142, 42, 0.30)',
+                            'rgba(254, 142, 42, 0.55)',
+                            'rgba(254, 142, 42, 0.30)',
+                            'rgba(254, 142, 42, 0.45)',
+                            'rgba(254, 142, 42, 0.30)',
+                          ],
+                          boxShadow: [
+                            '0 10px 24px -8px rgba(43, 20, 8, 0.35)',
+                            '0 15px 32px -8px rgba(43, 20, 8, 0.44), 0 0 18px -4px rgba(254, 142, 42, 0.22)',
+                            '0 10px 24px -8px rgba(43, 20, 8, 0.35)',
+                            '0 8px 20px -8px rgba(43, 20, 8, 0.30)',
+                            '0 10px 24px -8px rgba(43, 20, 8, 0.35)',
+                          ],
+                        }
+                  }
+                  transition={
+                    shouldReduceMotion
+                      ? undefined
+                      : {
+                          duration: 5.5,
+                          repeat: Infinity,
+                          ease: 'easeInOut',
+                          delay: idx * 0.9,
+                        }
+                  }
                   whileHover={
                     shouldReduceMotion
                       ? undefined
                       : {
-                          y: -4,
+                          y: -6,
                           scale: 1.015,
+                          boxShadow: '0 20px 40px -10px rgba(43, 20, 8, 0.52), 0 0 26px -4px rgba(254, 142, 42, 0.32)',
+                          borderColor: 'rgba(254, 142, 42, 0.75)',
                           transition: { duration: 0.22, ease: 'easeOut' },
                         }
                   }
                   whileTap={shouldReduceMotion ? undefined : { scale: 0.99 }}
-                  className="w-full h-full relative overflow-hidden rounded-2xl sm:rounded-3xl bg-[#FFFBF7] border border-[#EEDDCC] hover:border-[#FE8E2A]/60 p-4.5 sm:p-5 shadow-[0_3px_14px_-3px_rgba(43,20,8,0.06)] hover:shadow-[0_10px_28px_-4px_rgba(43,20,8,0.14)] flex flex-col justify-between group transition-all duration-200"
+                  className="w-full h-full relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-[#2B1408] via-[#381B0E] to-[#1E0D05] border border-[#FE8E2A]/30 text-white p-5 sm:p-6 shadow-md flex flex-col justify-between group transition-colors duration-300 min-h-[190px]"
                 >
+                  {/* Background Banner Image with Depth & Dark Legibility Overlay (if available) */}
+                  {offer.bannerImageUrl && (
+                    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none select-none" aria-hidden="true">
+                      <img
+                        src={getOptimizedImageUrl(offer.bannerImageUrl, 'offerBanner')}
+                        alt=""
+                        className="w-full h-full object-cover opacity-15 group-hover:opacity-25 group-hover:scale-105 transition-all duration-500 ease-out"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-r from-[#1E0D05]/95 via-[#2B1408]/85 to-[#1E0D05]/95" />
+                    </div>
+                  )}
+
+                  {/* Orange Light Sweep Highlight Beam */}
+                  {!shouldReduceMotion && (
+                    <div className="absolute inset-0 z-[1] overflow-hidden pointer-events-none select-none" aria-hidden="true">
+                      <motion.div
+                        className="absolute top-0 bottom-0 w-3/5"
+                        style={{
+                          background:
+                            'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.05) 25%, rgba(254, 142, 42, 0.18) 50%, rgba(255, 255, 255, 0.05) 75%, transparent 100%)',
+                          transform: 'skewX(-20deg)',
+                        }}
+                        animate={{
+                          left: ['-80%', '160%', '160%', '-80%'],
+                          opacity: [0, 1, 0, 0],
+                        }}
+                        transition={{
+                          duration: 6,
+                          times: [0, 0.24, 0.28, 1],
+                          repeat: Infinity,
+                          ease: 'easeInOut',
+                          delay: idx * 1.5,
+                        }}
+                      />
+                    </div>
+                  )}
+
                   {/* Top Badges */}
-                  <div className="flex items-center justify-between gap-2 mb-3">
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#FE8E2A]/10 text-[#FE8E2A] text-[11px] font-bold uppercase tracking-wider border border-[#FE8E2A]/20">
+                  <div className="relative z-10 flex items-center justify-between gap-2 mb-3">
+                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/12 text-[#FFFBF7] text-[11px] font-extrabold uppercase tracking-wider backdrop-blur-md border border-white/15">
                       <Sparkles size={11} className="text-[#FE8E2A]" />
                       <span>{cleanBadge}</span>
                     </span>
@@ -133,10 +209,10 @@ export const OffersCarousel: React.FC = () => {
                           shouldReduceMotion
                             ? undefined
                             : {
-                                scale: [1, 1.03, 1],
+                                scale: [1, 1.04, 1],
                                 boxShadow: [
                                   '0 2px 8px -2px rgba(254, 142, 42, 0.35)',
-                                  '0 4px 14px 0px rgba(254, 142, 42, 0.55)',
+                                  '0 4px 16px 0px rgba(254, 142, 42, 0.65)',
                                   '0 2px 8px -2px rgba(254, 142, 42, 0.35)',
                                 ],
                               }
@@ -151,7 +227,7 @@ export const OffersCarousel: React.FC = () => {
                                 delay: idx * 0.8,
                               }
                         }
-                        className="px-2.5 py-0.5 rounded-lg bg-[#FE8E2A] text-white text-xs sm:text-[13px] font-bold shadow-2xs whitespace-nowrap"
+                        className="px-2.5 py-0.5 rounded-lg bg-gradient-to-r from-[#FE8E2A] to-[#E67616] text-white text-xs sm:text-[13px] font-black shadow-xs tracking-tight border border-white/20 whitespace-nowrap"
                       >
                         {offer.discountType === 'PERCENTAGE'
                           ? `${offer.discountValue}% OFF`
@@ -160,41 +236,25 @@ export const OffersCarousel: React.FC = () => {
                     )}
                   </div>
 
-                  {/* Optional Banner Image with Hover Zoom */}
-                  {offer.bannerImageUrl && (
-                    <div className="mb-3 aspect-[16/8] sm:aspect-[16/7] w-full rounded-xl overflow-hidden bg-[#FDF6EE] border border-[#EEDDCC] shrink-0">
-                      <img
-                        src={getOptimizedImageUrl(offer.bannerImageUrl, 'offerBanner')}
-                        alt={offer.title}
-                        loading="lazy"
-                        decoding="async"
-                        onError={(e) => {
-                          (e.currentTarget.parentElement as HTMLElement)?.classList.add('hidden');
-                        }}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                      />
-                    </div>
-                  )}
-
                   {/* Main Content */}
-                  <div className="flex-1">
-                    <h3 className="text-base sm:text-lg lg:text-xl font-bold mb-1.5 font-serif text-[#2B1408] tracking-tight group-hover:text-[#FE8E2A] transition-colors leading-snug">
+                  <div className="relative z-10 flex-1">
+                    <h3 className="text-base sm:text-lg lg:text-xl font-bold mb-1.5 font-serif text-white tracking-tight group-hover:text-[#FFA857] transition-colors leading-snug">
                       {offer.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-[#7A5C4A] leading-relaxed line-clamp-2 mb-4">
+                    <p className="text-xs sm:text-sm text-[#E5D5C5] leading-relaxed line-clamp-2 mb-4 font-normal">
                       {offer.description}
                     </p>
                   </div>
 
                   {/* Footer Action Row */}
-                  <div className="flex items-center justify-between gap-2 pt-3 border-t border-[#EEDDCC] mt-auto">
+                  <div className="relative z-10 flex items-center justify-between gap-2 pt-3 border-t border-white/15 mt-auto">
                     <div className="min-w-0 flex-1">
                       {offer.minOrderAmount ? (
-                        <span className="text-xs text-[#7A5C4A] font-medium block leading-tight">
-                          Min Order: <strong className="text-[#2B1408] font-bold">₹{offer.minOrderAmount}</strong>
+                        <span className="text-xs text-[#D8C7BC] font-medium block leading-tight">
+                          Min Order: <strong className="text-white font-semibold">₹{offer.minOrderAmount}</strong>
                         </span>
                       ) : (
-                        <span className="text-xs text-[#7A5C4A] font-medium block leading-tight">
+                        <span className="text-xs text-[#D8C7BC] font-medium block leading-tight">
                           Valid on all orders
                         </span>
                       )}
@@ -208,13 +268,13 @@ export const OffersCarousel: React.FC = () => {
                           : {
                               y: -1,
                               scale: 1.02,
-                              boxShadow: '0 4px 14px -2px rgba(254, 142, 42, 0.45)',
+                              boxShadow: '0 6px 18px -2px rgba(254, 142, 42, 0.45)',
                               transition: { duration: 0.18 },
                             }
                       }
                       whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
                       onClick={scrollToMenu}
-                      className="group/btn h-9 sm:h-10 px-3.5 sm:px-4 rounded-xl bg-[#FE8E2A] hover:bg-[#E67616] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer shrink-0"
+                      className="group/btn h-9 sm:h-10 px-3.5 sm:px-4 rounded-xl bg-[#FE8E2A] hover:bg-[#E67616] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-colors shadow-sm shadow-[#FE8E2A]/30 cursor-pointer shrink-0"
                       aria-label={`Order Now for ${offer.title}`}
                     >
                       <span>Order Now</span>

@@ -136,7 +136,26 @@ export const BottomNav: React.FC<BottomNavProps> = ({ onOpenProfile }) => {
           className="flex flex-col items-center gap-1 text-[#7A5C4A] hover:text-[#FE8E2A] transition-colors py-1.5 px-1 min-h-[44px] cursor-pointer"
           aria-label={isCustomer ? 'Open profile' : 'Sign in'}
         >
-          <UserIcon size={20} />
+          {isCustomer ? (
+            <div className="w-5 h-5 rounded-full overflow-hidden border border-[#FE8E2A]/40 flex items-center justify-center bg-[#FFF0DF] shrink-0">
+              {user?.profileImageUrl ? (
+                <img
+                  src={user.profileImageUrl}
+                  alt={user.fullName || 'User'}
+                  className="w-full h-full object-cover rounded-full"
+                  referrerPolicy="no-referrer"
+                />
+              ) : user?.fullName?.trim() ? (
+                <span className="text-[10px] font-black text-[#FE8E2A] leading-none">
+                  {user.fullName.trim().charAt(0).toUpperCase()}
+                </span>
+              ) : (
+                <UserIcon size={13} className="text-[#FE8E2A]" />
+              )}
+            </div>
+          ) : (
+            <UserIcon size={20} />
+          )}
           <span className="text-[10px] font-bold tracking-tight">
             {isCustomer ? 'Profile' : 'Sign In'}
           </span>

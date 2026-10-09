@@ -185,12 +185,12 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProfile }) => {
 
   return (
     <header
-      className={`sticky top-0 z-40 transition-all duration-300 ${isScrolled
+      className={`sticky top-0 z-40 h-16 transition-all duration-300 ${isScrolled
           ? 'bg-[#FFFBF7]/98 backdrop-blur-md border-b border-[#EEDDCC] shadow-sm'
           : 'bg-[#FFFBF7]/90 backdrop-blur-sm border-b border-[#EEDDCC]/70'
         }`}
     >
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-16 sm:h-18 flex items-center justify-between gap-2 sm:gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-full flex items-center justify-between gap-2 sm:gap-4">
         {/* Left: Brand Logo & Title (Dedicated shrink-0 zone to guarantee zero collision) */}
         <motion.button
           type="button"
@@ -271,22 +271,39 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProfile }) => {
 
           {/* Customer Auth Button (Desktop only - mobile uses bottom navigation) */}
           {isCustomer ? (
-            <div className="hidden lg:flex items-center gap-1.5">
+            <div className="hidden lg:flex items-center gap-2">
               <motion.button
                 type="button"
-                whileHover={{ y: -1, scale: 1.02 }}
-                whileTap={{ scale: 0.96 }}
+                whileHover={{ y: -1, scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={handleProfileClick}
-                className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl hover:bg-[#FDF6EE] text-left transition cursor-pointer border border-[#EEDDCC] bg-white h-9 sm:h-10"
-                aria-label="Open Profile"
+                className="relative w-10 h-10 rounded-full border-2 border-[#FE8E2A]/40 hover:border-[#FE8E2A] bg-white shadow-2xs hover:shadow-md transition-all flex items-center justify-center cursor-pointer overflow-hidden p-0.5 group focus:outline-none focus:ring-2 focus:ring-[#FE8E2A]/40 shrink-0"
+                title={`${user?.fullName || 'Customer'} (Click to view profile)`}
+                aria-label={`Open profile for ${user?.fullName || 'Customer'}`}
               >
-                <div className="w-6 h-6 rounded-lg bg-[#FFF0DF] border border-[#FE8E2A]/30 text-[#2B1408] font-bold text-xs flex items-center justify-center shrink-0">
-                  <UserIcon size={14} className="text-[#FE8E2A]" />
-                </div>
-                <div className="flex flex-col items-start min-w-0">
-                  <span className="text-xs font-bold text-[#2B1408] leading-tight truncate max-w-[100px]">
-                    {user?.fullName}
-                  </span>
+                {user?.profileImageUrl ? (
+                  <img
+                    src={user.profileImageUrl}
+                    alt={user.fullName || 'User'}
+                    className="w-full h-full rounded-full object-cover"
+                    referrerPolicy="no-referrer"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLElement).style.display = 'none';
+                      const fallback = e.currentTarget.parentElement?.querySelector('.avatar-initial-fallback') as HTMLElement | null;
+                      if (fallback) fallback.style.display = 'flex';
+                    }}
+                  />
+                ) : null}
+                <div
+                  className={`avatar-initial-fallback w-full h-full rounded-full bg-[#FFF0DF] group-hover:bg-[#FFE3C7] text-[#FE8E2A] font-black text-sm flex items-center justify-center select-none transition-colors ${
+                    user?.profileImageUrl ? 'hidden' : 'flex'
+                  }`}
+                >
+                  {user?.fullName?.trim() ? (
+                    user.fullName.trim().charAt(0).toUpperCase()
+                  ) : (
+                    <UserIcon size={17} className="text-[#FE8E2A]" />
+                  )}
                 </div>
               </motion.button>
 
