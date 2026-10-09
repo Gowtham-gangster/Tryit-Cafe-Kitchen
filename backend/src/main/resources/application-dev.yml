@@ -32,8 +32,8 @@ app:
   seed:
     enabled: ${APP_SEED_ENABLED:true}
     sample-data: ${APP_SEED_SAMPLE_DATA:false}
-    owner-phone: ${OWNER_INITIAL_PHONE:9999999999}
-    owner-password: ${OWNER_INITIAL_PASSWORD:Owner@TryIt2026}
+    owner-phone: ${OWNER_INITIAL_PHONE:8977774885}
+    owner-password: ${OWNER_INITIAL_PASSWORD:Tryit@2026}
     customer-phone: ${CUSTOMER_INITIAL_PHONE:9876543210}
     customer-password: ${CUSTOMER_INITIAL_PASSWORD:Customer@TryIt2026}
     whatsapp-number: ${WHATSAPP_NUMBER:}

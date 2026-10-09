@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class DataSeeder implements CommandLineRunner {
@@ -98,19 +99,38 @@ public class DataSeeder implements CommandLineRunner {
     }
 
     private void seedAccounts() {
-        // Seed Owner Account when configured
+        // Seed or Update Owner Account when configured
         if (defaultOwnerPhone != null && !defaultOwnerPhone.isBlank() && defaultOwnerPassword != null && !defaultOwnerPassword.isBlank()) {
-            if (userRepository.countByRole(UserRole.ROLE_OWNER) == 0) {
+            List<User> existingOwners = userRepository.findAll().stream()
+                    .filter(u -> u.getRole() == UserRole.ROLE_OWNER)
+                    .toList();
+            for (User oldOwner : existingOwners) {
+                if (!defaultOwnerPhone.equals(oldOwner.getPhone())) {
+                    log.info("Removing obsolete owner account with phone: {}", oldOwner.getPhone());
+                    userRepository.delete(oldOwner);
+                }
+            }
+
+            Optional<User> ownerOpt = userRepository.findByPhone(defaultOwnerPhone);
+            if (ownerOpt.isEmpty()) {
                 User owner = User.builder()
                         .phone(defaultOwnerPhone)
                         .fullName("TryIt Cafe Owner")
-                        .email("owner@tryitcafe.com")
+                        .email("tryit.cafekichen@gmail.com")
                         .passwordHash(passwordEncoder.encode(defaultOwnerPassword))
                         .role(UserRole.ROLE_OWNER)
                         .active(true)
                         .build();
                 userRepository.save(owner);
-                log.info("Owner account provisioned from environment configuration.");
+                log.info("Owner account provisioned from environment configuration with phone: {}", defaultOwnerPhone);
+            } else {
+                User owner = ownerOpt.get();
+                owner.setRole(UserRole.ROLE_OWNER);
+                owner.setEmail("tryit.cafekichen@gmail.com");
+                owner.setPasswordHash(passwordEncoder.encode(defaultOwnerPassword));
+                owner.setActive(true);
+                userRepository.save(owner);
+                log.info("Owner account credentials updated for phone: {}", defaultOwnerPhone);
             }
         }
 

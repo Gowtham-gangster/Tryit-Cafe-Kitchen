@@ -88,9 +88,9 @@ public class SecurityIntegrationTests {
     @Test
     @DisplayName("Owner token accessing owner endpoint should return 200 OK")
     void testOwnerAccessingOwnerEndpoint() throws Exception {
-        User owner = userRepository.findByPhone("9999999999")
+        User owner = userRepository.findByPhone("8977774885")
                 .orElseGet(() -> userRepository.save(User.builder()
-                        .phone("9999999999")
+                        .phone("8977774885")
                         .fullName("Owner")
                         .passwordHash("hashed")
                         .role(UserRole.ROLE_OWNER)
@@ -146,9 +146,9 @@ public class SecurityIntegrationTests {
     @Test
     @DisplayName("SEC-AUD-04: Owner token calling /api/owner/business/online-ordering should succeed (200)")
     void testOwnerAllowedOnDirectOwnerOrdering() throws Exception {
-        User owner = userRepository.findByPhone("9999999999")
+        User owner = userRepository.findByPhone("8977774885")
                 .orElseGet(() -> userRepository.save(User.builder()
-                        .phone("9999999999")
+                        .phone("8977774885")
                         .fullName("Owner")
                         .passwordHash("hashed")
                         .role(UserRole.ROLE_OWNER)

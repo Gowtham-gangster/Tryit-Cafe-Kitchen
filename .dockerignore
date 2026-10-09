@@ -1,0 +1,34 @@
+# Environment & Secrets (NEVER bake into image)
+.env
+.env.*
+*.env
+!.env.example
+
+# Build Artifacts & Dependencies
+target/
+backend/target/
+frontend/dist/
+frontend/node_modules/
+*.class
+*.jar
+*.war
+node_modules/
+dist/
+
+# Git & IDE
+.git/
+.gitignore
+.idea/
+.vscode/
+*.iml
+
+# Uploads & Logs
+uploads/
+backend/uploads/
+logs/
+*.log
+
+# Temp files
+.tempmediaStorage/
+.system_generated/
+scratch/

@@ -27,8 +27,8 @@ app:
   seed:
     enabled: true
     sample-data: true
-    owner-phone: "9999999999"
-    owner-password: "Owner@TryIt2026"
+    owner-phone: "8977774885"
+    owner-password: "Tryit@2026"
     customer-phone: "9876543210"
     customer-password: "Customer@TryIt2026"
     whatsapp-number: "8977774885"

@@ -15,7 +15,7 @@ export const OwnerLoginPage: React.FC = () => {
     e.preventDefault();
     clearError();
 
-    const success = await ownerLogin(phone.trim(), password);
+    const success = await ownerLogin(phone.trim(), password.trim());
     if (success) {
       navigate('/owner/dashboard');
     }

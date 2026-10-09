@@ -19,12 +19,15 @@ export const validateApiBaseUrl = (url: string | undefined, isProd: boolean, hos
 
   if (url) {
     if (hostname && !isLocalhost) {
+      if (typeof window !== 'undefined' && (window.location.protocol === 'https:' || !url.startsWith('https://'))) {
+        return '/api/v1';
+      }
       return url.replace('localhost', hostname).replace('127.0.0.1', hostname);
     }
     return url;
   }
 
-  return `http://${hostname}:8088/api/v1`;
+  return '/api/v1';
 };
 
 export const getApiBaseUrl = (): string => {

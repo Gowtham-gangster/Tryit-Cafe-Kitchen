@@ -40,8 +40,8 @@ async function main() {
   console.log('🚀 Starting Development Dataset Population for Tryit Cafe & Kitchen...');
   const env = loadEnv();
 
-  const ownerPhone = env.OWNER_INITIAL_PHONE || '9999999999';
-  const ownerPassword = env.OWNER_INITIAL_PASSWORD || 'Owner@TryIt2026';
+  const ownerPhone = env.OWNER_INITIAL_PHONE || '8977774885';
+  const ownerPassword = env.OWNER_INITIAL_PASSWORD || 'Tryit@2026';
 
   // 1. Owner Login
   console.log(`\n🔑 Authenticating as Owner (${ownerPhone})...`);
