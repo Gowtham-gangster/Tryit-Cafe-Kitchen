@@ -101,10 +101,15 @@ export const useMenuStore = create<MenuState>((set, get) => ({
 
         lastPublicDataFetchTime = Date.now();
 
+        const normalizedItems = (items || []).map((item) => ({
+          ...item,
+          isNew: Boolean(item.isNew ?? item.new ?? item.is_new),
+        }));
+
         set({
           categories: cats,
-          allMenuItems: items,
-          menuItems: items,
+          allMenuItems: normalizedItems,
+          menuItems: normalizedItems,
           offers,
           gallery,
           reviews,
@@ -112,7 +117,7 @@ export const useMenuStore = create<MenuState>((set, get) => ({
         });
 
         // Synchronize cart items with the active database IDs
-        useCartStore.getState().syncWithMenuItems(items);
+        useCartStore.getState().syncWithMenuItems(normalizedItems);
       } catch (err: any) {
         set({
           error: 'Failed to load menu data. Please check your connection.',

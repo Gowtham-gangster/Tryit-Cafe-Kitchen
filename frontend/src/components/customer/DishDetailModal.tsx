@@ -70,7 +70,7 @@ export const DishDetailModal: React.FC = () => {
                 </span>
               )}
 
-              {selectedDishModal.isNew && (
+              {(selectedDishModal.isNew || (selectedDishModal as any).new || (selectedDishModal as any).is_new) && (
                 <span className="px-3 py-1 rounded-full bg-emerald-600 text-white text-xs font-bold uppercase tracking-wider flex items-center gap-1.5 shadow-md">
                   <Sparkles size={13} className="fill-white" />
                   <span>New</span>

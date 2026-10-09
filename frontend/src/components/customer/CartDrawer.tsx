@@ -18,7 +18,6 @@ import { modalBackdrop, bottomSheetVariants } from '../../utils/animations';
 import { OrderItemRow } from '../cart/OrderItemRow';
 
 export const CartDrawer: React.FC = () => {
-  const [showClearConfirm, setShowClearConfirm] = useState(false);
   const {
     items,
     instructions,
@@ -80,7 +79,6 @@ export const CartDrawer: React.FC = () => {
               animate="visible"
               exit="exit"
               onClick={() => {
-                setShowClearConfirm(false);
                 setIsCartOpen(false);
               }}
               className="fixed inset-0 bg-black/60 backdrop-blur-xs"
@@ -120,43 +118,18 @@ export const CartDrawer: React.FC = () => {
 
                 <div className="flex items-center gap-2 shrink-0">
                   {items.length > 0 && (
-                    showClearConfirm ? (
-                      <div className="flex items-center gap-1.5 bg-rose-50 border border-rose-200 px-2 py-1 rounded-xl animate-in fade-in duration-150">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            clearCart();
-                            setShowClearConfirm(false);
-                          }}
-                          className="text-[11px] font-bold text-white bg-rose-500 hover:bg-rose-600 px-2 py-1 rounded-lg transition-colors cursor-pointer"
-                          aria-label="Confirm clear cart"
-                        >
-                          Clear
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setShowClearConfirm(false)}
-                          className="text-[11px] font-semibold text-[#7A5C4A] hover:text-[#2B1408] px-1.5 py-1 rounded-lg transition-colors cursor-pointer"
-                          aria-label="Cancel clear cart"
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => setShowClearConfirm(true)}
-                        className="text-xs font-semibold text-[#7A5C4A] hover:text-rose-600 hover:bg-rose-50/70 px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer min-h-[36px] flex items-center"
-                        aria-label="Clear all items from cart"
-                      >
-                        Clear
-                      </button>
-                    )
+                    <button
+                      type="button"
+                      onClick={clearCart}
+                      className="text-xs font-semibold text-[#7A5C4A] hover:text-rose-600 hover:bg-rose-50/70 px-2.5 py-1.5 rounded-lg transition-colors cursor-pointer min-h-[36px] flex items-center"
+                      aria-label="Clear all items from cart"
+                    >
+                      Clear
+                    </button>
                   )}
                   <button
                     type="button"
                     onClick={() => {
-                      setShowClearConfirm(false);
                       setIsCartOpen(false);
                     }}
                     className="w-9 h-9 rounded-full text-[#7A5C4A] hover:text-[#2B1408] hover:bg-[#F2E5D6] flex items-center justify-center transition-colors cursor-pointer"

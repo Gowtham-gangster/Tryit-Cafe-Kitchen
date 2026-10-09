@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   MessageCircle,
@@ -100,9 +100,11 @@ export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
   const [isAddLocationOpen, setIsAddLocationOpen] = useState(false);
   const [isSavingLocation, setIsSavingLocation] = useState(false);
 
-  // Reset state whenever modal opens
+  const prevIsOpenRef = useRef(false);
+
+  // Reset state strictly when modal transitions from closed to open
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !prevIsOpenRef.current) {
       setCurrentStep('orderType');
       setIsAddLocationOpen(false);
       setPreviewError(null);
@@ -111,7 +113,8 @@ export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
         fetchLocations();
       }
     }
-  }, [isOpen, isAuthenticated, fetchLocations, locations.length, initialInstructions]);
+    prevIsOpenRef.current = isOpen;
+  }, [isOpen, isAuthenticated, fetchLocations, initialInstructions]);
 
   // Auto-select default or first saved location
   useEffect(() => {
@@ -248,14 +251,12 @@ export const OrderConfirmationModal: React.FC<OrderConfirmationModalProps> = ({
       });
 
       if (created) {
-        success('Delivery address saved!');
         setSelectedLocationId(created.id);
         setIsAddLocationOpen(false);
 
-        // Fetch backend preview and advance directly to Order Review
-        setPreview(null);
-        await fetchBackendPreview(created.id, 'DELIVERY');
+        // Advance directly to Order Review (Step 4) without fallback to orderType
         setCurrentStep('review');
+        fetchBackendPreview(created.id, 'DELIVERY');
       } else {
         const errorMsg =
           useAuthStore.getState().error ||

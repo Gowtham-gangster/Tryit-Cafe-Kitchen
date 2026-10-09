@@ -201,6 +201,7 @@ public class MenuItem {
 
     public boolean isNew() { return isNew; }
     public void setNew(boolean isNew) { this.isNew = isNew; }
+    public void setIsNew(boolean isNew) { this.isNew = isNew; }
 
     public boolean isPopular() { return isPopular; }
     public void setPopular(boolean popular) { this.isPopular = popular; }

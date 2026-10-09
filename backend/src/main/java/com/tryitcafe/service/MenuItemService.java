@@ -98,7 +98,7 @@ public class MenuItemService {
                 .imagePublicId(request.getImagePublicId())
                 .available(request.getAvailable() != null ? request.getAvailable() : true)
                 .bestseller(request.getBestseller() != null ? request.getBestseller() : false)
-                .isNew(request.getIsNew() != null ? request.getIsNew() : false)
+                .isNew(request.getIsNew() != null ? request.getIsNew() : (request.getNew() != null ? request.getNew() : false))
                 .isPopular(isPopular)
                 .popularDisplayOrder(request.getPopularDisplayOrder() != null ? request.getPopularDisplayOrder() : 0)
                 .discountEnabled(Boolean.TRUE.equals(request.getDiscountEnabled()))
@@ -150,8 +150,9 @@ public class MenuItemService {
         if (request.getBestseller() != null) {
             item.setBestseller(request.getBestseller());
         }
-        if (request.getIsNew() != null) {
-            item.setNew(request.getIsNew());
+        Boolean isNewVal = request.getIsNew() != null ? request.getIsNew() : request.getNew();
+        if (isNewVal != null) {
+            item.setNew(isNewVal);
         }
         if (request.getIsPopular() != null) {
             boolean wantPopular = request.getIsPopular();

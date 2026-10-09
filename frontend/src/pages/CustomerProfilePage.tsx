@@ -485,16 +485,22 @@ export const CustomerProfilePage: React.FC = () => {
     }
   };
 
-  const getLocationIcon = (label: string) => {
+  const getLocationIcon = (label: string, isDefault = false) => {
     switch (label?.toLowerCase()) {
       case 'work':
-        return <Briefcase size={16} className="text-blue-600" />;
+        return <Briefcase size={16} className={isDefault ? 'text-white' : 'text-blue-600'} />;
       case 'other':
-        return <Package size={16} className="text-purple-600" />;
+        return <Package size={16} className={isDefault ? 'text-white' : 'text-purple-600'} />;
       case 'home':
       default:
-        return <Home size={16} className="text-[#FE8E2A]" />;
+        return <Home size={16} className={isDefault ? 'text-white' : 'text-[#FE8E2A]'} />;
     }
+  };
+
+  const isLocationDefault = (loc: CustomerLocation) => {
+    if (loc.isDefault) return true;
+    if (!locations.some((l) => l.isDefault) && locations[0]?.id === loc.id) return true;
+    return false;
   };
 
   // Reusable Edit Address Form
@@ -926,64 +932,95 @@ export const CustomerProfilePage: React.FC = () => {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-              {locations.map((loc) => (
-                <div
-                  key={loc.id}
-                  className="p-4 rounded-2xl border border-[#EEDDCC] bg-[#FAF8F5] hover:border-[#FE8E2A]/50 transition-all shadow-xs flex items-start justify-between gap-3"
-                >
-                  <div className="flex items-start gap-3 min-w-0 flex-1">
-                    <div className="p-2.5 rounded-xl bg-[#FFF0DF] border border-[#EEDDCC] shrink-0 mt-0.5">
-                      {getLocationIcon(loc.label)}
-                    </div>
-                    <div className="min-w-0 space-y-1">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-xs font-bold text-[#2B1408]">{loc.label}</span>
-                        {loc.isDefault ? (
-                          <span className="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase tracking-wider">
-                            Default Address
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {locations.map((loc) => {
+                const isDefault = isLocationDefault(loc);
+                const formattedAddress = loc.address
+                  ? loc.address
+                      .split(/[\r\n]+/)
+                      .map((p) => p.trim())
+                      .filter(Boolean)
+                      .join(', ')
+                      .replace(/\s*,\s*/g, ', ')
+                  : '';
+
+                return (
+                  <div
+                    key={loc.id}
+                    className={`p-3.5 sm:p-4 rounded-2xl transition-all shadow-xs flex items-start justify-between gap-3 relative ${
+                      isDefault
+                        ? 'bg-[#FFF9F2] border-2 border-[#FE8E2A] shadow-md shadow-[#FE8E2A]/15 ring-1 ring-[#FE8E2A]/20'
+                        : 'bg-white border border-[#EEDDCC] hover:border-[#FE8E2A]/40'
+                    }`}
+                  >
+                    <div className="flex items-start gap-3 min-w-0 flex-1">
+                      {/* Address Icon */}
+                      <div
+                        className={`p-2.5 rounded-xl shrink-0 mt-0.5 border ${
+                          isDefault
+                            ? 'bg-[#FE8E2A] text-white border-[#FE8E2A] shadow-xs'
+                            : 'bg-[#FFF0DF] text-[#FE8E2A] border-[#EEDDCC]'
+                        }`}
+                      >
+                        {getLocationIcon(loc.label, isDefault)}
+                      </div>
+
+                      <div className="min-w-0 flex-1 space-y-1">
+                        {/* Title and Default Badge / Set Default Button */}
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-xs font-black text-[#2B1408]">{loc.label}</span>
+                          {isDefault ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase tracking-wider border border-emerald-300 shadow-2xs">
+                              <CheckCircle2 size={12} className="text-emerald-700 shrink-0" />
+                              <span>Default Address</span>
+                            </span>
+                          ) : (
+                            <button
+                              type="button"
+                              onClick={() => handleSetDefault(loc.id)}
+                              className="inline-flex items-center gap-1 text-[11px] text-[#735440] hover:text-[#FE8E2A] font-bold px-2 py-0.5 rounded-lg border border-[#EEDDCC] hover:bg-[#FFF0DF] transition cursor-pointer"
+                            >
+                              <span>Set as Default</span>
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Formatted Compact Address Text */}
+                        <p className="text-xs text-[#6B5344] leading-relaxed break-words">
+                          {formattedAddress}
+                        </p>
+
+                        {/* GPS Coordinates */}
+                        {loc.latitude != null && loc.longitude != null && (
+                          <span className="text-[10px] text-[#8A6E5C] font-mono block">
+                            GPS: {loc.latitude.toFixed(4)}, {loc.longitude.toFixed(4)}
                           </span>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() => handleSetDefault(loc.id)}
-                            className="text-[11px] text-[#8A6E5C] hover:text-[#FE8E2A] font-bold cursor-pointer"
-                          >
-                            Set as Default
-                          </button>
                         )}
                       </div>
-                      <p className="text-xs text-[#6B5344] leading-relaxed break-words">
-                        {loc.address}
-                      </p>
-                      {loc.latitude != null && loc.longitude != null && (
-                        <span className="text-[10px] text-[#8A6E5C] font-mono block">
-                          GPS: {loc.latitude.toFixed(4)}, {loc.longitude.toFixed(4)}
-                        </span>
-                      )}
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex items-center gap-0.5 shrink-0">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenEditLocation(loc)}
+                        title="Edit address"
+                        className="p-1.5 rounded-lg text-[#8A6E5C] hover:text-[#2B1408] hover:bg-[#FAF6F0] transition cursor-pointer"
+                      >
+                        <Edit3 size={15} />
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteLocation(loc.id)}
+                        title="Delete address"
+                        className="p-1.5 rounded-lg text-[#8A6E5C] hover:text-red-600 hover:bg-red-50 transition cursor-pointer"
+                      >
+                        <Trash2 size={15} />
+                      </button>
                     </div>
                   </div>
-
-                  <div className="flex items-center gap-1 shrink-0">
-                    <button
-                      type="button"
-                      onClick={() => handleOpenEditLocation(loc)}
-                      title="Edit address"
-                      className="p-2 rounded-xl text-[#8A6E5C] hover:text-[#2B1408] hover:bg-[#FFFDF9] transition cursor-pointer"
-                    >
-                      <Edit3 size={15} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteLocation(loc.id)}
-                      title="Delete address"
-                      className="p-2 rounded-xl text-[#8A6E5C] hover:text-red-600 hover:bg-red-50 transition cursor-pointer"
-                    >
-                      <Trash2 size={15} />
-                    </button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </section>

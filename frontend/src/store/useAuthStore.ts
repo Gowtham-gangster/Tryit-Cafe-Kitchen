@@ -46,7 +46,7 @@ interface AuthState {
   clearError: () => void;
 
   // Location Management
-  fetchLocations: () => Promise<void>;
+  fetchLocations: (force?: boolean) => Promise<void>;
   addLocation: (payload: CreateLocationPayload) => Promise<CustomerLocation | null>;
   editLocation: (id: string, payload: UpdateLocationPayload) => Promise<boolean>;
   deleteLocation: (id: string) => Promise<boolean>;
@@ -325,9 +325,13 @@ export const useAuthStore = create<AuthState>((set, get) => {
 
       try {
         const list = await customerApi.getLocations();
-        const def = list.find((l) => l.isDefault) || (list.length > 0 ? list[0] : null);
+        const hasDefault = list.some((l) => l.isDefault);
+        const normalizedList = hasDefault
+          ? list
+          : list.map((loc, idx) => ({ ...loc, isDefault: idx === 0 }));
+        const def = normalizedList.find((l) => l.isDefault) || null;
         set({
-          locations: list,
+          locations: normalizedList,
           defaultLocation: def,
           selectedLocationId: get().selectedLocationId || def?.id || null,
         });
@@ -398,11 +402,21 @@ export const useAuthStore = create<AuthState>((set, get) => {
 
     setDefaultLocation: async (id: string) => {
       try {
+        // Optimistically update store immediately so UI highlights right away
+        set((state) => ({
+          locations: state.locations.map((loc) => ({
+            ...loc,
+            isDefault: loc.id === id,
+          })),
+          defaultLocation: state.locations.find((l) => l.id === id) || null,
+          selectedLocationId: id,
+        }));
+
         await customerApi.setDefaultLocation(id);
-        await get().fetchLocations();
-        set({ selectedLocationId: id });
+        await get().fetchLocations(true);
         return true;
       } catch (err: any) {
+        await get().fetchLocations(true);
         return false;
       }
     },

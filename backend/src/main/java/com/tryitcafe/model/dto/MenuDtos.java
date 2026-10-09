@@ -244,8 +244,17 @@ public class MenuDtos {
         public boolean isBestseller() { return bestseller; }
         public void setBestseller(boolean bestseller) { this.bestseller = bestseller; }
 
+        @com.fasterxml.jackson.annotation.JsonProperty("isNew")
         public boolean isNew() { return isNew; }
+
+        @com.fasterxml.jackson.annotation.JsonProperty("new")
+        public boolean getNew() { return isNew; }
+
+        @com.fasterxml.jackson.annotation.JsonProperty("isNew")
+        @com.fasterxml.jackson.annotation.JsonAlias({"new", "is_new"})
         public void setNew(boolean isNew) { this.isNew = isNew; }
+
+        public void setIsNew(boolean isNew) { this.isNew = isNew; }
 
         @com.fasterxml.jackson.annotation.JsonProperty("isPopular")
         public boolean isPopular() { return isPopular; }
@@ -340,8 +349,19 @@ public class MenuDtos {
         public Boolean getBestseller() { return bestseller; }
         public void setBestseller(Boolean bestseller) { this.bestseller = bestseller; }
 
+        @com.fasterxml.jackson.annotation.JsonProperty("isNew")
+        @com.fasterxml.jackson.annotation.JsonAlias({"new", "is_new"})
         public Boolean getIsNew() { return isNew; }
+
+        @com.fasterxml.jackson.annotation.JsonProperty("isNew")
+        @com.fasterxml.jackson.annotation.JsonAlias({"new", "is_new"})
         public void setIsNew(Boolean isNew) { this.isNew = isNew; }
+
+        @com.fasterxml.jackson.annotation.JsonProperty("new")
+        public Boolean getNew() { return isNew; }
+
+        @com.fasterxml.jackson.annotation.JsonProperty("new")
+        public void setNew(Boolean isNew) { this.isNew = isNew; }
 
         @com.fasterxml.jackson.annotation.JsonProperty("isPopular")
         @com.fasterxml.jackson.annotation.JsonAlias({"popular"})

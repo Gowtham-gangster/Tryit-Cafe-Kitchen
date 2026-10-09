@@ -53,7 +53,7 @@ public class MenuItemMapper {
                 .imagePublicId(request.getImagePublicId())
                 .available(request.getAvailable() != null ? request.getAvailable() : true)
                 .bestseller(request.getBestseller() != null ? request.getBestseller() : false)
-                .isNew(request.getIsNew() != null ? request.getIsNew() : false)
+                .isNew(request.getIsNew() != null ? request.getIsNew() : (request.getNew() != null ? request.getNew() : false))
                 .isPopular(request.getIsPopular() != null ? request.getIsPopular() : false)
                 .popularDisplayOrder(request.getPopularDisplayOrder() != null ? request.getPopularDisplayOrder() : 0)
                 .discountEnabled(Boolean.TRUE.equals(request.getDiscountEnabled()))

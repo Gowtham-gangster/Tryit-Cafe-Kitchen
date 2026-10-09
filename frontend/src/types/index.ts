@@ -66,6 +66,8 @@ export interface MenuItem {
   available: boolean;
   bestseller: boolean;
   isNew: boolean;
+  new?: boolean;
+  is_new?: boolean;
   isPopular?: boolean;
   popular?: boolean;
   popularDisplayOrder?: number;

@@ -138,7 +138,7 @@ export const DishCard: React.FC<DishCardProps> = ({
                 </span>
               )}
 
-              {currentDish.isNew && (
+              {(currentDish.isNew || (currentDish as any).new || (currentDish as any).is_new) && (
                 <span className="px-1.5 min-[390px]:px-2 py-0.5 rounded-full bg-emerald-600 text-white text-[9px] min-[390px]:text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-0.5 sm:gap-1 shadow-2xs">
                   <Sparkles size={10} className="fill-white" />
                   <span>New</span>

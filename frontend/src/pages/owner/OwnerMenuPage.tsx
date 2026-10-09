@@ -68,7 +68,11 @@ export const OwnerMenuPage: React.FC = () => {
         ownerApi.getMenuItems(),
         ownerApi.getCategories(),
       ]);
-      setDishes(dishesData);
+      const normalizedDishes = (dishesData || []).map((d) => ({
+        ...d,
+        isNew: Boolean(d.isNew ?? (d as any).new ?? (d as any).is_new),
+      }));
+      setDishes(normalizedDishes);
       setCategories(catsData);
     } catch (e) {
       console.error(e);
@@ -124,7 +128,7 @@ export const OwnerMenuPage: React.FC = () => {
     setImagePublicId(dish.imagePublicId || '');
     setAvailable(dish.available);
     setBestseller(dish.bestseller);
-    setIsNew(dish.isNew);
+    setIsNew(Boolean(dish.isNew ?? (dish as any).new ?? (dish as any).is_new));
     setIsPopular(!!(dish.isPopular || dish.popular));
     setPopularDisplayOrder(dish.popularDisplayOrder || 1);
     setIsModalOpen(true);
@@ -191,7 +195,7 @@ export const OwnerMenuPage: React.FC = () => {
 
     setIsSubmitting(true);
     try {
-      const payload: Partial<MenuItem> = {
+      const payload: any = {
         name: name.trim(),
         categoryId,
         price: Number(price),
@@ -205,7 +209,10 @@ export const OwnerMenuPage: React.FC = () => {
         available,
         bestseller,
         isNew,
+        new: isNew,
+        is_new: isNew,
         isPopular,
+        popular: isPopular,
         popularDisplayOrder: isPopular ? Number(popularDisplayOrder) : 0,
       };
 
@@ -567,7 +574,7 @@ export const OwnerMenuPage: React.FC = () => {
                           <span>#{dish.popularDisplayOrder || 1} Pop</span>
                         </span>
                       )}
-                      {dish.isNew && (
+                      {(dish.isNew || (dish as any).new || (dish as any).is_new) && (
                         <span className="px-1.5 py-0.5 rounded bg-emerald-600 text-white text-[9px] sm:text-[9.5px] font-bold uppercase flex items-center gap-0.5 shadow-xs">
                           <Sparkles size={9} className="fill-white" />
                           <span>New</span>

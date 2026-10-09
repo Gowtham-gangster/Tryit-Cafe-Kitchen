@@ -140,7 +140,7 @@ export const PopularDishCard: React.FC<PopularDishCardProps> = ({
                 </span>
               )}
 
-              {item.isNew && (
+              {(item.isNew || (item as any).new || (item as any).is_new) && (
                 <span className="px-2 py-0.5 rounded-full bg-emerald-600 text-white text-[10px] font-extrabold uppercase tracking-wider flex items-center gap-1 shadow-xs">
                   <Sparkles size={10} className="fill-white" />
                   <span>New</span>
