@@ -88,7 +88,7 @@ export const OwnerCategoriesPage: React.FC = () => {
 
       setIsModalOpen(false);
       await loadCategories();
-      fetchAllPublicData(true);
+      useMenuStore.getState().fetchCategoriesData();
     } catch (err: any) {
       toastError(err.response?.data?.message || 'Failed to save category');
     } finally {
@@ -104,7 +104,7 @@ export const OwnerCategoriesPage: React.FC = () => {
       success(`"${deleteTarget.name}" deleted.`);
       setDeleteTarget(null);
       await loadCategories();
-      fetchAllPublicData(true);
+      useMenuStore.getState().fetchCategoriesData();
     } catch (err: any) {
       toastError(err.response?.data?.message || 'Cannot delete category containing dishes.');
     } finally {

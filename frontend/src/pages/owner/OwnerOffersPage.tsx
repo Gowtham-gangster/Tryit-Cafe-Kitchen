@@ -199,17 +199,21 @@ export const OwnerOffersPage: React.FC = () => {
         displayOrder: Number(displayOrder),
       };
 
+      let savedOffer: Offer;
       if (editingOffer) {
-        await ownerApi.updateOffer(editingOffer.id, payload);
+        savedOffer = await ownerApi.updateOffer(editingOffer.id, payload);
         success(`"${title}" offer updated successfully!`);
       } else {
-        await ownerApi.createOffer(payload);
+        savedOffer = await ownerApi.createOffer(payload);
         success(`"${title}" offer created and published!`);
       }
 
       setIsModalOpen(false);
-      await loadOffers();
-      fetchAllPublicData(true);
+      setOffers((prev) => {
+        const exists = prev.some((o) => o.id === savedOffer.id);
+        return exists ? prev.map((o) => (o.id === savedOffer.id ? savedOffer : o)) : [...prev, savedOffer];
+      });
+      useMenuStore.getState().updatePublicOffer(savedOffer);
     } catch (err: any) {
       toastError(err.response?.data?.message || 'Failed to save offer');
     } finally {
@@ -221,8 +225,8 @@ export const OwnerOffersPage: React.FC = () => {
     try {
       const updated = await ownerApi.toggleOfferStatus(id);
       success(`"${offerTitle}" is now ${updated.active ? 'Active' : 'Paused'}.`);
-      await loadOffers();
-      fetchAllPublicData(true);
+      setOffers((prev) => prev.map((o) => (o.id === id ? { ...o, active: updated.active } : o)));
+      useMenuStore.getState().updatePublicOffer(updated);
     } catch (e) {
       toastError('Failed to update status');
     }
@@ -231,15 +235,16 @@ export const OwnerOffersPage: React.FC = () => {
   const confirmDelete = async () => {
     if (!deleteTargetOffer) return;
     setIsDeleting(true);
+    const deletedId = deleteTargetOffer.id;
     try {
-      await ownerApi.deleteOffer(deleteTargetOffer.id);
+      await ownerApi.deleteOffer(deletedId);
       success(`"${deleteTargetOffer.title}" deleted successfully.`);
       setDeleteTargetOffer(null);
-      if (isModalOpen && editingOffer?.id === deleteTargetOffer.id) {
+      if (isModalOpen && editingOffer?.id === deletedId) {
         setIsModalOpen(false);
       }
-      await loadOffers();
-      fetchAllPublicData(true);
+      setOffers((prev) => prev.filter((o) => o.id !== deletedId));
+      useMenuStore.getState().removePublicOffer(deletedId);
     } catch (e) {
       toastError('Failed to delete offer.');
     } finally {

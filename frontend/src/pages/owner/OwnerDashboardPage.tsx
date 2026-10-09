@@ -46,8 +46,15 @@ export const OwnerDashboardPage: React.FC = () => {
     try {
       const updated = await ownerApi.toggleAvailability(id);
       setDishes((prev) => prev.map((d) => (d.id === id ? updated : d)));
-      await loadData();
-      useMenuStore.getState().fetchAllPublicData(true);
+      setSummary((prev) => {
+        if (!prev) return prev;
+        const diff = updated.available ? 1 : -1;
+        return {
+          ...prev,
+          availableMenuItems: Math.max(0, prev.availableMenuItems + diff),
+        };
+      });
+      useMenuStore.getState().updatePublicMenuItem(updated);
     } catch (e) {
       alert('Failed to update dish availability');
     } finally {

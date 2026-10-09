@@ -216,17 +216,25 @@ export const OwnerMenuPage: React.FC = () => {
         popularDisplayOrder: isPopular ? Number(popularDisplayOrder) : 0,
       };
 
+      let savedDish: MenuItem;
       if (editingDish) {
-        await ownerApi.updateMenuItem(editingDish.id, payload);
+        savedDish = await ownerApi.updateMenuItem(editingDish.id, payload);
         success(`"${name}" updated successfully!`);
       } else {
-        await ownerApi.createMenuItem(payload);
+        savedDish = await ownerApi.createMenuItem(payload);
         success(`"${name}" added to menu!`);
       }
 
       setIsModalOpen(false);
-      await loadData();
-      fetchAllPublicData(true); // Update customer cache instantly!
+      setDishes((prev) => {
+        const norm = {
+          ...savedDish,
+          isNew: Boolean(savedDish.isNew ?? (savedDish as any).new ?? (savedDish as any).is_new),
+        };
+        const exists = prev.some((d) => d.id === norm.id);
+        return exists ? prev.map((d) => (d.id === norm.id ? norm : d)) : [...prev, norm];
+      });
+      useMenuStore.getState().updatePublicMenuItem(savedDish);
     } catch (err: any) {
       toastError(err.response?.data?.message || 'Failed to save menu dish.');
     } finally {
@@ -237,12 +245,13 @@ export const OwnerMenuPage: React.FC = () => {
   const confirmDeleteDish = async () => {
     if (!deleteTarget) return;
     setIsDeleting(true);
+    const deletedId = deleteTarget.id;
     try {
-      await ownerApi.deleteMenuItem(deleteTarget.id);
+      await ownerApi.deleteMenuItem(deletedId);
       success(`"${deleteTarget.name}" removed from menu.`);
       setDeleteTarget(null);
-      await loadData();
-      fetchAllPublicData(true);
+      setDishes((prev) => prev.filter((d) => d.id !== deletedId));
+      useMenuStore.getState().removePublicMenuItem(deletedId);
     } catch (err: any) {
       toastError('Failed to delete dish.');
     } finally {
@@ -254,8 +263,8 @@ export const OwnerMenuPage: React.FC = () => {
     try {
       const updated = await ownerApi.toggleAvailability(id);
       success(`"${currentDishName}" is now ${updated.available ? 'Available' : 'Sold Out'}.`);
-      await loadData();
-      fetchAllPublicData(true);
+      setDishes((prev) => prev.map((d) => (d.id === id ? { ...d, available: updated.available } : d)));
+      useMenuStore.getState().updatePublicMenuItem(updated);
     } catch (e) {
       toastError('Failed to update availability.');
     }
@@ -272,14 +281,14 @@ export const OwnerMenuPage: React.FC = () => {
     setUpdatingPopularId(dish.id);
     try {
       const nextOrder = isAdding ? popularDishes.length + 1 : 0;
-      await ownerApi.togglePopular(dish.id, isAdding, nextOrder);
+      const updated = await ownerApi.togglePopular(dish.id, isAdding, nextOrder);
       success(
         `"${dish.name}" ${
           isAdding ? 'is now featured in Popular at Tryit' : 'removed from Popular at Tryit'
         }.`
       );
-      await loadData();
-      fetchAllPublicData(true);
+      setDishes((prev) => prev.map((d) => (d.id === dish.id ? { ...d, ...updated } : d)));
+      useMenuStore.getState().updatePublicMenuItem(updated);
     } catch (err: any) {
       toastError(err.response?.data?.message || 'Could not update Popular status. Please try again.');
     } finally {

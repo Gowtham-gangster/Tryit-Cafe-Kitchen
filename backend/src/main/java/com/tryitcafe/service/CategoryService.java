@@ -9,8 +9,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.Normalizer;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -34,15 +36,32 @@ public class CategoryService {
         return slug.isEmpty() ? "category" : slug;
     }
 
+    private Map<UUID, Integer> getCategoryCountsMap() {
+        List<Object[]> rows = menuItemRepository.countGroupedByCategoryId();
+        Map<UUID, Integer> counts = new HashMap<>();
+        for (Object[] row : rows) {
+            if (row != null && row.length >= 2 && row[0] instanceof UUID) {
+                UUID catId = (UUID) row[0];
+                long count = row[1] instanceof Number ? ((Number) row[1]).longValue() : 0L;
+                counts.put(catId, (int) count);
+            }
+        }
+        return counts;
+    }
+
     public List<CategoryDto> getPublicCategories() {
-        return categoryRepository.findAllByActiveTrueOrderByDisplayOrderAsc().stream()
-                .map(this::toDto)
+        List<Category> categories = categoryRepository.findAllByActiveTrueOrderByDisplayOrderAsc();
+        Map<UUID, Integer> counts = getCategoryCountsMap();
+        return categories.stream()
+                .map(c -> toDto(c, counts.getOrDefault(c.getId(), 0)))
                 .collect(Collectors.toList());
     }
 
     public List<CategoryDto> getAllCategoriesForOwner() {
-        return categoryRepository.findAllByOrderByDisplayOrderAsc().stream()
-                .map(this::toDto)
+        List<Category> categories = categoryRepository.findAllByOrderByDisplayOrderAsc();
+        Map<UUID, Integer> counts = getCategoryCountsMap();
+        return categories.stream()
+                .map(c -> toDto(c, counts.getOrDefault(c.getId(), 0)))
                 .collect(Collectors.toList());
     }
 
@@ -95,6 +114,10 @@ public class CategoryService {
 
     public CategoryDto toDto(Category category) {
         int count = (int) menuItemRepository.countByCategoryIdAndDeletedFalse(category.getId());
+        return toDto(category, count);
+    }
+
+    public CategoryDto toDto(Category category, int count) {
         return CategoryDto.builder()
                 .id(category.getId())
                 .name(category.getName())

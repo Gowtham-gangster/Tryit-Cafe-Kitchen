@@ -48,4 +48,7 @@ public interface MenuItemRepository extends JpaRepository<MenuItem, UUID> {
     List<MenuItem> findAllByDeletedFalseAndIsPopularTrueOrderByPopularDisplayOrderAscDisplayOrderAsc();
 
     long countByDeletedFalseAndIsPopularTrue();
+
+    @Query("SELECT m.category.id, COUNT(m) FROM MenuItem m WHERE m.deleted = false GROUP BY m.category.id")
+    List<Object[]> countGroupedByCategoryId();
 }

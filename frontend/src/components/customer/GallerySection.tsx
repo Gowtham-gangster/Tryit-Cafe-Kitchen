@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { useMenuStore } from '../../store/useMenuStore';
 import { GalleryItem } from '../../types';
-import { normalizeImageUrl, getOptimizedImageUrl, getOptimizedSrcSet } from '../../utils/imageUrl';
+import { normalizeImageUrl, getOptimizedImageUrl, getOptimizedSrcSet, getVideoPosterUrl } from '../../utils/imageUrl';
 
 // Category definitions
 const CATEGORIES = ['All', 'Ambience', 'Food', 'Kitchen'] as const;
@@ -358,6 +358,7 @@ export const GallerySection: React.FC = () => {
                 {activeLightboxItem.mediaType === 'VIDEO' ? (
                   <video
                     src={activeLightboxItem.mediaUrl}
+                    poster={getVideoPosterUrl(activeLightboxItem.mediaUrl, activeLightboxItem.thumbnailUrl) || undefined}
                     controls
                     autoPlay
                     playsInline
@@ -423,6 +424,21 @@ const EditorialCard: React.FC<EditorialCardProps> = ({
 }) => {
   const shouldReduceMotion = useReducedMotion();
   const staggerDelay = shouldReduceMotion ? 0 : Math.min(index * 0.05, 0.25);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const posterUrl = item.mediaType === 'VIDEO' ? getVideoPosterUrl(item.mediaUrl, item.thumbnailUrl) : '';
+
+  const handleMouseEnter = () => {
+    if (item.mediaType === 'VIDEO' && videoRef.current) {
+      videoRef.current.play().catch(() => {});
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (item.mediaType === 'VIDEO' && videoRef.current) {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+    }
+  };
 
   return (
     <motion.div
@@ -456,14 +472,20 @@ const EditorialCard: React.FC<EditorialCardProps> = ({
         onClick={onOpen}
         className="group relative rounded-2xl sm:rounded-3xl overflow-hidden aspect-[4/3] bg-[#FDF6EE] border border-[#EEDDCC] hover:border-[#FE8E2A]/50 shadow-[0_2px_12px_-3px_rgba(43,20,8,0.06)] hover:shadow-[0_10px_28px_-4px_rgba(43,20,8,0.14)] transition-all duration-300 cursor-pointer w-full select-none"
       >
-        <div className="w-full h-full overflow-hidden">
+        <div
+          className="w-full h-full overflow-hidden"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
           {item.mediaType === 'VIDEO' ? (
             <video
+              ref={videoRef}
               src={item.mediaUrl}
+              poster={posterUrl || undefined}
+              preload="none"
               muted
               playsInline
               loop
-              autoPlay
               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out will-change-transform"
             />
           ) : (

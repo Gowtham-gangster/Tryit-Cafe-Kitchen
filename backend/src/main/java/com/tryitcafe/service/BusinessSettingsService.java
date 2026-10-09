@@ -44,9 +44,34 @@ public class BusinessSettingsService {
         this.reviewRepository = reviewRepository;
     }
 
+    private final Object settingsLock = new Object();
+    private volatile BusinessSettingsDto cachedSettingsDto = null;
+    private volatile long lastSettingsCacheTime = 0L;
+    private static final long SETTINGS_CACHE_TTL_MS = 60_000L; // 60 seconds
+
+    public void invalidateCache() {
+        synchronized (settingsLock) {
+            cachedSettingsDto = null;
+            lastSettingsCacheTime = 0L;
+        }
+    }
+
     public BusinessSettingsDto getSettings() {
-        BusinessSettings settings = getOrCreateDefaultSettings();
-        return toDto(settings);
+        long now = System.currentTimeMillis();
+        BusinessSettingsDto local = cachedSettingsDto;
+        if (local != null && (now - lastSettingsCacheTime < SETTINGS_CACHE_TTL_MS)) {
+            return local;
+        }
+        synchronized (settingsLock) {
+            if (cachedSettingsDto != null && (System.currentTimeMillis() - lastSettingsCacheTime < SETTINGS_CACHE_TTL_MS)) {
+                return cachedSettingsDto;
+            }
+            BusinessSettings settings = getOrCreateDefaultSettings();
+            BusinessSettingsDto dto = toDto(settings);
+            cachedSettingsDto = dto;
+            lastSettingsCacheTime = System.currentTimeMillis();
+            return dto;
+        }
     }
 
     @Transactional
@@ -80,7 +105,9 @@ public class BusinessSettingsService {
         if (request.getFreeDeliveryDistanceKm() != null) settings.setFreeDeliveryDistanceKm(request.getFreeDeliveryDistanceKm());
         if (request.getDeliveryRatePerKm() != null) settings.setDeliveryRatePerKm(request.getDeliveryRatePerKm());
 
-        return toDto(businessSettingsRepository.save(settings));
+        BusinessSettings saved = businessSettingsRepository.save(settings);
+        invalidateCache();
+        return toDto(saved);
     }
 
     @Transactional
@@ -98,6 +125,7 @@ public class BusinessSettingsService {
                 }
             }
         }
+        invalidateCache();
         return businessHoursRepository.findAllByOrderByDayOrderAsc().stream()
                 .map(this::toHoursDto)
                 .collect(Collectors.toList());
@@ -225,6 +253,7 @@ public class BusinessSettingsService {
             settings.setNextOpeningTime(request.getNextOpeningTime());
         }
         businessSettingsRepository.save(settings);
+        invalidateCache();
         return getOnlineOrderingStatus();
     }
 

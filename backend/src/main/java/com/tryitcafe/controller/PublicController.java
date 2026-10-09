@@ -51,17 +51,23 @@ public class PublicController {
 
     @GetMapping("/settings")
     public ResponseEntity<ApiResponse<BusinessSettingsDto>> getSettings() {
-        return ResponseEntity.ok(ApiResponse.ok(businessSettingsService.getSettings()));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CACHE_CONTROL, "public, max-age=30, stale-while-revalidate=60")
+                .body(ApiResponse.ok(businessSettingsService.getSettings()));
     }
 
     @GetMapping("/business/status")
     public ResponseEntity<ApiResponse<com.tryitcafe.model.dto.SettingsDtos.OnlineOrderingStatusDto>> getOnlineOrderingStatus() {
-        return ResponseEntity.ok(ApiResponse.ok(businessSettingsService.getOnlineOrderingStatus()));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CACHE_CONTROL, "public, max-age=5, stale-while-revalidate=10")
+                .body(ApiResponse.ok(businessSettingsService.getOnlineOrderingStatus()));
     }
 
     @GetMapping("/categories")
     public ResponseEntity<ApiResponse<List<CategoryDto>>> getCategories() {
-        return ResponseEntity.ok(ApiResponse.ok(categoryService.getPublicCategories()));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CACHE_CONTROL, "public, max-age=15, stale-while-revalidate=60")
+                .body(ApiResponse.ok(categoryService.getPublicCategories()));
     }
 
     @GetMapping("/menu")
@@ -71,18 +77,24 @@ public class PublicController {
             @RequestParam(required = false) Boolean bestseller,
             @RequestParam(required = false) String search
     ) {
-        return ResponseEntity.ok(ApiResponse.ok(menuItemService.searchMenuItems(categoryId, foodType, bestseller, search)));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CACHE_CONTROL, "public, max-age=15, stale-while-revalidate=60")
+                .body(ApiResponse.ok(menuItemService.searchMenuItems(categoryId, foodType, bestseller, search)));
     }
 
     @GetMapping("/menu/popular")
     public ResponseEntity<ApiResponse<List<MenuItemDto>>> getPopularMenu() {
-        return ResponseEntity.ok(ApiResponse.ok(menuItemService.getPopularMenuItems()));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CACHE_CONTROL, "public, max-age=15, stale-while-revalidate=60")
+                .body(ApiResponse.ok(menuItemService.getPopularMenuItems()));
     }
 
     @GetMapping("/menu/{slug}")
     public ResponseEntity<ApiResponse<MenuItemDto>> getMenuItemBySlug(@PathVariable String slug) {
         try {
-            return ResponseEntity.ok(ApiResponse.ok(menuItemService.getBySlug(slug)));
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CACHE_CONTROL, "public, max-age=15, stale-while-revalidate=60")
+                    .body(ApiResponse.ok(menuItemService.getBySlug(slug)));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();
         }
@@ -90,12 +102,16 @@ public class PublicController {
 
     @GetMapping("/offers")
     public ResponseEntity<ApiResponse<List<OfferDto>>> getOffers() {
-        return ResponseEntity.ok(ApiResponse.ok(offerService.getActiveOffers()));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CACHE_CONTROL, "public, max-age=15, stale-while-revalidate=60")
+                .body(ApiResponse.ok(offerService.getActiveOffers()));
     }
 
     @GetMapping("/gallery")
     public ResponseEntity<ApiResponse<List<GalleryItemDto>>> getGallery() {
-        return ResponseEntity.ok(ApiResponse.ok(galleryService.getActiveGallery()));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CACHE_CONTROL, "public, max-age=30, stale-while-revalidate=60")
+                .body(ApiResponse.ok(galleryService.getActiveGallery()));
     }
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(PublicController.class);
@@ -105,7 +121,9 @@ public class PublicController {
 
     @GetMapping("/reviews")
     public ResponseEntity<ApiResponse<List<ReviewDto>>> getReviews() {
-        return ResponseEntity.ok(ApiResponse.ok(reviewService.getApprovedReviews()));
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CACHE_CONTROL, "public, max-age=30, stale-while-revalidate=60")
+                .body(ApiResponse.ok(reviewService.getApprovedReviews()));
     }
 
     @GetMapping("/media/{folder}/{filename:.+}")

@@ -26,6 +26,17 @@ interface MenuState {
   error: string | null;
 
   fetchAllPublicData: (force?: boolean) => Promise<void>;
+  fetchMenuData: (force?: boolean) => Promise<void>;
+  fetchCategoriesData: (force?: boolean) => Promise<void>;
+  fetchOffersData: (force?: boolean) => Promise<void>;
+  fetchGalleryData: (force?: boolean) => Promise<void>;
+  fetchReviewsData: (force?: boolean) => Promise<void>;
+  updatePublicMenuItem: (item: MenuItem) => void;
+  removePublicMenuItem: (id: string) => void;
+  updatePublicOffer: (offer: Offer) => void;
+  removePublicOffer: (id: string) => void;
+  updatePublicGalleryItem: (item: GalleryItem) => void;
+  removePublicGalleryItem: (id: string) => void;
   invalidateCache: () => void;
   filterMenu: () => Promise<void>;
   setSelectedCategoryId: (id: string | null) => void;
@@ -69,6 +80,106 @@ export const useMenuStore = create<MenuState>((set, get) => ({
     inFlightPublicDataPromise = null;
   },
 
+  updatePublicMenuItem: (updatedItem: MenuItem) => {
+    const norm = {
+      ...updatedItem,
+      isNew: Boolean(updatedItem.isNew ?? updatedItem.new ?? updatedItem.is_new),
+    };
+    const { allMenuItems } = get();
+    const exists = allMenuItems.some((d) => d.id === norm.id);
+    const newAll = exists
+      ? allMenuItems.map((d) => (d.id === norm.id ? norm : d))
+      : [...allMenuItems, norm];
+    set({ allMenuItems: newAll });
+    get().filterMenu();
+    useCartStore.getState().syncWithMenuItems(newAll);
+  },
+
+  removePublicMenuItem: (id: string) => {
+    const { allMenuItems } = get();
+    const newAll = allMenuItems.filter((d) => d.id !== id);
+    set({ allMenuItems: newAll });
+    get().filterMenu();
+    useCartStore.getState().syncWithMenuItems(newAll);
+  },
+
+  updatePublicOffer: (offer: Offer) => {
+    const { offers } = get();
+    const exists = offers.some((o) => o.id === offer.id);
+    const newOffers = exists
+      ? offers.map((o) => (o.id === offer.id ? offer : o))
+      : [...offers, offer];
+    set({ offers: newOffers });
+  },
+
+  removePublicOffer: (id: string) => {
+    set({ offers: get().offers.filter((o) => o.id !== id) });
+  },
+
+  updatePublicGalleryItem: (item: GalleryItem) => {
+    const { gallery } = get();
+    const exists = gallery.some((g) => g.id === item.id);
+    const newGallery = exists
+      ? gallery.map((g) => (g.id === item.id ? item : g))
+      : [...gallery, item];
+    set({ gallery: newGallery });
+  },
+
+  removePublicGalleryItem: (id: string) => {
+    set({ gallery: get().gallery.filter((g) => g.id !== id) });
+  },
+
+  fetchMenuData: async (force = false) => {
+    try {
+      const items = await publicApi.getMenu();
+      const normalizedItems = (items || []).map((item) => ({
+        ...item,
+        isNew: Boolean(item.isNew ?? item.new ?? item.is_new),
+      }));
+      set({ allMenuItems: normalizedItems });
+      get().filterMenu();
+      useCartStore.getState().syncWithMenuItems(normalizedItems);
+    } catch (e) {
+      console.warn('Failed to refresh public menu items', e);
+    }
+  },
+
+  fetchCategoriesData: async () => {
+    try {
+      const cats = await publicApi.getCategories();
+      set({ categories: cats || [] });
+    } catch (e) {
+      console.warn('Failed to refresh public categories', e);
+    }
+  },
+
+  fetchOffersData: async () => {
+    try {
+      const offers = await publicApi.getOffers();
+      set({ offers: offers || [] });
+    } catch (e) {
+      console.warn('Failed to refresh public offers', e);
+    }
+  },
+
+  fetchGalleryData: async () => {
+    try {
+      const gallery = await publicApi.getGallery();
+      set({ gallery: gallery || [] });
+    } catch (e) {
+      console.warn('Failed to refresh public gallery', e);
+    }
+  },
+
+  fetchReviewsData: async () => {
+    try {
+      const reviews = await publicApi.getReviews();
+      set({ reviews: reviews || [] });
+    } catch (e) {
+      console.warn('Failed to refresh public reviews', e);
+    }
+  },
+
   fetchAllPublicData: async (force = false) => {
     if (force) {
       lastPublicDataFetchTime = 0;
@@ -91,7 +202,7 @@ export const useMenuStore = create<MenuState>((set, get) => ({
 
     inFlightPublicDataPromise = (async () => {
       try {
-        const [cats, items, offers, gallery, reviews] = await Promise.all([
+        const [catsRes, itemsRes, offersRes, galleryRes, reviewsRes] = await Promise.allSettled([
           publicApi.getCategories(),
           publicApi.getMenu(),
           publicApi.getOffers(),
@@ -101,7 +212,13 @@ export const useMenuStore = create<MenuState>((set, get) => ({
 
         lastPublicDataFetchTime = Date.now();
 
-        const normalizedItems = (items || []).map((item) => ({
+        const cats = catsRes.status === 'fulfilled' ? catsRes.value || [] : [];
+        const rawItems = itemsRes.status === 'fulfilled' ? itemsRes.value || [] : [];
+        const offers = offersRes.status === 'fulfilled' ? offersRes.value || [] : [];
+        const gallery = galleryRes.status === 'fulfilled' ? galleryRes.value || [] : [];
+        const reviews = reviewsRes.status === 'fulfilled' ? reviewsRes.value || [] : [];
+
+        const normalizedItems = rawItems.map((item) => ({
           ...item,
           isNew: Boolean(item.isNew ?? item.new ?? item.is_new),
         }));
@@ -114,6 +231,7 @@ export const useMenuStore = create<MenuState>((set, get) => ({
           gallery,
           reviews,
           isLoadingInitial: false,
+          error: itemsRes.status === 'rejected' ? 'Failed to load menu data. Please check your connection.' : null,
         });
 
         // Synchronize cart items with the active database IDs

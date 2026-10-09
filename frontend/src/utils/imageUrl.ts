@@ -169,3 +169,30 @@ export const getOptimizedSrcSet = (
     .map((w) => `${getOptimizedImageUrl(rawUrl, { width: w, crop, format: 'auto', quality: 'auto' })} ${w}w`)
     .join(', ');
 };
+
+/**
+ * Generates an optimized poster image URL for videos.
+ * Supports explicit thumbnailUrl or Cloudinary video snapshot transformation.
+ */
+export const getVideoPosterUrl = (
+  mediaUrl?: string | null,
+  thumbnailUrl?: string | null
+): string => {
+  if (thumbnailUrl && thumbnailUrl.trim()) {
+    return getOptimizedImageUrl(thumbnailUrl, 'gallery');
+  }
+  if (!mediaUrl || !mediaUrl.trim()) return '';
+
+  const normalized = normalizeImageUrl(mediaUrl);
+  if (normalized.includes('res.cloudinary.com') && normalized.includes('/upload/')) {
+    // Cloudinary video thumbnail: replace extension with .jpg and apply video thumbnail transformation
+    const jpgUrl = normalized.replace(/\.(mp4|webm|mov|mkv|avi)$/i, '.jpg');
+    return getOptimizedImageUrl(jpgUrl, {
+      width: 640,
+      quality: 'auto:good',
+      format: 'jpg',
+      crop: 'limit',
+    });
+  }
+  return '';
+};

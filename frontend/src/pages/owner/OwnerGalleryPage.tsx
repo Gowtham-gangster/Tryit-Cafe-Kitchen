@@ -208,16 +208,17 @@ export const OwnerGalleryPage: React.FC = () => {
       const uploadRes = await ownerApi.uploadMedia(file, 'gallery');
       const updatedMediaType: MediaType = isVideo ? 'VIDEO' : 'IMAGE';
 
-      await ownerApi.updateGalleryItem(directReplaceTarget.id, {
+      const updated = await ownerApi.updateGalleryItem(directReplaceTarget.id, {
         mediaUrl: uploadRes.url,
         mediaPublicId: uploadRes.publicId,
         mediaType: updatedMediaType,
       });
 
       success('Gallery media replaced successfully!');
+      const targetId = directReplaceTarget.id;
       setDirectReplaceTarget(null);
-      await loadGallery();
-      fetchAllPublicData(true);
+      setGallery((prev) => prev.map((g) => (g.id === targetId ? updated : g)));
+      useMenuStore.getState().updatePublicGalleryItem(updated);
     } catch (err: any) {
       console.error(err);
       toastError(err.response?.data?.message || 'Failed to replace media asset.');
@@ -250,17 +251,21 @@ export const OwnerGalleryPage: React.FC = () => {
         displayOrder: editingItem ? editingItem.displayOrder : gallery.length + 1,
       };
 
+      let savedItem: GalleryItem;
       if (editingItem) {
-        await ownerApi.updateGalleryItem(editingItem.id, payload);
+        savedItem = await ownerApi.updateGalleryItem(editingItem.id, payload);
         success('Gallery item updated successfully!');
       } else {
-        await ownerApi.addGalleryItem(payload);
+        savedItem = await ownerApi.addGalleryItem(payload);
         success('Media asset published to gallery!');
       }
 
       setIsModalOpen(false);
-      await loadGallery();
-      fetchAllPublicData(true);
+      setGallery((prev) => {
+        const exists = prev.some((g) => g.id === savedItem.id);
+        return exists ? prev.map((g) => (g.id === savedItem.id ? savedItem : g)) : [...prev, savedItem];
+      });
+      useMenuStore.getState().updatePublicGalleryItem(savedItem);
     } catch (err: any) {
       toastError(err.response?.data?.message || 'Failed to save gallery item.');
     } finally {
@@ -271,12 +276,13 @@ export const OwnerGalleryPage: React.FC = () => {
   const confirmDelete = async () => {
     if (!deleteTargetItem) return;
     setIsDeleting(true);
+    const deletedId = deleteTargetItem.id;
     try {
-      await ownerApi.deleteGalleryItem(deleteTargetItem.id);
+      await ownerApi.deleteGalleryItem(deletedId);
       success('Media asset removed from gallery.');
       setDeleteTargetItem(null);
-      await loadGallery();
-      fetchAllPublicData(true);
+      setGallery((prev) => prev.filter((g) => g.id !== deletedId));
+      useMenuStore.getState().removePublicGalleryItem(deletedId);
     } catch (e) {
       toastError('Failed to delete media item');
     } finally {
