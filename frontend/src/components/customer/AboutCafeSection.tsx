@@ -60,27 +60,27 @@ export const AboutCafeSection: React.FC = () => {
     }
   };
 
-  // 4 Core Highlights aligned with cafe offerings
+  // 4 Core Highlights aligned with cafe offerings with real emojis
   const highlights = [
     {
-      icon: UtensilsCrossed,
-      title: 'Freshly Prepared Food',
-      desc: 'Delicious fast food, flavorful snacks, and satisfying meals cooked fresh to order.',
+      emoji: '✨',
+      title: 'Freshly Prepared',
+      desc: 'Delicious food and snacks cooked fresh to order with care.',
     },
     {
-      icon: Coffee,
-      title: 'Premium Coffee & Brews',
-      desc: 'Freshly brewed aromatic coffee, teas, and soothing hot drinks crafted for every mood.',
+      emoji: '☕',
+      title: 'Coffee & Brews',
+      desc: 'Freshly brewed aromatic coffee, teas, and soothing hot drinks.',
     },
     {
-      icon: Sparkles,
+      emoji: '🥤',
       title: 'Shakes & Mocktails',
-      desc: 'Thick indulgence shakes, chilled mocktails, and handcrafted beverages for every craving.',
+      desc: 'Thick creamy shakes, chilled mocktails, and cold refreshments.',
     },
     {
-      icon: Heart,
-      title: 'Friendly & Cozy Ambience',
-      desc: 'A spotlessly clean, relaxed, and welcoming environment for friends, family, and remote work.',
+      emoji: '😊',
+      title: 'Cozy Ambience',
+      desc: 'Clean, friendly, and welcoming space for friends, family, and work.',
     },
   ];
 
@@ -203,37 +203,37 @@ export const AboutCafeSection: React.FC = () => {
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
-            {highlights.map((item, idx) => {
-              const Icon = item.icon;
-              return (
-                <RevealCard
-                  key={idx}
-                  delay={idx * 0.08}
-                  yOffset={25}
-                  scaleInitial={0.97}
-                  enableHover={false}
-                  className="h-full"
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
+            {highlights.map((item, idx) => (
+              <RevealCard
+                key={idx}
+                delay={idx * 0.08}
+                yOffset={20}
+                scaleInitial={0.97}
+                enableHover={false}
+                className="h-full"
+              >
+                <motion.div
+                  whileHover={shouldReduceMotion ? undefined : { y: -3, scale: 1.015 }}
+                  className="p-3 sm:p-5 rounded-xl sm:rounded-2xl bg-[#FFFBF7] border border-[#EEDDCC] shadow-xs hover:shadow-md hover:border-[#FE8E2A]/40 transition-all duration-300 flex flex-col justify-between h-full cursor-default"
                 >
-                  <motion.div
-                    whileHover={shouldReduceMotion ? undefined : { y: -4, scale: 1.015 }}
-                    className="p-4 sm:p-5 rounded-2xl bg-[#FFFBF7] border border-[#EEDDCC] shadow-xs hover:shadow-md hover:border-[#FE8E2A]/40 transition-all duration-300 flex flex-col justify-between h-full cursor-default"
-                  >
-                    <div>
-                      <div className="w-10 h-10 rounded-xl bg-[#FDF6EE] border border-[#EEDDCC] text-[#FE8E2A] flex items-center justify-center shrink-0 mb-3">
-                        <Icon size={18} />
-                      </div>
-                      <h4 className="text-sm sm:text-base font-bold text-[#2B1408] font-display">
+                  <div>
+                    {/* Emoji + Title in a single clean line */}
+                    <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2 min-w-0">
+                      <span className="text-base sm:text-xl shrink-0 select-none" role="img" aria-hidden="true">
+                        {item.emoji}
+                      </span>
+                      <h4 className="text-xs min-[390px]:text-[13px] sm:text-base font-bold text-[#2B1408] font-display truncate leading-snug">
                         {item.title}
                       </h4>
-                      <p className="text-xs text-[#7A5C4A] mt-1 leading-relaxed">
-                        {item.desc}
-                      </p>
                     </div>
-                  </motion.div>
-                </RevealCard>
-              );
-            })}
+                    <p className="text-[11px] sm:text-xs text-[#7A5C4A] leading-relaxed line-clamp-3">
+                      {item.desc}
+                    </p>
+                  </div>
+                </motion.div>
+              </RevealCard>
+            ))}
           </div>
         </div>
 

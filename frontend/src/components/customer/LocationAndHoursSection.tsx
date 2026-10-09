@@ -257,34 +257,34 @@ export const LocationAndHoursSection: React.FC = () => {
                 )}
               </div>
 
-              {/* Action Buttons: Get Directions (Primary) + Call & WhatsApp (Secondary) */}
-              <div className="space-y-3 pt-2">
+              {/* Action Buttons: Get Directions (Primary) + Call & WhatsApp (Secondary) - Compact on Mobile */}
+              <div className="space-y-2 sm:space-y-2.5 pt-1 sm:pt-2">
                 {/* Primary Action: Get Directions */}
                 <motion.a
-                  whileHover={shouldReduceMotion ? undefined : { y: -2, scale: 1.01 }}
+                  whileHover={shouldReduceMotion ? undefined : { y: -1, scale: 1.01 }}
                   whileTap={{ scale: 0.98 }}
                   href={googleMapsLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-3.5 px-6 rounded-2xl bg-[#FE8E2A] hover:bg-[#E67616] active:bg-[#C65A08] text-white font-extrabold text-sm sm:text-base flex items-center justify-center gap-2.5 shadow-md shadow-[#FE8E2A]/25 transition-all cursor-pointer min-h-[46px] group"
+                  className="w-full py-2.5 sm:py-3 px-4 rounded-xl bg-[#FE8E2A] hover:bg-[#E67616] active:bg-[#C65A08] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-sm shadow-[#FE8E2A]/20 transition-all cursor-pointer min-h-[38px] sm:min-h-[42px] group"
                   aria-label="Get directions to Tryit Cafe on Google Maps"
                 >
-                  <Navigation size={17} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
+                  <Navigation size={15} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
                   <span>Get Directions</span>
-                  <ArrowUpRight size={15} className="opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
+                  <ArrowUpRight size={14} className="opacity-80 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
                 </motion.a>
 
                 {/* Secondary Actions: Call Cafe & WhatsApp */}
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
                   {phoneUrl ? (
                     <motion.a
-                      whileHover={shouldReduceMotion ? undefined : { y: -2, scale: 1.015 }}
+                      whileHover={shouldReduceMotion ? undefined : { y: -1, scale: 1.01 }}
                       whileTap={{ scale: 0.98 }}
                       href={phoneUrl}
-                      className="py-3 px-4 rounded-2xl bg-[#FDF6EE] hover:bg-[#FBEFE1] border border-[#EEDDCC] hover:border-[#FE8E2A]/40 text-[#2B1408] text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer min-h-[44px]"
+                      className="py-2 sm:py-2.5 px-3 rounded-xl bg-[#FDF6EE] hover:bg-[#FBEFE1] border border-[#EEDDCC] hover:border-[#FE8E2A]/40 text-[#2B1408] text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[36px] sm:min-h-[38px]"
                       aria-label={`Call Tryit Cafe at ${displayPhone}`}
                     >
-                      <Phone size={15} className="text-[#FE8E2A] shrink-0" />
+                      <Phone size={14} className="text-[#FE8E2A] shrink-0" />
                       <span className="truncate">Call Cafe</span>
                     </motion.a>
                   ) : (
@@ -295,25 +295,25 @@ export const LocationAndHoursSection: React.FC = () => {
                           'Phone calling is temporarily unavailable. Please reach us via WhatsApp!'
                         )
                       }
-                      className="py-3 px-4 rounded-2xl bg-[#FDF6EE] hover:bg-[#FBEFE1] border border-[#EEDDCC] hover:border-[#FE8E2A]/40 text-[#2B1408] text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer min-h-[44px] active:scale-98"
+                      className="py-2 sm:py-2.5 px-3 rounded-xl bg-[#FDF6EE] hover:bg-[#FBEFE1] border border-[#EEDDCC] hover:border-[#FE8E2A]/40 text-[#2B1408] text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[36px] sm:min-h-[38px] active:scale-98"
                       aria-label="Call cafe info"
                     >
-                      <Phone size={15} className="text-[#FE8E2A] shrink-0" />
+                      <Phone size={14} className="text-[#FE8E2A] shrink-0" />
                       <span className="truncate">Call Cafe</span>
                     </button>
                   )}
 
                   {whatsappUrl ? (
                     <motion.a
-                      whileHover={shouldReduceMotion ? undefined : { y: -2, scale: 1.015 }}
+                      whileHover={shouldReduceMotion ? undefined : { y: -1, scale: 1.01 }}
                       whileTap={{ scale: 0.98 }}
                       href={whatsappUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="py-3 px-4 rounded-2xl bg-[#FDF6EE] hover:bg-[#FBEFE1] border border-[#EEDDCC] hover:border-[#FE8E2A]/40 text-[#2B1408] text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all cursor-pointer min-h-[44px]"
+                      className="py-2 sm:py-2.5 px-3 rounded-xl bg-[#FDF6EE] hover:bg-[#FBEFE1] border border-[#EEDDCC] hover:border-[#FE8E2A]/40 text-[#2B1408] text-xs font-semibold flex items-center justify-center gap-1.5 transition-all cursor-pointer min-h-[36px] sm:min-h-[38px]"
                       aria-label="Message Tryit Cafe on WhatsApp"
                     >
-                      <MessageCircle size={15} className="text-[#FE8E2A] shrink-0" />
+                      <MessageCircle size={14} className="text-[#FE8E2A] shrink-0" />
                       <span className="truncate">WhatsApp</span>
                     </motion.a>
                   ) : (
@@ -322,10 +322,10 @@ export const LocationAndHoursSection: React.FC = () => {
                       onClick={() =>
                         toastInfo('WhatsApp contact is temporarily unavailable.')
                       }
-                      className="py-3 px-4 rounded-2xl bg-[#FDF6EE] border border-[#EEDDCC] text-[#7A5C4A] text-xs sm:text-sm font-bold flex items-center justify-center gap-2 transition-all min-h-[44px]"
+                      className="py-2 sm:py-2.5 px-3 rounded-xl bg-[#FDF6EE] border border-[#EEDDCC] text-[#7A5C4A] text-xs font-semibold flex items-center justify-center gap-1.5 transition-all min-h-[36px] sm:min-h-[38px]"
                       aria-label="WhatsApp unavailable"
                     >
-                      <MessageCircle size={15} className="text-[#7A5C4A] shrink-0" />
+                      <MessageCircle size={14} className="text-[#7A5C4A] shrink-0" />
                       <span className="truncate">WhatsApp</span>
                     </button>
                   )}
@@ -341,6 +341,9 @@ export const LocationAndHoursSection: React.FC = () => {
               <div className="h-[250px] sm:h-[280px] lg:h-full lg:min-h-[340px] w-full">
                 <GoogleMap
                   src={settings?.googleMapsEmbedUrl}
+                  latitude={settings?.cafeLatitude}
+                  longitude={settings?.cafeLongitude}
+                  googleMapsLink={googleMapsLink}
                   height="100%"
                   title="TryIt Cafe & Kitchen location on Google Maps"
                   className="h-full min-h-[250px] sm:min-h-[280px] lg:min-h-[340px]"
@@ -363,42 +366,42 @@ export const LocationAndHoursSection: React.FC = () => {
           scaleInitial={1}
           enableHover={false}
         >
-          {/* MOBILE VIEW (< sm): Compact, easy-to-scan, premium cafe app layout */}
+          {/* MOBILE VIEW (< sm): Reduced line spacing, compact card size & refined fonts */}
           <div
-            className="sm:hidden rounded-[20px] bg-[#FFFBF7] border border-[#EEDDCC] p-4 shadow-sm"
+            className="sm:hidden rounded-2xl bg-[#FFFBF7] border border-[#EEDDCC] p-3 shadow-xs"
             aria-labelledby="opening-hours-title-mobile"
           >
             {/* 1. SECTION TITLE */}
-            <div className="flex items-center gap-2 mb-3.5">
-              <div className="w-7 h-7 rounded-lg bg-[#FE8E2A]/10 border border-[#FE8E2A]/20 flex items-center justify-center shrink-0 text-[#FE8E2A]">
-                <Clock size={15} aria-hidden="true" />
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-5 h-5 rounded-md bg-[#FE8E2A]/10 border border-[#FE8E2A]/20 flex items-center justify-center shrink-0 text-[#FE8E2A]">
+                <Clock size={12} aria-hidden="true" />
               </div>
               <h3
                 id="opening-hours-title-mobile"
-                className="text-lg font-bold uppercase tracking-wide text-[#FE8E2A] font-serif"
+                className="text-xs font-bold uppercase tracking-wider text-[#FE8E2A] font-serif"
               >
                 Opening Hours
               </h3>
             </div>
 
-            {/* 2. TODAY STATUS CARD */}
+            {/* 2. TODAY STATUS CARD (Compact Height & Padding) */}
             <div
-              className={`p-3.5 rounded-2xl border transition-colors flex items-center gap-3.5 ${
+              className={`p-2 rounded-xl border transition-colors flex items-center gap-2.5 ${
                 physicalStatus.isOpen
-                  ? 'bg-emerald-50/80 border-emerald-200/80'
-                  : 'bg-rose-50/80 border-rose-200/80'
+                  ? 'bg-emerald-50/70 border-emerald-200/80'
+                  : 'bg-rose-50/70 border-rose-200/80'
               }`}
             >
-              <div className="w-10 h-10 rounded-xl bg-white/90 border border-[#EEDDCC]/70 text-[#FE8E2A] flex items-center justify-center shrink-0 shadow-2xs">
-                <Clock size={18} className="text-[#FE8E2A]" aria-hidden="true" />
+              <div className="w-7 h-7 rounded-lg bg-white/90 border border-[#EEDDCC]/70 text-[#FE8E2A] flex items-center justify-center shrink-0 shadow-2xs">
+                <Clock size={14} className="text-[#FE8E2A]" aria-hidden="true" />
               </div>
               <div className="flex-1 min-w-0">
                 {/* Live Status indicator */}
                 <div className="flex items-center gap-1.5">
-                  <span className="relative flex h-2 w-2 items-center justify-center shrink-0">
+                  <span className="relative flex h-1.5 w-1.5 items-center justify-center shrink-0">
                     {physicalStatus.isOpen ? (
                       shouldReduceMotion ? (
-                        <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                       ) : (
                         <motion.span
                           animate={{ opacity: [1, 0.55, 1] }}
@@ -407,15 +410,15 @@ export const LocationAndHoursSection: React.FC = () => {
                             repeat: Infinity,
                             ease: 'easeInOut',
                           }}
-                          className="w-2 h-2 rounded-full bg-emerald-500"
+                          className="w-1.5 h-1.5 rounded-full bg-emerald-500"
                         />
                       )
                     ) : (
-                      <span className="w-2 h-2 rounded-full bg-rose-500" />
+                      <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
                     )}
                   </span>
                   <span
-                    className={`text-xs font-black uppercase tracking-wider ${
+                    className={`text-[10px] font-black uppercase tracking-wider ${
                       physicalStatus.isOpen
                         ? 'text-emerald-700'
                         : 'text-rose-700'
@@ -425,25 +428,25 @@ export const LocationAndHoursSection: React.FC = () => {
                   </span>
                 </div>
 
-                {/* Day name */}
-                <div className="text-xs font-semibold text-[#7A5C4A] mt-0.5">
-                  Today · {todayName}
-                </div>
-
-                {/* Today hours */}
-                <div className="text-[17px] font-black text-[#FE8E2A] whitespace-nowrap tracking-tight font-display mt-0.5">
-                  {todayHoursText}
+                {/* Day name & Hours in clean compact row */}
+                <div className="flex items-center justify-between gap-2 mt-0.5">
+                  <span className="text-[11px] font-semibold text-[#7A5C4A]">
+                    Today · {todayName}
+                  </span>
+                  <span className="text-xs font-black text-[#FE8E2A] whitespace-nowrap tracking-tight font-display">
+                    {todayHoursText}
+                  </span>
                 </div>
               </div>
             </div>
 
             {/* 3. WEEKLY SCHEDULE HEADING */}
-            <div className="text-[12px] font-extrabold uppercase tracking-wider text-[#7A5C4A] mt-4 mb-2 px-1">
+            <div className="text-[10px] font-extrabold uppercase tracking-wider text-[#7A5C4A] mt-2 mb-1 px-1">
               WEEKLY HOURS
             </div>
 
-            {/* 4. WEEKLY SCHEDULE ROWS */}
-            <div className="rounded-2xl bg-white/80 border border-[#EEDDCC]/80 overflow-hidden divide-y divide-[#EEDDCC]/50">
+            {/* 4. WEEKLY SCHEDULE ROWS (Reduced line spacing, height & fonts) */}
+            <div className="rounded-xl bg-white/80 border border-[#EEDDCC]/80 overflow-hidden divide-y divide-[#EEDDCC]/40">
               {orderedDays.map((h, idx) => {
                 const isToday =
                   h.dayOfWeek?.trim().toLowerCase() === todayName.toLowerCase();
@@ -451,23 +454,23 @@ export const LocationAndHoursSection: React.FC = () => {
                   <motion.div
                     key={h.dayOfWeek}
                     initial={
-                      shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 10 }
+                      shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 4 }
                     }
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{
-                      duration: 0.4,
-                      delay: shouldReduceMotion ? 0 : idx * 0.045,
+                      duration: 0.25,
+                      delay: shouldReduceMotion ? 0 : idx * 0.02,
                       ease: 'easeOut',
                     }}
-                    className={`flex items-center justify-between px-3.5 py-2.5 min-h-[46px] transition-colors ${
+                    className={`flex items-center justify-between px-3 py-1.5 min-h-[30px] transition-colors ${
                       isToday ? 'bg-[#FE8E2A]/10' : ''
                     }`}
                   >
                     {/* Left: Day + TODAY badge */}
-                    <div className="flex items-center gap-2 shrink-0">
+                    <div className="flex items-center gap-1.5 shrink-0">
                       <span
-                        className={`text-sm ${
+                        className={`text-xs ${
                           isToday
                             ? 'font-bold text-[#2B1408]'
                             : 'font-semibold text-[#5C3D2E]'
@@ -482,7 +485,7 @@ export const LocationAndHoursSection: React.FC = () => {
                           }
                           animate={{ opacity: 1 }}
                           transition={{ duration: 0.35 }}
-                          className="text-[10px] font-extrabold uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-[#FE8E2A] text-white shadow-2xs"
+                          className="text-[9px] font-extrabold uppercase tracking-wider px-1 py-0.2 rounded bg-[#FE8E2A] text-white shadow-2xs"
                         >
                           TODAY
                         </motion.span>
@@ -491,7 +494,7 @@ export const LocationAndHoursSection: React.FC = () => {
 
                     {/* Right: Hours */}
                     <span
-                      className={`text-[13px] sm:text-sm whitespace-nowrap text-right ${
+                      className={`text-xs whitespace-nowrap text-right ${
                         isToday
                           ? 'font-bold text-[#FE8E2A]'
                           : h.closed
@@ -499,11 +502,9 @@ export const LocationAndHoursSection: React.FC = () => {
                           : 'font-medium text-[#7A5C4A]'
                       }`}
                     >
-                      {h.closed ? (
-                        'Closed'
-                      ) : (
-                        formatBusinessHoursRange(h.openTime, h.closeTime)
-                      )}
+                      {h.closed
+                        ? 'Closed'
+                        : formatBusinessHoursRange(h.openTime, h.closeTime)}
                     </span>
                   </motion.div>
                 );

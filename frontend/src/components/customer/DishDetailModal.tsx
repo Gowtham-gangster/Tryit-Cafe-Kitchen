@@ -127,45 +127,60 @@ export const DishDetailModal: React.FC = () => {
             'Prepared with fresh locally sourced ingredients and spices, designed to offer an authentic gourmet flavor experience.'}
         </p>
 
-        {/* Quantity and Actions */}
-        <div className="pt-6 border-t border-[#EEDDCC] flex items-center justify-between gap-4">
-          <div className="flex items-center bg-[#FDF6EE] rounded-2xl p-1 border border-[#EEDDCC]">
+        {/* Quantity and Actions: Cohesive, compact, and non-wrapping on all screen sizes */}
+        <div className="pt-4 sm:pt-5 border-t border-[#EEDDCC] flex items-center justify-between gap-2.5 sm:gap-3.5">
+          {/* Integrated Quantity Stepper */}
+          <div className="flex items-center rounded-xl bg-[#FFF0DF] border border-[#FE8E2A]/35 h-11 sm:h-12 shrink-0 overflow-hidden shadow-2xs">
             <button
+              type="button"
               disabled={!orderingOpen}
               onClick={() => setLocalQty(Math.max(1, localQty - 1))}
-              className="w-10 h-10 rounded-xl bg-white text-[#2B1408] flex items-center justify-center shadow-xs hover:bg-[#FBEFE1] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-9 sm:w-10 h-full flex items-center justify-center text-[#FE8E2A] hover:bg-[#FFE4CB] active:bg-[#FED1A5] transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+              aria-label="Decrease quantity"
             >
-              <Minus size={16} />
+              <Minus size={15} className="stroke-[2.5]" />
             </button>
-            <span className="w-12 text-center text-sm font-bold text-[#2B1408]">
+            <span className="px-2 min-w-[30px] sm:min-w-[34px] text-center text-sm sm:text-base font-extrabold text-[#2B1408] select-none tabular-nums">
               {localQty}
             </span>
             <button
+              type="button"
               disabled={!orderingOpen}
               onClick={() => setLocalQty(localQty + 1)}
-              className="w-10 h-10 rounded-xl bg-white text-[#2B1408] flex items-center justify-center shadow-xs hover:bg-[#FBEFE1] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-9 sm:w-10 h-full flex items-center justify-center text-[#FE8E2A] hover:bg-[#FFE4CB] active:bg-[#FED1A5] transition-colors disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
+              aria-label="Increase quantity"
             >
-              <Plus size={16} />
+              <Plus size={15} className="stroke-[2.5]" />
             </button>
           </div>
 
+          {/* Add To Cart or Closed Status Button */}
           {!orderingOpen ? (
             <button
               type="button"
               disabled
               aria-disabled="true"
-              className="flex-1 py-3.5 px-6 rounded-2xl bg-[#EEDDCC] text-[#7A5C4A] font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-not-allowed select-none"
+              className="flex-1 h-11 sm:h-12 px-3 rounded-xl bg-[#EEDDCC] text-[#7A5C4A] font-extrabold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-not-allowed select-none"
             >
               <span className="w-2 h-2 rounded-full bg-red-500 shrink-0 inline-block" />
-              <span>Online Ordering Closed</span>
+              <span className="truncate">Ordering Paused</span>
             </button>
           ) : (
             <button
+              type="button"
               onClick={handleAddToCart}
-              className="flex-1 py-3.5 px-6 rounded-2xl bg-[#FE8E2A] hover:bg-[#E67616] text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-[#FE8E2A]/20 transition-all active:scale-95 cursor-pointer"
+              className="flex-1 h-11 sm:h-12 px-3 sm:px-4.5 rounded-xl bg-[#FE8E2A] hover:bg-[#E67616] active:scale-[0.98] text-white font-bold text-xs sm:text-sm flex items-center justify-between gap-2 shadow-md shadow-[#FE8E2A]/25 transition-all cursor-pointer overflow-hidden group select-none min-w-0"
+              aria-label={`Add to cart for ₹${effectivePrice * localQty}`}
             >
-              <ShoppingBag size={18} />
-              <span>Add to Cart • ₹{effectivePrice * localQty}</span>
+              <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
+                <div className="w-6 h-6 rounded-lg bg-white/20 flex items-center justify-center shrink-0">
+                  <ShoppingBag size={13} className="text-white" />
+                </div>
+                <span className="whitespace-nowrap font-extrabold tracking-wide truncate">Add to Cart</span>
+              </div>
+              <span className="text-xs sm:text-sm font-black bg-black/15 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-lg tabular-nums shrink-0 whitespace-nowrap">
+                ₹{effectivePrice * localQty}
+              </span>
             </button>
           )}
         </div>

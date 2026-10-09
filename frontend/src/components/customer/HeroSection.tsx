@@ -288,8 +288,8 @@ export const HeroSection: React.FC = () => {
             {heroSubheading}
           </motion.p>
 
-          {/* 5. Call To Action Buttons: Prominent primary, subtle secondary with micro-interactions */}
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start gap-2.5 sm:gap-3.5 mb-5 sm:mb-7 w-full sm:w-auto">
+          {/* 5. Call To Action Buttons: Compact fitted layout on mobile, prominent on desktop */}
+          <div className="flex flex-row flex-wrap items-center justify-start gap-2.5 sm:gap-3.5 mb-5 sm:mb-7 w-auto">
             <motion.button
               variants={exploreBtnVariants}
               initial="hidden"
@@ -306,9 +306,9 @@ export const HeroSection: React.FC = () => {
               }
               whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
               onClick={() => scrollToSection('menu')}
-              className="group px-6 sm:px-7 py-3 rounded-xl bg-[#FE8E2A] hover:bg-[#E67616] active:bg-[#C65A08] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer h-11 sm:h-12 select-none"
+              className="group px-4.5 min-[390px]:px-5 sm:px-7 py-2.5 sm:py-3 rounded-xl bg-[#FE8E2A] hover:bg-[#E67616] active:bg-[#C65A08] text-white font-bold text-xs min-[390px]:text-sm sm:text-base inline-flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer h-10.5 sm:h-12 select-none shrink-0"
             >
-              <Utensils size={17} className="transition-transform duration-200 group-hover:translate-x-0.5 shrink-0" />
+              <Utensils size={15} className="sm:size-[17px] transition-transform duration-200 group-hover:translate-x-0.5 shrink-0" />
               <span>Explore Menu</span>
             </motion.button>
 
@@ -332,10 +332,10 @@ export const HeroSection: React.FC = () => {
               href={instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="group px-5 sm:px-6 py-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-semibold text-sm sm:text-base flex items-center justify-center gap-2 backdrop-blur-xs transition-all cursor-pointer h-11 sm:h-12 select-none"
+              className="group px-4 min-[390px]:px-4.5 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-semibold text-xs min-[390px]:text-sm sm:text-base inline-flex items-center justify-center gap-2 backdrop-blur-xs transition-all cursor-pointer h-10.5 sm:h-12 select-none shrink-0"
               aria-label="Connect Us on Instagram"
             >
-              <InstagramIcon size={16} className="text-[#FE8E2A] transition-transform duration-200 group-hover:scale-110 shrink-0" />
+              <InstagramIcon size={15} className="sm:size-[16px] text-[#FE8E2A] transition-transform duration-200 group-hover:scale-110 shrink-0" />
               <span>Connect Us</span>
             </motion.a>
           </div>
