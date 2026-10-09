@@ -49,21 +49,24 @@ export const MenuSection: React.FC = () => {
 
   const sortDropdownRef = useRef<HTMLDivElement>(null);
   const categoryDropdownRef = useRef<HTMLDivElement>(null);
+  const mobileSortDropdownRef = useRef<HTMLDivElement>(null);
+  const mobileCategoryDropdownRef = useRef<HTMLDivElement>(null);
 
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
-      if (
-        sortDropdownRef.current &&
-        !sortDropdownRef.current.contains(target)
-      ) {
+      const isInsideSort =
+        (sortDropdownRef.current && sortDropdownRef.current.contains(target)) ||
+        (mobileSortDropdownRef.current && mobileSortDropdownRef.current.contains(target));
+      if (!isInsideSort) {
         setIsSortOpen(false);
       }
-      if (
-        categoryDropdownRef.current &&
-        !categoryDropdownRef.current.contains(target)
-      ) {
+
+      const isInsideCategory =
+        (categoryDropdownRef.current && categoryDropdownRef.current.contains(target)) ||
+        (mobileCategoryDropdownRef.current && mobileCategoryDropdownRef.current.contains(target));
+      if (!isInsideCategory) {
         setIsCategoryOpen(false);
       }
     };
@@ -128,7 +131,7 @@ export const MenuSection: React.FC = () => {
   return (
     <section
       id="menu"
-      className="py-8 sm:py-10 lg:py-12 bg-[#FDF6EE] scroll-mt-16 sm:scroll-mt-20"
+      className="py-8 sm:py-10 lg:py-12 bg-[#FDF6EE] scroll-mt-16"
     >
       <div className="max-w-7xl mx-auto px-3 min-[390px]:px-4 sm:px-6 lg:px-8">
         {/* Section Header with Staggered Entrance */}
@@ -184,12 +187,12 @@ export const MenuSection: React.FC = () => {
         {/*
           ==================================================
           STICKY MENU TOOLBAR
-          - Sticks below the mobile top navbar (top-16 = 64px on mobile, top-20 on desktop)
+          - Sticks directly below the top navbar (top-16 = 64px) with zero gap
           - Translucent warm cream background with subtle blur & divider
           - High z-index (z-30) so search & filters stay always accessible
           ==================================================
         */}
-        <div className="sticky top-16 sm:top-20 z-30 bg-[#FFF8F0]/96 backdrop-blur-md py-2.5 -mx-3 min-[390px]:-mx-4 sm:mx-0 px-3 min-[390px]:px-4 sm:px-0 mb-4 sm:mb-6 border-b border-[#EEDDCC] shadow-2xs transition-all">
+        <div className="sticky top-16 z-30 bg-[#FFF8F0]/98 backdrop-blur-md pt-2 pb-2.5 -mx-3 min-[390px]:-mx-4 sm:-mx-6 lg:-mx-8 px-3 min-[390px]:px-4 sm:px-6 lg:px-8 mb-4 sm:mb-6 border-b border-[#EEDDCC] shadow-2xs transition-all">
           {/* MOBILE VIEW (< sm): 3-Row Compact Toolbar */}
           <div className="block sm:hidden space-y-2">
             {/* ROW 1: Search Bar */}
@@ -218,7 +221,7 @@ export const MenuSection: React.FC = () => {
             {/* ROW 2: All Categories Dropdown + Sort Dropdown */}
             <div className="grid grid-cols-2 gap-2">
               {/* Category Dropdown Control */}
-              <div className="relative w-full" ref={categoryDropdownRef}>
+              <div className="relative w-full" ref={mobileCategoryDropdownRef}>
                 <button
                   type="button"
                   aria-label="Select menu category"
@@ -310,7 +313,7 @@ export const MenuSection: React.FC = () => {
               </div>
 
               {/* Sort Dropdown Control */}
-              <div className="relative w-full" ref={sortDropdownRef}>
+              <div className="relative w-full" ref={mobileSortDropdownRef}>
                 <button
                   type="button"
                   aria-label="Sort menu items"
@@ -419,10 +422,10 @@ export const MenuSection: React.FC = () => {
             </div>
           </div>
 
-          {/* DESKTOP VIEW (sm+): Wide Search + Category Tabs + Filters */}
-          <div className="hidden sm:block">
+          {/* DESKTOP VIEW (sm+): Search + Filters & Dropdowns */}
+          <div className="hidden sm:block space-y-2.5">
             {/* Desktop Search Bar */}
-            <div className="max-w-md mx-auto mb-3">
+            <div className="max-w-md mx-auto">
               <div className="relative flex items-center">
                 <Search className="absolute left-3.5 text-[#7A5C4A]" size={17} />
                 <input
@@ -430,7 +433,7 @@ export const MenuSection: React.FC = () => {
                   placeholder="Search dishes..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-9 py-2.5 rounded-2xl bg-white border border-[#EEDDCC] shadow-2xs focus:outline-none focus:ring-2 focus:ring-[#FE8E2A]/40 focus:border-[#FE8E2A] text-xs sm:text-sm font-medium text-[#23120B] placeholder:text-[#7A5C4A]/60 transition-all"
+                  className="w-full pl-10 pr-9 py-2 rounded-2xl bg-white border border-[#EEDDCC] shadow-2xs focus:outline-none focus:ring-2 focus:ring-[#FE8E2A]/40 focus:border-[#FE8E2A] text-xs sm:text-sm font-medium text-[#23120B] placeholder:text-[#7A5C4A]/60 transition-all h-10"
                   aria-label="Search dishes"
                 />
                 {searchQuery && (
@@ -446,40 +449,9 @@ export const MenuSection: React.FC = () => {
               </div>
             </div>
 
-            {/* Desktop Category Tabs Container */}
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 max-w-full">
-              <motion.button
-                whileHover={{ y: -1, scale: 1.02 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setSelectedCategoryId(null)}
-                className={`whitespace-nowrap px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 ${
-                  selectedCategoryId === null
-                    ? 'bg-[#FE8E2A] text-white shadow-md shadow-[#FE8E2A]/20'
-                    : 'bg-[#FFFBF7] text-[#2B1408] hover:bg-[#FBEFE1] border border-[#EEDDCC] hover:border-[#FE8E2A]/40'
-                }`}
-              >
-                All Categories
-              </motion.button>
-
-              {categories.map((cat) => (
-                <motion.button
-                  key={cat.id}
-                  whileHover={{ y: -1, scale: 1.02 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setSelectedCategoryId(cat.id)}
-                  className={`whitespace-nowrap px-4 py-2 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer shrink-0 ${
-                    selectedCategoryId === cat.id
-                      ? 'bg-[#FE8E2A] text-white shadow-md shadow-[#FE8E2A]/20'
-                      : 'bg-[#FFFBF7] text-[#2B1408] hover:bg-[#FBEFE1] border border-[#EEDDCC] hover:border-[#FE8E2A]/40'
-                  }`}
-                >
-                  {cat.name}
-                </motion.button>
-              ))}
-            </div>
-
-            {/* Desktop Filters & Sort Row */}
-            <div className="flex items-center justify-between gap-3 mt-3 pt-2.5 border-t border-[#EEDDCC]/60">
+            {/* Desktop Filters & Dropdowns Row */}
+            <div className="flex items-center justify-between gap-3 pt-1">
+              {/* Left: Dietary Filters */}
               <div className="flex items-center gap-2">
                 {foodTypeOptions.map((opt, idx) => (
                   <motion.button
@@ -501,74 +473,176 @@ export const MenuSection: React.FC = () => {
                 ))}
               </div>
 
-              {/* Desktop Sort Dropdown Control */}
-              <div className="relative" ref={sortDropdownRef}>
-                <button
-                  type="button"
-                  aria-label="Sort menu items"
-                  aria-haspopup="listbox"
-                  aria-expanded={isSortOpen}
-                  onClick={() => setIsSortOpen(!isSortOpen)}
-                  className="px-3.5 py-2 rounded-xl bg-[#FFFBF7] hover:bg-[#FBEFE1] border border-[#EEDDCC] hover:border-[#FE8E2A]/50 text-[#2B1408] text-xs font-bold flex items-center gap-2 transition-all cursor-pointer shadow-2xs min-h-[38px]"
-                >
-                  <ArrowUpDown size={13} className="text-[#FE8E2A]" />
-                  <span className="text-[#7A5C4A]">Sort:</span>
-                  <span className="text-[#2B1408]">
-                    {sortOptions.find((o) => o.value === sortBy)?.label}
-                  </span>
-                  <ChevronDown
-                    size={14}
-                    className={`text-[#7A5C4A] transition-transform duration-200 ${
-                      isSortOpen ? 'rotate-180 text-[#FE8E2A]' : ''
+              {/* Right: Category Dropdown & Sort Dropdown side by side */}
+              <div className="flex items-center gap-2.5">
+                {/* Category Dropdown (styled identically to Sort dropdown) */}
+                <div className="relative" ref={categoryDropdownRef}>
+                  <button
+                    type="button"
+                    aria-label="Select menu category"
+                    aria-haspopup="listbox"
+                    aria-expanded={isCategoryOpen}
+                    onClick={() => {
+                      setIsCategoryOpen(!isCategoryOpen);
+                      setIsSortOpen(false);
+                    }}
+                    className={`px-3.5 py-2 rounded-xl border text-xs font-bold flex items-center gap-2 transition-all cursor-pointer shadow-2xs min-h-[38px] ${
+                      selectedCategoryId !== null
+                        ? 'bg-[#FFF0DF] text-[#2B1408] border-[#FE8E2A]/60'
+                        : 'bg-[#FFFBF7] hover:bg-[#FBEFE1] border-[#EEDDCC] hover:border-[#FE8E2A]/50 text-[#2B1408]'
                     }`}
-                  />
-                </button>
+                  >
+                    <UtensilsCrossed size={13} className="text-[#FE8E2A]" />
+                    <span className="text-[#7A5C4A]">Category:</span>
+                    <span className="text-[#2B1408] max-w-[130px] truncate">
+                      {activeCategoryName}
+                    </span>
+                    <ChevronDown
+                      size={14}
+                      className={`text-[#7A5C4A] transition-transform duration-200 ${
+                        isCategoryOpen ? 'rotate-180 text-[#FE8E2A]' : ''
+                      }`}
+                    />
+                  </button>
 
-                <AnimatePresence>
-                  {isSortOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, y: 6, scale: 0.96 }}
-                      animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 6, scale: 0.96 }}
-                      transition={{ duration: 0.15 }}
-                      className="absolute right-0 top-full mt-1.5 w-52 bg-[#FFFBF7] rounded-2xl border border-[#EEDDCC] shadow-xl p-1.5 z-50 space-y-0.5"
-                      role="listbox"
-                      aria-label="Sort options"
-                    >
-                      <div className="px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-[#7A5C4A]">
-                        Sort By
-                      </div>
-                      {sortOptions.map((opt) => {
-                        const isSelected = sortBy === opt.value;
-                        return (
-                          <button
-                            key={opt.value}
-                            type="button"
-                            role="option"
-                            aria-selected={isSelected}
-                            onClick={() => {
-                              setSortBy(opt.value);
-                              setIsSortOpen(false);
-                            }}
-                            className={`w-full px-2.5 py-2 rounded-xl text-left text-xs font-bold flex items-center justify-between transition-colors cursor-pointer ${
-                              isSelected
-                                ? 'bg-[#FBEFE1] text-[#FE8E2A]'
-                                : 'text-[#2B1408] hover:bg-[#FDF6EE]'
-                            }`}
-                          >
-                            <span>{opt.label}</span>
-                            {isSelected && (
-                              <Check
-                                size={14}
-                                className="stroke-[3] text-[#FE8E2A]"
-                              />
-                            )}
-                          </button>
-                        );
-                      })}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                  <AnimatePresence>
+                    {isCategoryOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 6, scale: 0.96 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 6, scale: 0.96 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute right-0 top-full mt-1.5 w-60 max-h-72 overflow-y-auto bg-[#FFFBF7] rounded-2xl border border-[#EEDDCC] shadow-xl p-1.5 z-50 space-y-0.5 no-scrollbar"
+                        role="listbox"
+                        aria-label="Categories"
+                      >
+                        <div className="px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-[#7A5C4A]">
+                          Filter by Category
+                        </div>
+                        <button
+                          type="button"
+                          role="option"
+                          aria-selected={selectedCategoryId === null}
+                          onClick={() => {
+                            setSelectedCategoryId(null);
+                            setIsCategoryOpen(false);
+                          }}
+                          className={`w-full px-2.5 py-2 rounded-xl text-left text-xs font-bold flex items-center justify-between transition-colors cursor-pointer ${
+                            selectedCategoryId === null
+                              ? 'bg-[#FBEFE1] text-[#FE8E2A]'
+                              : 'text-[#2B1408] hover:bg-[#FDF6EE]'
+                          }`}
+                        >
+                          <span>All Categories</span>
+                          {selectedCategoryId === null && (
+                            <Check size={14} className="stroke-[3] text-[#FE8E2A]" />
+                          )}
+                        </button>
+                        {categories.map((cat) => {
+                          const isSelected = selectedCategoryId === cat.id;
+                          return (
+                            <button
+                              key={cat.id}
+                              type="button"
+                              role="option"
+                              aria-selected={isSelected}
+                              onClick={() => {
+                                setSelectedCategoryId(cat.id);
+                                setIsCategoryOpen(false);
+                              }}
+                              className={`w-full px-2.5 py-2 rounded-xl text-left text-xs font-bold flex items-center justify-between transition-colors cursor-pointer ${
+                                isSelected
+                                  ? 'bg-[#FBEFE1] text-[#FE8E2A]'
+                                  : 'text-[#2B1408] hover:bg-[#FDF6EE]'
+                              }`}
+                            >
+                              <span className="truncate">{cat.name}</span>
+                              {isSelected && (
+                                <Check
+                                  size={14}
+                                  className="stroke-[3] text-[#FE8E2A]"
+                                />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* Desktop Sort Dropdown Control */}
+                <div className="relative" ref={sortDropdownRef}>
+                  <button
+                    type="button"
+                    aria-label="Sort menu items"
+                    aria-haspopup="listbox"
+                    aria-expanded={isSortOpen}
+                    onClick={() => {
+                      setIsSortOpen(!isSortOpen);
+                      setIsCategoryOpen(false);
+                    }}
+                    className="px-3.5 py-2 rounded-xl bg-[#FFFBF7] hover:bg-[#FBEFE1] border border-[#EEDDCC] hover:border-[#FE8E2A]/50 text-[#2B1408] text-xs font-bold flex items-center gap-2 transition-all cursor-pointer shadow-2xs min-h-[38px]"
+                  >
+                    <ArrowUpDown size={13} className="text-[#FE8E2A]" />
+                    <span className="text-[#7A5C4A]">Sort:</span>
+                    <span className="text-[#2B1408]">
+                      {sortOptions.find((o) => o.value === sortBy)?.label}
+                    </span>
+                    <ChevronDown
+                      size={14}
+                      className={`text-[#7A5C4A] transition-transform duration-200 ${
+                        isSortOpen ? 'rotate-180 text-[#FE8E2A]' : ''
+                      }`}
+                    />
+                  </button>
+
+                  <AnimatePresence>
+                    {isSortOpen && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 6, scale: 0.96 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 6, scale: 0.96 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute right-0 top-full mt-1.5 w-52 bg-[#FFFBF7] rounded-2xl border border-[#EEDDCC] shadow-xl p-1.5 z-50 space-y-0.5"
+                        role="listbox"
+                        aria-label="Sort options"
+                      >
+                        <div className="px-2.5 py-1.5 text-[10px] font-extrabold uppercase tracking-wider text-[#7A5C4A]">
+                          Sort By
+                        </div>
+                        {sortOptions.map((opt) => {
+                          const isSelected = sortBy === opt.value;
+                          return (
+                            <button
+                              key={opt.value}
+                              type="button"
+                              role="option"
+                              aria-selected={isSelected}
+                              onClick={() => {
+                                setSortBy(opt.value);
+                                setIsSortOpen(false);
+                              }}
+                              className={`w-full px-2.5 py-2 rounded-xl text-left text-xs font-bold flex items-center justify-between transition-colors cursor-pointer ${
+                                isSelected
+                                  ? 'bg-[#FBEFE1] text-[#FE8E2A]'
+                                  : 'text-[#2B1408] hover:bg-[#FDF6EE]'
+                              }`}
+                            >
+                              <span>{opt.label}</span>
+                              {isSelected && (
+                                <Check
+                                  size={14}
+                                  className="stroke-[3] text-[#FE8E2A]"
+                                />
+                              )}
+                            </button>
+                          );
+                        })}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
             </div>
           </div>
