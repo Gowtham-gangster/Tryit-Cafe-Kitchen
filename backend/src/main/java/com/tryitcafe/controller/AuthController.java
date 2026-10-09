@@ -66,6 +66,28 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponse.ok(profile));
     }
 
+    @PostMapping("/forgot-password")
+    public ResponseEntity<ApiResponse<Void>> forgotPassword(
+            @Valid @RequestBody ForgotPasswordRequest request,
+            jakarta.servlet.http.HttpServletRequest httpRequest
+    ) {
+        rateLimiterService.checkLoginRateLimit(httpRequest, request.getEmail());
+        authService.requestPasswordReset(request);
+        return ResponseEntity.ok(ApiResponse.ok("Password reset link has been sent to your email address", null));
+    }
+
+    @GetMapping("/verify-reset-token")
+    public ResponseEntity<ApiResponse<VerifyResetTokenResponse>> verifyResetToken(@RequestParam("token") String token) {
+        VerifyResetTokenResponse response = authService.verifyResetToken(token);
+        return ResponseEntity.ok(ApiResponse.ok(response));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<ApiResponse<Void>> resetPassword(@Valid @RequestBody ResetPasswordRequest request) {
+        authService.resetPassword(request);
+        return ResponseEntity.ok(ApiResponse.ok("Password reset successfully. You can now login with your new password.", null));
+    }
+
     @PutMapping("/profile")
     public ResponseEntity<ApiResponse<UserProfileDto>> updateProfile(
             @AuthenticationPrincipal User user,

@@ -319,4 +319,58 @@ public class AuthDtos {
         public AuthResponse getAuthResponse() { return authResponse; }
         public void setAuthResponse(AuthResponse authResponse) { this.authResponse = authResponse; }
     }
+
+    public static class ForgotPasswordRequest {
+        @NotBlank(message = "Email address or registered phone number is required")
+        private String email;
+
+        public ForgotPasswordRequest() {}
+        public ForgotPasswordRequest(String email) { this.email = email; }
+
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
+    }
+
+    public static class ResetPasswordRequest {
+        @NotBlank(message = "Password reset token is required")
+        private String token;
+
+        @NotBlank(message = "New password is required")
+        @Size(min = 6, message = "Password must be at least 6 characters long")
+        private String newPassword;
+
+        public ResetPasswordRequest() {}
+        public ResetPasswordRequest(String token, String newPassword) {
+            this.token = token;
+            this.newPassword = newPassword;
+        }
+
+        public String getToken() { return token; }
+        public void setToken(String token) { this.token = token; }
+
+        public String getNewPassword() { return newPassword; }
+        public void setNewPassword(String newPassword) { this.newPassword = newPassword; }
+    }
+
+    public static class VerifyResetTokenResponse {
+        private boolean valid;
+        private String email;
+        private String fullName;
+
+        public VerifyResetTokenResponse() {}
+        public VerifyResetTokenResponse(boolean valid, String email, String fullName) {
+            this.valid = valid;
+            this.email = email;
+            this.fullName = fullName;
+        }
+
+        public boolean isValid() { return valid; }
+        public void setValid(boolean valid) { this.valid = valid; }
+
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
+
+        public String getFullName() { return fullName; }
+        public void setFullName(String fullName) { this.fullName = fullName; }
+    }
 }

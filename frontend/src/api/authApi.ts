@@ -50,4 +50,21 @@ export const authApi = {
     const res = await apiClient.post<ApiResponse<GoogleAuthResponse>>('/auth/google', payload);
     return res.data.data;
   },
+
+  forgotPassword: async (emailOrPhone: string) => {
+    const res = await apiClient.post<ApiResponse<void>>('/auth/forgot-password', { email: emailOrPhone });
+    return res.data.message || 'Password reset link sent to your registered email';
+  },
+
+  verifyResetToken: async (token: string) => {
+    const res = await apiClient.get<ApiResponse<{ valid: boolean; email?: string; fullName?: string }>>(
+      `/auth/verify-reset-token?token=${encodeURIComponent(token)}`
+    );
+    return res.data.data;
+  },
+
+  resetPassword: async (token: string, newPassword: string) => {
+    const res = await apiClient.post<ApiResponse<void>>('/auth/reset-password', { token, newPassword });
+    return res.data.message || 'Password reset successfully';
+  },
 };

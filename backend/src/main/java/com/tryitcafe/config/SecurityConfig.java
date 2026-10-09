@@ -81,7 +81,7 @@ public class SecurityConfig {
                     // Health & Diagnostics Endpoints
                     auth.requestMatchers("/health", "/api/health", "/api/v1/health").permitAll()
                             // Public Endpoints
-                            .requestMatchers("/api/v1/auth/register", "/api/v1/auth/login", "/api/v1/auth/owner-login", "/api/v1/auth/google").permitAll()
+                            .requestMatchers("/api/v1/auth/register", "/api/v1/auth/login", "/api/v1/auth/owner-login", "/api/v1/auth/google", "/api/v1/auth/forgot-password", "/api/v1/auth/verify-reset-token", "/api/v1/auth/reset-password").permitAll()
                             .requestMatchers("/api/v1/public/**", "/api/business/**", "/api/v1/business/**").permitAll()
                             .requestMatchers("/error").permitAll();
 

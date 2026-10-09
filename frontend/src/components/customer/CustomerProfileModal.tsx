@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '../../store/useAuthStore';
 import { useToastStore } from '../../store/useToastStore';
+import { authApi } from '../../api/authApi';
 import { CustomerLocation } from '../../types';
 import { getCurrentBrowserLocation, reverseGeocodeCoordinates } from '../../services/reverseGeocodeService';
 import { DeliveryLocationPicker } from '../location/DeliveryLocationPicker';
@@ -56,6 +57,8 @@ export const CustomerProfileModal: React.FC<CustomerProfileModalProps> = ({ isOp
   const [newPassword, setNewPassword] = useState('');
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [isSendingResetEmail, setIsSendingResetEmail] = useState(false);
+  const [resetEmailSentNotice, setResetEmailSentNotice] = useState<string | null>(null);
 
   // Add / Edit Location Sub-Panel State
   const [isLocationFormOpen, setIsLocationFormOpen] = useState(false);
@@ -74,8 +77,39 @@ export const CustomerProfileModal: React.FC<CustomerProfileModalProps> = ({ isOp
       setFullName(user.fullName);
       setEmail(user.email || '');
     }
+    setResetEmailSentNotice(null);
     clearError();
   }, [user, isOpen]);
+
+  const handleForgotPasswordFromProfile = async () => {
+    const targetEmail = (user?.email || email || '').trim();
+    const targetPhone = user?.phone;
+
+    if (!targetEmail && !targetPhone) {
+      toastError('Please enter your email address first so we can send the reset link.');
+      return;
+    }
+
+    setIsSendingResetEmail(true);
+    setResetEmailSentNotice(null);
+
+    try {
+      const sentTarget = targetEmail || targetPhone || '';
+      const msg = await authApi.forgotPassword(sentTarget);
+      success(msg || `Password reset link sent to ${targetEmail || 'your email'}!`);
+      setResetEmailSentNotice(
+        `Reset link sent to ${targetEmail || 'your email'}. Check your inbox or spam folder (valid for 15 mins).`
+      );
+    } catch (err: any) {
+      toastError(
+        err.response?.data?.message ||
+          err.message ||
+          'Failed to send reset email. Please ensure your email address is valid.'
+      );
+    } finally {
+      setIsSendingResetEmail(false);
+    }
+  };
 
   if (!isOpen || !user) return null;
 
@@ -348,9 +382,34 @@ export const CustomerProfileModal: React.FC<CustomerProfileModalProps> = ({ isOp
                     </div>
 
                     <div className="pt-2 border-t border-stone-200/60 space-y-2">
-                      <span className="text-[10px] font-bold text-stone-500 uppercase tracking-wider block">
-                        Change Password (Optional)
-                      </span>
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-bold text-stone-500 uppercase tracking-wider block">
+                          Change Password (Optional)
+                        </span>
+                        <button
+                          type="button"
+                          onClick={handleForgotPasswordFromProfile}
+                          disabled={isSendingResetEmail}
+                          className="text-[11px] font-bold text-amber-700 hover:text-amber-900 hover:underline cursor-pointer flex items-center gap-1"
+                        >
+                          {isSendingResetEmail ? (
+                            <>
+                              <Loader2 size={11} className="animate-spin text-amber-700" />
+                              <span>Sending...</span>
+                            </>
+                          ) : (
+                            <span>Forgot Password?</span>
+                          )}
+                        </button>
+                      </div>
+
+                      {resetEmailSentNotice && (
+                        <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] flex items-start gap-2">
+                          <CheckCircle2 size={14} className="text-emerald-600 shrink-0 mt-0.5" />
+                          <span>{resetEmailSentNotice}</span>
+                        </div>
+                      )}
+
                       <div>
                         <label className="text-[11px] font-semibold text-stone-600 block mb-1">
                           Current Password
@@ -472,9 +531,33 @@ export const CustomerProfileModal: React.FC<CustomerProfileModalProps> = ({ isOp
                       </div>
                     )}
 
-                    <div className="pt-2 flex items-center gap-1.5 text-emerald-700 text-[11px] font-bold">
-                      <ShieldCheck size={14} className="text-emerald-600" />
-                      <span>Verified Customer Account</span>
+                    {resetEmailSentNotice && (
+                      <div className="p-2.5 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-[11px] flex items-start gap-2">
+                        <CheckCircle2 size={14} className="text-emerald-600 shrink-0 mt-0.5" />
+                        <span>{resetEmailSentNotice}</span>
+                      </div>
+                    )}
+
+                    <div className="pt-2 flex items-center justify-between border-t border-stone-200/60">
+                      <div className="flex items-center gap-1.5 text-emerald-700 text-[11px] font-bold">
+                        <ShieldCheck size={14} className="text-emerald-600" />
+                        <span>Verified Customer Account</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleForgotPasswordFromProfile}
+                        disabled={isSendingResetEmail}
+                        className="text-[11px] font-bold text-amber-700 hover:text-amber-900 hover:underline flex items-center gap-1 cursor-pointer"
+                      >
+                        {isSendingResetEmail ? (
+                          <>
+                            <Loader2 size={11} className="animate-spin text-amber-700" />
+                            <span>Sending link...</span>
+                          </>
+                        ) : (
+                          <span>Reset Password</span>
+                        )}
+                      </button>
                     </div>
                   </div>
                 )}

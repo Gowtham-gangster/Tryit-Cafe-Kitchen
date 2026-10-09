@@ -19,6 +19,7 @@ import {
 import { useAuthStore } from '../../store/useAuthStore';
 import { useCartStore } from '../../store/useCartStore';
 import { useToastStore } from '../../store/useToastStore';
+import { authApi } from '../../api/authApi';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { modalBackdrop, modalContent } from '../../utils/animations';
@@ -70,13 +71,18 @@ export const AuthModal: React.FC = () => {
   } = useCartStore();
   const { addToast } = useToastStore();
 
-  const [mode, setMode] = useState<'login' | 'register'>(authModalMode);
+  const [mode, setMode] = useState<'login' | 'register' | 'forgot-password'>(authModalMode);
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
   const [localError, setLocalError] = useState<string | null>(null);
+
+  // Forgot Password State
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [isSendingForgot, setIsSendingForgot] = useState(false);
+  const [forgotSentSuccess, setForgotSentSuccess] = useState(false);
 
   // Google Authentication State
   const [isGoogleSigningIn, setIsGoogleSigningIn] = useState(false);
@@ -112,6 +118,8 @@ export const AuthModal: React.FC = () => {
     setPendingGoogleToken(null);
     setGoogleProfile(null);
     setSelectedLocation(null);
+    setForgotSentSuccess(false);
+    setForgotEmail('');
   }, [authModalMode, isAuthModalOpen]);
 
   // Pre-load Google Identity Services script
@@ -379,6 +387,37 @@ export const AuthModal: React.FC = () => {
     }
   };
 
+  const handleSendForgotPassword = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const query = forgotEmail.trim();
+    if (!query) {
+      setLocalError('Please enter your registered email address or phone number');
+      return;
+    }
+
+    setIsSendingForgot(true);
+    setLocalError(null);
+    clearError();
+
+    try {
+      const msg = await authApi.forgotPassword(query);
+      setForgotSentSuccess(true);
+      addToast({
+        type: 'success',
+        title: 'Reset Link Sent',
+        message: msg || 'Please check your email inbox for the reset link.',
+      });
+    } catch (err: any) {
+      setLocalError(
+        err.response?.data?.message ||
+          err.message ||
+          'Failed to send password reset link. Please verify your details.'
+      );
+    } finally {
+      setIsSendingForgot(false);
+    }
+  };
+
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -583,6 +622,124 @@ export const AuthModal: React.FC = () => {
                 </Button>
               </form>
             </div>
+          ) : mode === 'forgot-password' ? (
+            /* ========================================================= */
+            /* VIEW C: FORGOT PASSWORD REQUEST                           */
+            /* ========================================================= */
+            <div>
+              {/* Back to sign in */}
+              <div className="flex items-center gap-2 mb-4">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setMode('login');
+                    setLocalError(null);
+                    clearError();
+                  }}
+                  className="p-1 rounded-lg text-[#735440] hover:text-[#2B1408] hover:bg-[#FDF6EE] transition cursor-pointer"
+                  aria-label="Back to Sign In"
+                >
+                  <ArrowLeft className="w-5 h-5" />
+                </button>
+                <div>
+                  <h3 className="text-xl font-serif font-black text-[#2B1408]">Reset Password</h3>
+                  <p className="text-xs text-[#735440]">
+                    We will send a reset link to your registered email
+                  </p>
+                </div>
+              </div>
+
+              {/* Error Alert */}
+              {(error || localError) && (
+                <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-2xl flex items-center gap-2.5 text-red-500 text-xs font-semibold">
+                  <AlertCircle className="w-4 h-4 shrink-0" />
+                  <span>{error || localError}</span>
+                </div>
+              )}
+
+              {forgotSentSuccess ? (
+                <div className="space-y-4 text-center py-2">
+                  <div className="w-14 h-14 bg-emerald-50 border border-emerald-200 text-emerald-600 rounded-full flex items-center justify-center mx-auto shadow-xs">
+                    <CheckCircle2 size={30} />
+                  </div>
+                  <div>
+                    <h4 className="text-base font-bold text-[#2B1408]">Reset Link Sent!</h4>
+                    <p className="text-xs text-[#735440] mt-1.5 leading-relaxed">
+                      We've dispatched a password reset link to the email on file for <strong className="text-[#2B1408]">{forgotEmail}</strong>.
+                    </p>
+                  </div>
+                  <div className="p-3.5 bg-[#FDF6EE] border border-[#EEDDCC] rounded-2xl text-[11px] text-[#8A6E5C] text-left space-y-1.5">
+                    <p className="font-bold text-[#2B1408]">What to do next:</p>
+                    <p>• Check your inbox and spam/junk folder for the email.</p>
+                    <p>• Click the <strong>Reset My Password</strong> button in the email.</p>
+                    <p>• The reset link is valid for <strong>15 minutes</strong>.</p>
+                  </div>
+                  <div className="pt-2 space-y-2">
+                    <Button
+                      type="button"
+                      variant="primary"
+                      size="lg"
+                      onClick={() => {
+                        setMode('login');
+                        setForgotSentSuccess(false);
+                      }}
+                      className="w-full font-bold cursor-pointer"
+                    >
+                      Back to Sign In
+                    </Button>
+                    <button
+                      type="button"
+                      onClick={() => handleSendForgotPassword()}
+                      disabled={isSendingForgot}
+                      className="text-xs text-[#8A6E5C] hover:text-[#FE8E2A] underline cursor-pointer"
+                    >
+                      {isSendingForgot ? 'Resending...' : "Didn't receive email? Send Again"}
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <form onSubmit={handleSendForgotPassword} className="space-y-4">
+                  <p className="text-xs text-[#735440] leading-relaxed">
+                    Enter your registered email address or mobile phone number. We'll send a password recovery link directly to your email inbox.
+                  </p>
+
+                  <Input
+                    label="Email Address or Phone Number"
+                    placeholder="e.g. name@example.com or 9876543210"
+                    value={forgotEmail}
+                    onChange={(e) => {
+                      setForgotEmail(e.target.value);
+                      setLocalError(null);
+                    }}
+                    icon={<Mail className="w-4 h-4 text-[#8A6E5C]" />}
+                    required
+                  />
+
+                  <Button
+                    type="submit"
+                    variant="primary"
+                    size="lg"
+                    className="w-full font-bold cursor-pointer mt-2"
+                    isLoading={isSendingForgot}
+                  >
+                    Send Password Reset Link
+                  </Button>
+
+                  <div className="text-center pt-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMode('login');
+                        setLocalError(null);
+                      }}
+                      className="text-xs font-semibold text-[#8A6E5C] hover:text-[#2B1408] transition cursor-pointer"
+                    >
+                      Remember your password? <span className="text-[#FE8E2A] underline">Sign In</span>
+                    </button>
+                  </div>
+                </form>
+              )}
+            </div>
           ) : (
             /* ========================================================= */
             /* VIEW B: STANDARD LOGIN / REGISTER + CONTINUE WITH GOOGLE  */
@@ -743,6 +900,24 @@ export const AuthModal: React.FC = () => {
                   error={formErrors.password}
                   icon={<Lock className="w-4 h-4 text-stone-400" />}
                 />
+
+                {mode === 'login' && (
+                  <div className="flex justify-end -mt-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setMode('forgot-password');
+                        setForgotSentSuccess(false);
+                        setForgotEmail(phone || '');
+                        setLocalError(null);
+                        clearError();
+                      }}
+                      className="text-xs font-semibold text-[#FE8E2A] hover:text-[#E67616] hover:underline cursor-pointer"
+                    >
+                      Forgot Password?
+                    </button>
+                  </div>
+                )}
 
                 <Button
                   type="submit"

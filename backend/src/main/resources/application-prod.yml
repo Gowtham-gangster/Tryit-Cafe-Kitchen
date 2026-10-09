@@ -38,6 +38,7 @@ spring:
       enabled: false
 
 app:
+  frontend-url: ${FRONTEND_URL:https://tryitcafe.com}
   media:
     allow-local-fallback: false
   cloudinary:

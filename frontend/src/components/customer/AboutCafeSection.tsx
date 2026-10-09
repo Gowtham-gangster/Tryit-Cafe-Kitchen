@@ -255,16 +255,16 @@ export const AboutCafeSection: React.FC = () => {
               </p>
             </div>
 
-            {/* Compact Business Info Blocks (6 cols) */}
-            <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+            {/* Compact Business Info Blocks (6 cols) - 2 cols on mobile with WhatsApp hidden; 3 cols on desktop */}
+            <div className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3.5">
               {/* Location */}
               <RevealCard index={0} delay={0.1} yOffset={20} scaleInitial={0.97} enableHover={false}>
                 <button
                   type="button"
                   onClick={handleScrollToLocation}
-                  className="w-full h-full p-4 rounded-2xl bg-[#FDF6EE] border border-[#EEDDCC] hover:border-[#FE8E2A]/40 hover:-translate-y-1 transition-all text-left group cursor-pointer active:scale-98"
+                  className="w-full h-full p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-[#FDF6EE] border border-[#EEDDCC] hover:border-[#FE8E2A]/40 hover:-translate-y-1 transition-all text-left group cursor-pointer active:scale-98"
                 >
-                  <div className="flex items-center gap-1.5 text-[#FE8E2A] mb-1.5">
+                  <div className="flex items-center gap-1.5 text-[#FE8E2A] mb-1 sm:mb-1.5">
                     <span className="text-sm">📍</span>
                     <span className="text-[10px] font-extrabold uppercase tracking-wider">
                       LOCATION
@@ -281,8 +281,8 @@ export const AboutCafeSection: React.FC = () => {
 
               {/* Hours */}
               <RevealCard index={1} delay={0.18} yOffset={20} scaleInitial={0.97} enableHover={false}>
-                <div className="w-full h-full p-4 rounded-2xl bg-[#FDF6EE] border border-[#EEDDCC] text-left">
-                  <div className="flex items-center gap-1.5 text-[#FE8E2A] mb-1.5">
+                <div className="w-full h-full p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-[#FDF6EE] border border-[#EEDDCC] text-left">
+                  <div className="flex items-center gap-1.5 text-[#FE8E2A] mb-1 sm:mb-1.5">
                     <span className="text-sm">⏰</span>
                     <span className="text-[10px] font-extrabold uppercase tracking-wider">
                       DAILY HOURS
@@ -297,15 +297,15 @@ export const AboutCafeSection: React.FC = () => {
                 </div>
               </RevealCard>
 
-              {/* WhatsApp Ordering */}
-              <RevealCard index={2} delay={0.26} yOffset={20} scaleInitial={0.97} enableHover={false}>
+              {/* WhatsApp Ordering - Hidden on mobile view, visible on tablet/desktop */}
+              <RevealCard index={2} delay={0.26} yOffset={20} scaleInitial={0.97} enableHover={false} className="hidden sm:block">
                 <a
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full h-full p-4 rounded-2xl bg-[#FDF6EE] border border-[#EEDDCC] hover:border-[#FE8E2A]/40 hover:-translate-y-1 transition-all text-left group cursor-pointer active:scale-98 block"
+                  className="w-full h-full p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-[#FDF6EE] border border-[#EEDDCC] hover:border-[#FE8E2A]/40 hover:-translate-y-1 transition-all text-left group cursor-pointer active:scale-98 block"
                 >
-                  <div className="flex items-center gap-1.5 mb-1.5">
+                  <div className="flex items-center gap-1.5 mb-1 sm:mb-1.5">
                     <WhatsAppIcon size={16} className="text-[#25D366] shrink-0" />
                     <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#FE8E2A]">
                       ORDER AHEAD

@@ -20,17 +20,23 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final GoogleTokenVerifierService googleTokenVerifierService;
+    private final EmailService emailService;
+
+    @org.springframework.beans.factory.annotation.Value("${app.frontend-url:http://localhost:5173}")
+    private String frontendUrl;
 
     public AuthService(UserRepository userRepository,
                        CustomerLocationRepository customerLocationRepository,
                        PasswordEncoder passwordEncoder,
                        JwtUtils jwtUtils,
-                       GoogleTokenVerifierService googleTokenVerifierService) {
+                       GoogleTokenVerifierService googleTokenVerifierService,
+                       EmailService emailService) {
         this.userRepository = userRepository;
         this.customerLocationRepository = customerLocationRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
         this.googleTokenVerifierService = googleTokenVerifierService;
+        this.emailService = emailService;
     }
 
     @Transactional
@@ -304,6 +310,83 @@ public class AuthService {
                 .role(user.getRole())
                 .profileImageUrl(user.getProfileImageUrl())
                 .build();
+    }
+
+    @Transactional
+    public void requestPasswordReset(ForgotPasswordRequest request) {
+        String input = request.getEmail() != null ? request.getEmail().trim() : "";
+        if (input.isBlank()) {
+            throw new BadRequestException("Please provide your registered email address or phone number.");
+        }
+
+        User user = null;
+        if (input.contains("@")) {
+            user = userRepository.findByEmailIgnoreCase(input).orElse(null);
+        } else {
+            String cleanedPhone = input.replaceAll("\\s+", "");
+            user = userRepository.findByPhone(cleanedPhone).orElse(null);
+        }
+
+        if (user == null) {
+            user = userRepository.findByPhone(input.replaceAll("\\s+", "")).orElse(null);
+        }
+
+        if (user == null) {
+            throw new BadRequestException("No account was found with the provided details. Please check your email or phone number.");
+        }
+
+        if (user.getEmail() == null || user.getEmail().isBlank()) {
+            throw new BadRequestException("This account does not have a registered email address. Please contact cafe support directly.");
+        }
+
+        if (!user.isActive()) {
+            throw new BadRequestException("This account is currently deactivated. Please contact cafe support.");
+        }
+
+        String token = java.util.UUID.randomUUID().toString();
+        user.setPasswordResetToken(token);
+        user.setPasswordResetTokenExpiresAt(java.time.LocalDateTime.now().plusMinutes(15));
+        userRepository.save(user);
+
+        String resetUrl = frontendUrl + "/reset-password?token=" + token;
+        emailService.sendPasswordResetEmail(user.getEmail(), user.getFullName(), resetUrl);
+    }
+
+    public VerifyResetTokenResponse verifyResetToken(String token) {
+        if (token == null || token.isBlank()) {
+            return new VerifyResetTokenResponse(false, null, null);
+        }
+
+        return userRepository.findByPasswordResetToken(token.trim())
+                .filter(user -> user.getPasswordResetTokenExpiresAt() != null &&
+                        user.getPasswordResetTokenExpiresAt().isAfter(java.time.LocalDateTime.now()))
+                .map(user -> new VerifyResetTokenResponse(true, user.getEmail(), user.getFullName()))
+                .orElse(new VerifyResetTokenResponse(false, null, null));
+    }
+
+    @Transactional
+    public void resetPassword(ResetPasswordRequest request) {
+        String token = request.getToken() != null ? request.getToken().trim() : "";
+        if (token.isBlank()) {
+            throw new BadRequestException("Password reset token is missing.");
+        }
+
+        User user = userRepository.findByPasswordResetToken(token)
+                .orElseThrow(() -> new BadRequestException("The password reset link is invalid or has expired. Please request a new one."));
+
+        if (user.getPasswordResetTokenExpiresAt() == null ||
+                user.getPasswordResetTokenExpiresAt().isBefore(java.time.LocalDateTime.now())) {
+            throw new BadRequestException("The password reset link has expired (links are valid for 15 minutes). Please request a new one.");
+        }
+
+        if (request.getNewPassword() == null || request.getNewPassword().length() < 6) {
+            throw new BadRequestException("New password must be at least 6 characters long.");
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        user.setPasswordResetToken(null);
+        user.setPasswordResetTokenExpiresAt(null);
+        userRepository.save(user);
     }
 
     public static void validateProfileImageUrl(String url) {
