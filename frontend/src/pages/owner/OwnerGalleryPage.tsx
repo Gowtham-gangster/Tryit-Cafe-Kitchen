@@ -119,11 +119,12 @@ export const OwnerGalleryPage: React.FC = () => {
     if (!file) return;
     setUploadError(null);
 
-    const isVideo = file.type.startsWith('video/');
-    const isImage = file.type.startsWith('image/');
+    const ext = file.name.split('.').pop()?.toLowerCase() || '';
+    const isVideo = file.type.startsWith('video/') || ['mp4', 'webm', 'mov', 'm4v', 'mkv'].includes(ext);
+    const isImage = file.type.startsWith('image/') || ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif', 'heic', 'bmp'].includes(ext);
 
     if (!isImage && !isVideo) {
-      setUploadError('Unsupported file type. Please select a JPG, PNG, WebP image or MP4, WebM video.');
+      setUploadError('Unsupported file type. Please select a JPG, PNG, WebP, GIF image or MP4, WebM, MOV video.');
       return;
     }
 
@@ -187,17 +188,18 @@ export const OwnerGalleryPage: React.FC = () => {
     const file = e.target.files?.[0];
     if (!file || !directReplaceTarget) return;
 
-    const isVideo = file.type.startsWith('video/');
-    const isImage = file.type.startsWith('image/');
+    const ext = file.name.split('.').pop()?.toLowerCase() || '';
+    const isVideo = file.type.startsWith('video/') || ['mp4', 'webm', 'mov', 'm4v', 'mkv'].includes(ext);
+    const isImage = file.type.startsWith('image/') || ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif', 'heic', 'bmp'].includes(ext);
 
     if (!isImage && !isVideo) {
-      toastError('Unsupported file type. Allowed: JPG, PNG, WebP, MP4, WebM.');
+      toastError('Unsupported file type. Allowed: JPG, PNG, WebP, GIF, MP4, WebM, MOV.');
       return;
     }
 
-    const maxSizeBytes = isVideo ? 25 * 1024 * 1024 : 5 * 1024 * 1024;
+    const maxSizeBytes = isVideo ? 50 * 1024 * 1024 : 10 * 1024 * 1024;
     if (file.size > maxSizeBytes) {
-      toastError(isVideo ? 'Video must be smaller than 25 MB.' : 'Image must be smaller than 5 MB.');
+      toastError(isVideo ? 'Video must be smaller than 50 MB.' : 'Image must be smaller than 10 MB.');
       return;
     }
 
@@ -289,7 +291,7 @@ export const OwnerGalleryPage: React.FC = () => {
         type="file"
         ref={directReplaceInputRef}
         onChange={handleDirectReplaceFileChange}
-        accept="image/jpeg,image/png,image/webp,image/jpg,video/mp4,video/webm"
+        accept="image/*,video/*,.jpg,.jpeg,.png,.webp,.gif,.avif,.heic,.mp4,.webm,.mov"
         className="hidden"
       />
 
@@ -655,7 +657,7 @@ export const OwnerGalleryPage: React.FC = () => {
                 Media File *
               </label>
               <span className="text-[11px] text-[#7A5C4A]">
-                {mediaType === 'VIDEO' ? 'MP4 or WebM · Max 25MB' : 'JPG, PNG or WebP · Max 5MB'}
+                {mediaType === 'VIDEO' ? 'MP4, WebM or MOV · Max 50MB' : 'JPG, PNG, WebP or GIF · Max 10MB'}
               </span>
             </div>
 
@@ -765,7 +767,7 @@ export const OwnerGalleryPage: React.FC = () => {
                   Click to select file or drag and drop media here
                 </p>
                 <p className="text-[10px] text-[#A89284] mt-1 font-mono">
-                  {mediaType === 'VIDEO' ? 'MP4, WebM · Max 25MB' : 'JPG, PNG or WebP · Max 5MB'}
+                  {mediaType === 'VIDEO' ? 'MP4, WebM, MOV · Max 50MB' : 'JPG, PNG, WebP or GIF · Max 10MB'}
                 </p>
               </div>
             )}
@@ -778,7 +780,7 @@ export const OwnerGalleryPage: React.FC = () => {
                 const file = e.target.files?.[0];
                 if (file) handleFileSelection(file);
               }}
-              accept="image/jpeg,image/png,image/webp,image/jpg,video/mp4,video/webm"
+              accept="image/*,video/*,.jpg,.jpeg,.png,.webp,.gif,.avif,.heic,.mp4,.webm,.mov"
               className="hidden"
             />
 

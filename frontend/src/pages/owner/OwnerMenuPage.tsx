@@ -895,7 +895,7 @@ export const OwnerMenuPage: React.FC = () => {
                 <span>{isUploading ? 'Uploading...' : 'Upload File'}</span>
                 <input
                   type="file"
-                  accept="image/*"
+                  accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.avif,.heic"
                   onChange={handleFileUpload}
                   className="hidden"
                   disabled={isUploading}

@@ -42,19 +42,19 @@ public class CloudinaryService {
     );
 
     private static final Set<String> ALLOWED_IMAGE_TYPES = Set.of(
-            "image/jpeg", "image/png", "image/webp", "image/gif"
+            "image/jpeg", "image/png", "image/webp", "image/gif", "image/avif", "image/heic", "image/heif", "image/bmp"
     );
 
     private static final Set<String> ALLOWED_IMAGE_EXTENSIONS = Set.of(
-            "jpg", "jpeg", "png", "webp", "gif"
+            "jpg", "jpeg", "png", "webp", "gif", "avif", "heic", "heif", "bmp"
     );
 
     private static final Set<String> ALLOWED_VIDEO_TYPES = Set.of(
-            "video/mp4", "video/webm", "video/quicktime"
+            "video/mp4", "video/webm", "video/quicktime", "video/x-m4v", "video/x-matroska"
     );
 
     private static final Set<String> ALLOWED_VIDEO_EXTENSIONS = Set.of(
-            "mp4", "webm", "mov"
+            "mp4", "webm", "mov", "m4v", "mkv"
     );
 
     private static final java.util.regex.Pattern LOCAL_PUBLIC_ID_PATTERN =
@@ -100,112 +100,127 @@ public class CloudinaryService {
         boolean isVideoExt = ALLOWED_VIDEO_EXTENSIONS.contains(extension);
 
         if (!isImageExt && !isVideoExt) {
-            throw new BadRequestException("Unsupported file extension: ." + extension + ". Allowed formats: JPG, PNG, WEBP, GIF, MP4, WEBM, MOV.");
+            throw new BadRequestException("Unsupported file extension: ." + extension + ". Allowed formats: JPG, PNG, WEBP, GIF, AVIF, HEIC, MP4, WEBM, MOV.");
         }
 
-        String contentType = file.getContentType();
-        if (contentType == null || contentType.isBlank() || "application/octet-stream".equalsIgnoreCase(contentType)) {
-            throw new BadRequestException("Invalid or generic Content-Type. Please upload a valid media format.");
-        }
-
-        String cleanContentType = contentType.toLowerCase().trim();
-        boolean isImageMime = ALLOWED_IMAGE_TYPES.contains(cleanContentType);
-        boolean isVideoMime = ALLOWED_VIDEO_TYPES.contains(cleanContentType);
-
-        if (!isImageMime && !isVideoMime) {
-            throw new BadRequestException("Unsupported Content-Type: " + contentType + ". Allowed MIME types: JPEG, PNG, WEBP, GIF, MP4, WEBM, MOV.");
-        }
-
-        if (isImageExt && !isImageMime) {
-            throw new BadRequestException("Mismatch between file extension (." + extension + ") and Content-Type (" + contentType + ").");
-        }
-        if (isVideoExt && !isVideoMime) {
-            throw new BadRequestException("Mismatch between file extension (." + extension + ") and Content-Type (" + contentType + ").");
-        }
-
-        // Validate File Size
-        if (isImageExt && file.getSize() > MAX_IMAGE_SIZE) {
-            throw new BadRequestException("Image file size exceeds maximum limit of 10MB.");
-        }
-        if (isVideoExt && file.getSize() > MAX_VIDEO_SIZE) {
-            throw new BadRequestException("Video file size exceeds maximum limit of 50MB.");
-        }
-
-        // Inspect Magic Bytes (File Signature)
-        try {
-            byte[] header = new byte[32];
-            int readBytes;
-            try (java.io.InputStream is = file.getInputStream()) {
-                readBytes = is.read(header);
-            }
-            if (readBytes < 4) {
-                throw new BadRequestException("File is corrupted or too small to be a valid media file.");
-            }
-
-            validateMagicBytes(header, extension);
-        } catch (BadRequestException bre) {
-            throw bre;
+        // Inspect header bytes (first 32 bytes)
+        byte[] header = new byte[32];
+        int readBytes;
+        try (java.io.InputStream is = file.getInputStream()) {
+            readBytes = is.read(header);
         } catch (Exception e) {
-            log.warn("Failed to inspect file magic bytes: {}", e.getMessage());
-            throw new BadRequestException("Unable to verify file authenticity.");
+            log.warn("Failed to read media header bytes: {}", e.getMessage());
+            throw new BadRequestException("Unable to read uploaded file.");
+        }
+
+        if (readBytes < 4) {
+            throw new BadRequestException("File is corrupted or too small to be a valid media file.");
+        }
+
+        // Validate authenticity: determine whether it matches authentic image or video signatures
+        boolean isAuthenticImage = isImageSignature(header);
+        boolean isAuthenticVideo = isVideoSignature(header);
+
+        // Fallback check for images readable by Java ImageIO if raw header was ambiguous
+        if (!isAuthenticImage && !isAuthenticVideo && isImageExt) {
+            try (java.io.InputStream testIs = file.getInputStream()) {
+                if (javax.imageio.ImageIO.read(testIs) != null) {
+                    isAuthenticImage = true;
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
+        if (!isAuthenticImage && !isAuthenticVideo) {
+            log.warn("Security Alert: Media file failed authenticity verification for {}", originalFilename);
+            throw new BadRequestException("Uploaded file does not match a valid image (JPG, PNG, WebP, GIF, AVIF, HEIC) or video (MP4, WebM, MOV) signature.");
+        }
+
+        // Validate File Size (10MB for images, 50MB for videos)
+        if (isAuthenticImage || isImageExt) {
+            if (file.getSize() > MAX_IMAGE_SIZE) {
+                throw new BadRequestException("Image file size exceeds maximum limit of 10MB.");
+            }
+        } else {
+            if (file.getSize() > MAX_VIDEO_SIZE) {
+                throw new BadRequestException("Video file size exceeds maximum limit of 50MB.");
+            }
         }
     }
 
-    private void validateMagicBytes(byte[] header, String extension) {
-        // JPEG: FF D8 FF
-        boolean isJpeg = (header[0] & 0xFF) == 0xFF && (header[1] & 0xFF) == 0xD8 && (header[2] & 0xFF) == 0xFF;
+    private boolean isImageSignature(byte[] header) {
+        if (header == null || header.length < 2) return false;
+
+        // JPEG: FF D8 (SOI marker)
+        if ((header[0] & 0xFF) == 0xFF && (header[1] & 0xFF) == 0xD8) {
+            return true;
+        }
 
         // PNG: 89 50 4E 47 0D 0A 1A 0A
-        boolean isPng = header.length >= 8 &&
+        if (header.length >= 8 &&
                 (header[0] & 0xFF) == 0x89 && header[1] == 'P' && header[2] == 'N' && header[3] == 'G' &&
-                header[4] == 0x0D && header[5] == 0x0A && header[6] == 0x1A && header[7] == 0x0A;
+                header[4] == 0x0D && header[5] == 0x0A && header[6] == 0x1A && header[7] == 0x0A) {
+            return true;
+        }
 
         // GIF: GIF87a or GIF89a
-        boolean isGif = header.length >= 6 && header[0] == 'G' && header[1] == 'I' && header[2] == 'F' && header[3] == '8'
-                && (header[4] == '7' || header[4] == '9') && header[5] == 'a';
+        if (header.length >= 6 && header[0] == 'G' && header[1] == 'I' && header[2] == 'F' && header[3] == '8'
+                && (header[4] == '7' || header[4] == '9') && header[5] == 'a') {
+            return true;
+        }
 
         // WebP: RIFF....WEBP
-        boolean isWebP = header.length >= 12 &&
+        if (header.length >= 12 &&
                 header[0] == 'R' && header[1] == 'I' && header[2] == 'F' && header[3] == 'F' &&
-                header[8] == 'W' && header[9] == 'E' && header[10] == 'B' && header[11] == 'P';
-
-        // MP4: ....ftyp
-        boolean isMp4 = header.length >= 8 &&
-                header[4] == 'f' && header[5] == 't' && header[6] == 'y' && header[7] == 'p';
-
-        // QuickTime MOV: ....ftypqt or ....moov or ....wide
-        boolean isMov = isMp4 || (header.length >= 8 &&
-                ((header[4] == 'm' && header[5] == 'o' && header[6] == 'o' && header[7] == 'v') ||
-                        (header[4] == 'w' && header[5] == 'i' && header[6] == 'd' && header[7] == 'e')));
-
-        // WebM: 1A 45 DF A3 (EBML ID)
-        boolean isWebM = header.length >= 4 &&
-                (header[0] & 0xFF) == 0x1A && (header[1] & 0xFF) == 0x45 && (header[2] & 0xFF) == 0xDF && (header[3] & 0xFF) == 0xA3;
-
-        switch (extension) {
-            case "jpg", "jpeg" -> {
-                if (!isJpeg) throw new BadRequestException("File header does not match JPEG image signature.");
-            }
-            case "png" -> {
-                if (!isPng) throw new BadRequestException("File header does not match PNG image signature.");
-            }
-            case "gif" -> {
-                if (!isGif) throw new BadRequestException("File header does not match GIF image signature.");
-            }
-            case "webp" -> {
-                if (!isWebP) throw new BadRequestException("File header does not match WebP image signature.");
-            }
-            case "mp4" -> {
-                if (!isMp4) throw new BadRequestException("File header does not match MP4 video signature.");
-            }
-            case "mov" -> {
-                if (!isMov) throw new BadRequestException("File header does not match QuickTime MOV video signature.");
-            }
-            case "webm" -> {
-                if (!isWebM) throw new BadRequestException("File header does not match WebM video signature.");
-            }
-            default -> throw new BadRequestException("Unsupported or unrecognized media file extension: ." + extension);
+                header[8] == 'W' && header[9] == 'E' && header[10] == 'B' && header[11] == 'P') {
+            return true;
         }
+
+        // BMP: BM
+        if (header[0] == 'B' && header[1] == 'M') {
+            return true;
+        }
+
+        // AVIF / HEIC container check: contains 'ftyp' with avif, avis, heic, heix, mif1, msf1
+        String headerStr = new String(header, java.nio.charset.StandardCharsets.ISO_8859_1);
+        if (headerStr.contains("ftyp")) {
+            int ftypIdx = headerStr.indexOf("ftyp");
+            if (ftypIdx + 8 <= headerStr.length()) {
+                String brand = headerStr.substring(ftypIdx + 4, ftypIdx + 8).toLowerCase();
+                if (brand.contains("avif") || brand.contains("avis") || brand.contains("heic")
+                        || brand.contains("heix") || brand.contains("mif1") || brand.contains("msf1")) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    private boolean isVideoSignature(byte[] header) {
+        if (header == null || header.length < 4) return false;
+
+        // WebM / MKV: 1A 45 DF A3 (EBML ID)
+        if ((header[0] & 0xFF) == 0x1A && (header[1] & 0xFF) == 0x45 && (header[2] & 0xFF) == 0xDF && (header[3] & 0xFF) == 0xA3) {
+            return true;
+        }
+
+        // ISO Base Media File Format: MP4 / MOV / M4V (contains 'ftyp', 'moov', 'mdat')
+        String headerStr = new String(header, java.nio.charset.StandardCharsets.ISO_8859_1);
+        if (headerStr.contains("ftyp")) {
+            int ftypIdx = headerStr.indexOf("ftyp");
+            if (ftypIdx + 8 <= headerStr.length()) {
+                String brand = headerStr.substring(ftypIdx + 4, ftypIdx + 8).toLowerCase();
+                // If it's specifically an AVIF or HEIC image brand, let isImageSignature handle it
+                if (brand.contains("avif") || brand.contains("avis") || brand.contains("heic")
+                        || brand.contains("heix") || brand.contains("mif1") || brand.contains("msf1")) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        return headerStr.contains("moov") || headerStr.contains("mdat");
     }
 
     public Map<String, Object> uploadFile(MultipartFile file, String folder) throws IOException {

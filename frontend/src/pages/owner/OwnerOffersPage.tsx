@@ -705,7 +705,7 @@ export const OwnerOffersPage: React.FC = () => {
                 const file = e.target.files?.[0];
                 if (file) handleFileChange(file);
               }}
-              accept="image/jpeg,image/png,image/webp,image/jpg"
+              accept="image/*,.jpg,.jpeg,.png,.webp,.gif,.avif,.heic"
               className="hidden"
             />
 

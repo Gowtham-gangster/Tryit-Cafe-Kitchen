@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowUpRight,
+  Play,
 } from 'lucide-react';
 import { useMenuStore } from '../../store/useMenuStore';
 import { GalleryItem } from '../../types';
@@ -557,11 +558,21 @@ export const GallerySection: React.FC = () => {
                 transition={{ duration: 0.22, ease: 'easeOut' }}
                 className="max-h-[66vh] sm:max-h-[75vh] w-auto max-w-full flex items-center justify-center"
               >
-                <img
-                  src={getOptimizedImageUrl(activeLightboxItem.mediaUrl, 'galleryLightbox')}
-                  alt={activeLightboxItem.title || 'Tryit Cafe photo'}
-                  className="max-h-[66vh] sm:max-h-[75vh] w-auto max-w-full object-contain rounded-2xl shadow-2xl border border-white/10"
-                />
+                {activeLightboxItem.mediaType === 'VIDEO' ? (
+                  <video
+                    src={activeLightboxItem.mediaUrl}
+                    controls
+                    autoPlay
+                    playsInline
+                    className="max-h-[66vh] sm:max-h-[75vh] w-auto max-w-full object-contain rounded-2xl shadow-2xl border border-white/10"
+                  />
+                ) : (
+                  <img
+                    src={getOptimizedImageUrl(activeLightboxItem.mediaUrl, 'galleryLightbox')}
+                    alt={activeLightboxItem.title || 'Tryit Cafe photo'}
+                    className="max-h-[66vh] sm:max-h-[75vh] w-auto max-w-full object-contain rounded-2xl shadow-2xl border border-white/10"
+                  />
+                )}
               </motion.div>
 
               {/* Next Image Button (Visible on all viewports, min 44px) */}
@@ -728,12 +739,23 @@ const EditorialCard: React.FC<EditorialCardProps> = ({
           }}
           className="w-full h-full will-change-transform"
         >
-          <SafeImage
-            src={item.mediaUrl}
-            alt={item.title || 'Tryit Cafe photo'}
-            priority={isFeatured}
-            className="w-full h-full object-cover"
-          />
+          {item.mediaType === 'VIDEO' ? (
+            <video
+              src={item.mediaUrl}
+              muted
+              playsInline
+              loop
+              autoPlay
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <SafeImage
+              src={item.mediaUrl}
+              alt={item.title || 'Tryit Cafe photo'}
+              priority={isFeatured}
+              className="w-full h-full object-cover"
+            />
+          )}
         </motion.div>
 
         {/* Subtle Cursor-Following Warm Radial Light (Desktop Only) */}
@@ -750,14 +772,15 @@ const EditorialCard: React.FC<EditorialCardProps> = ({
         {/* Bottom Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#2B1408]/85 via-[#2B1408]/20 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-300 p-5 sm:p-6 flex flex-col justify-end text-white pointer-events-none">
           <div className="flex items-center justify-between">
-            {/* Category Pill */}
-            <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-[#FE8E2A] px-2.5 py-1 rounded-full bg-[#2B1408]/75 backdrop-blur-sm border border-[#FE8E2A]/30 transition-transform duration-300 group-hover:-translate-y-0.5">
-              {item.categoryTag}
+            {/* Category Pill with optional Video Play Icon */}
+            <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-[#FE8E2A] px-2.5 py-1 rounded-full bg-[#2B1408]/75 backdrop-blur-sm border border-[#FE8E2A]/30 transition-transform duration-300 group-hover:-translate-y-0.5 inline-flex items-center gap-1.5">
+              {item.mediaType === 'VIDEO' && <Play size={10} className="fill-[#FE8E2A]" />}
+              <span>{item.categoryTag}</span>
             </span>
 
             {/* Interactive "View" Button Badge */}
             <span className="inline-flex items-center gap-1 text-[11px] font-bold text-white/95 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/25 opacity-90 group-hover:opacity-100 group-hover:bg-[#FE8E2A] group-hover:border-[#FE8E2A] group-hover:scale-[1.04] transition-all duration-300">
-              <span>View</span>
+              <span>{item.mediaType === 'VIDEO' ? 'Watch' : 'View'}</span>
               <ArrowUpRight size={13} className="group-hover:translate-x-1 transition-transform duration-200" />
             </span>
           </div>
