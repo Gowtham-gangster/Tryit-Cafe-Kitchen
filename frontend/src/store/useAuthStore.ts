@@ -40,6 +40,7 @@ interface AuthState {
   ) => Promise<boolean>;
   googleSignIn: (payload: GoogleAuthPayload) => Promise<GoogleAuthResponse | null>;
   logout: () => void;
+  deleteAccount: () => Promise<boolean>;
   checkAuth: () => Promise<void>;
   updateProfile: (payload: UpdateProfilePayload) => Promise<boolean>;
   clearError: () => void;
@@ -264,6 +265,20 @@ export const useAuthStore = create<AuthState>((set, get) => {
         pendingCartAction: null,
         error: null,
       });
+    },
+
+    deleteAccount: async () => {
+      set({ isLoading: true, error: null });
+      try {
+        await authApi.deleteAccount();
+        get().logout();
+        set({ isLoading: false });
+        return true;
+      } catch (err: any) {
+        const message = err.response?.data?.message || 'Failed to delete account.';
+        set({ error: message, isLoading: false });
+        return false;
+      }
     },
 
     checkAuth: async () => {

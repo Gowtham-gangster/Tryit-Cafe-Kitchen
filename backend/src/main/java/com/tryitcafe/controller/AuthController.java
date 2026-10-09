@@ -99,4 +99,13 @@ public class AuthController {
         UserProfileDto profile = authService.updateProfile(user, request);
         return ResponseEntity.ok(ApiResponse.ok("Profile updated successfully", profile));
     }
+
+    @DeleteMapping("/account")
+    public ResponseEntity<ApiResponse<Void>> deleteAccount(@AuthenticationPrincipal User user) {
+        if (user == null) {
+            return ResponseEntity.status(401).body(ApiResponse.error("Not authenticated"));
+        }
+        authService.deleteAccount(user);
+        return ResponseEntity.ok(ApiResponse.ok("Account deleted successfully", null));
+    }
 }

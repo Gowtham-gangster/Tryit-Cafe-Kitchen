@@ -91,7 +91,7 @@ public class SecurityConfig {
                     }
 
                     // Authenticated Auth Profile Endpoints
-                    auth.requestMatchers("/api/v1/auth/me", "/api/v1/auth/profile").authenticated()
+                    auth.requestMatchers("/api/v1/auth/me", "/api/v1/auth/profile", "/api/v1/auth/account").authenticated()
                             // Customer & Order Endpoints
                             .requestMatchers("/api/v1/customer/**", "/api/orders/**", "/api/v1/orders/**", "/api/orders", "/api/v1/orders", "/api/checkout/**", "/api/v1/checkout/**", "/api/checkout", "/api/v1/checkout").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_OWNER")
                             // Owner Dashboard Endpoints

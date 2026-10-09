@@ -85,6 +85,8 @@ public class AuthDtos {
         @Email(message = "Please provide a valid email address")
         private String email;
 
+        private String phone;
+
         @Size(max = 500, message = "Profile image URL cannot exceed 500 characters")
         @Pattern(
                 regexp = "^$|^https://[a-zA-Z0-9.-]+(?::[0-9]+)?(?:/[a-zA-Z0-9._~!$&'()*+,;=:@%/?#-]*)?$",
@@ -101,6 +103,9 @@ public class AuthDtos {
 
         public String getEmail() { return email; }
         public void setEmail(String email) { this.email = email; }
+
+        public String getPhone() { return phone; }
+        public void setPhone(String phone) { this.phone = phone; }
 
         public String getProfileImageUrl() { return profileImageUrl; }
         public void setProfileImageUrl(String profileImageUrl) { this.profileImageUrl = profileImageUrl; }

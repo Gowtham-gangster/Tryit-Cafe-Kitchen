@@ -21,6 +21,7 @@ public class AuthService {
     private final JwtUtils jwtUtils;
     private final GoogleTokenVerifierService googleTokenVerifierService;
     private final EmailService emailService;
+    private final com.tryitcafe.repository.CartRepository cartRepository;
 
     @org.springframework.beans.factory.annotation.Value("${app.frontend-url:http://localhost:5173}")
     private String frontendUrl;
@@ -30,13 +31,15 @@ public class AuthService {
                        PasswordEncoder passwordEncoder,
                        JwtUtils jwtUtils,
                        GoogleTokenVerifierService googleTokenVerifierService,
-                       EmailService emailService) {
+                       EmailService emailService,
+                       com.tryitcafe.repository.CartRepository cartRepository) {
         this.userRepository = userRepository;
         this.customerLocationRepository = customerLocationRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtils = jwtUtils;
         this.googleTokenVerifierService = googleTokenVerifierService;
         this.emailService = emailService;
+        this.cartRepository = cartRepository;
     }
 
     @Transactional
@@ -153,6 +156,17 @@ public class AuthService {
             existing.setEmail(newEmail);
         }
 
+        if (request.getPhone() != null && !request.getPhone().isBlank()) {
+            String cleanedPhone = request.getPhone().replaceAll("\\s+", "");
+            if (!cleanedPhone.matches("^[0-9+]{8,15}$")) {
+                throw new BadRequestException("Please enter a valid mobile number (8-15 digits).");
+            }
+            if (userRepository.existsByPhoneAndIdNot(cleanedPhone, existing.getId())) {
+                throw new BadRequestException("Phone number is already associated with another account.");
+            }
+            existing.setPhone(cleanedPhone);
+        }
+
         if (request.getProfileImageUrl() != null) {
             String trimmed = request.getProfileImageUrl().trim();
             if (!trimmed.isEmpty()) {
@@ -179,6 +193,29 @@ public class AuthService {
 
         User saved = userRepository.save(existing);
         return getProfile(saved);
+    }
+
+    @Transactional
+    public void deleteAccount(User user) {
+        User existing = userRepository.findById(user.getId())
+                .orElseThrow(() -> new UnauthorizedException("User not found"));
+
+        if (existing.getRole() == UserRole.ROLE_OWNER) {
+            throw new BadRequestException("Owner accounts cannot be deleted directly.");
+        }
+
+        // Delete user's active cart if any
+        cartRepository.findByUser(existing).ifPresent(cartRepository::delete);
+
+        // Delete user's saved customer delivery locations
+        java.util.List<com.tryitcafe.model.entity.CustomerLocation> locations =
+                customerLocationRepository.findByCustomerId(existing.getId());
+        if (!locations.isEmpty()) {
+            customerLocationRepository.deleteAll(locations);
+        }
+
+        // Permanently delete user
+        userRepository.delete(existing);
     }
 
     @Transactional

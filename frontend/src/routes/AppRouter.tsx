@@ -14,6 +14,9 @@ const TermsAndConditionsPage = lazy(() =>
 const ResetPasswordPage = lazy(() =>
   import('../pages/ResetPasswordPage').then((m) => ({ default: m.ResetPasswordPage }))
 );
+const CustomerProfilePage = lazy(() =>
+  import('../pages/CustomerProfilePage').then((m) => ({ default: m.CustomerProfilePage }))
+);
 
 // Owner Portal - Code Split (Completely isolated from initial customer bundle)
 const OwnerLoginPage = lazy(() =>
@@ -67,7 +70,7 @@ export const AppRouter: React.FC = () => {
             <Route path="/location" element={<CustomerHomePage />} />
             <Route path="/cart" element={<CustomerHomePage />} />
             <Route path="/checkout" element={<CustomerHomePage />} />
-            <Route path="/profile" element={<CustomerHomePage />} />
+            <Route path="/profile" element={<CustomerProfilePage />} />
             <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
             <Route path="/terms-and-conditions" element={<TermsAndConditionsPage />} />
             <Route path="/reset-password" element={<ResetPasswordPage />} />

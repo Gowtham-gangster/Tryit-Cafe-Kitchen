@@ -8,7 +8,6 @@ import { Footer } from './Footer';
 import { FloatingCartCTA } from './FloatingCartCTA';
 import { CartDrawer } from './CartDrawer';
 import { DishDetailModal } from './DishDetailModal';
-import { CustomerProfileModal } from './CustomerProfileModal';
 import { ReviewModal } from './ReviewModal';
 import { OrderConfirmationModal } from '../cart/OrderConfirmationModal';
 import { useMenuStore } from '../../store/useMenuStore';
@@ -38,7 +37,6 @@ export const CustomerLayout: React.FC = () => {
   } = useCartStore();
   const { isAuthenticated, user, openAuthModal, fetchLocations } = useAuthStore();
   const { success } = useToastStore();
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isCheckoutBlockedOpen, setIsCheckoutBlockedOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
@@ -70,9 +68,8 @@ export const CustomerLayout: React.FC = () => {
     } else if (path === '/cart') {
       setIsCartOpen(true);
     } else if (path === '/profile') {
-      if (isAuthenticated && user && user.role !== 'ROLE_OWNER') {
-        setIsProfileOpen(true);
-      } else {
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      if (!isAuthenticated || !user || user.role === 'ROLE_OWNER') {
         openAuthModal('login', 'Sign in to access your customer profile.');
       }
     } else if (['/menu', '/offers', '/popular', '/gallery', '/reviews', '/about', '/location'].includes(path)) {
@@ -88,14 +85,14 @@ export const CustomerLayout: React.FC = () => {
       requestAnimationFrame(tryScroll);
     } else if (path === '/' && isNewRoute) {
       window.scrollTo({ top: 0, behavior: 'instant' });
-    } else if ((path === '/privacy-policy' || path === '/terms-and-conditions') && isNewRoute) {
+    } else if ((path === '/privacy-policy' || path === '/terms-and-conditions' || path === '/reset-password') && isNewRoute) {
       window.scrollTo({ top: 0, behavior: 'instant' });
     }
   }, [location.pathname, isAuthenticated, user, setIsCartOpen, openAuthModal, isOnlineOrderingOpen]);
 
   const handleOpenProfile = () => {
     if (isAuthenticated && user && user.role !== 'ROLE_OWNER') {
-      setIsProfileOpen(true);
+      navigate('/profile');
     } else {
       openAuthModal('login', 'Sign in to access your customer profile & saved details.');
     }
@@ -185,13 +182,7 @@ export const CustomerLayout: React.FC = () => {
       {/* 8. Dish Detail Lightbox Modal */}
       <DishDetailModal />
 
-      {/* 9. Customer Profile Modal */}
-      <CustomerProfileModal
-        isOpen={isProfileOpen}
-        onClose={() => setIsProfileOpen(false)}
-      />
-
-      {/* 10. Review Submission Modal */}
+      {/* 9. Review Submission Modal */}
       <ReviewModal />
 
       {/* 11. Customer Checkout & Delivery Confirmation Modal */}

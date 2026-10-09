@@ -3,6 +3,7 @@ import { ApiResponse, AuthResponse, GoogleAuthPayload, GoogleAuthResponse, User 
 
 export interface UpdateProfilePayload {
   fullName?: string;
+  phone?: string;
   email?: string;
   profileImageUrl?: string;
   currentPassword?: string;
@@ -66,5 +67,10 @@ export const authApi = {
   resetPassword: async (token: string, newPassword: string) => {
     const res = await apiClient.post<ApiResponse<void>>('/auth/reset-password', { token, newPassword });
     return res.data.message || 'Password reset successfully';
+  },
+
+  deleteAccount: async () => {
+    const res = await apiClient.delete<ApiResponse<void>>('/auth/account');
+    return res.data.message || 'Account permanently deleted';
   },
 };
