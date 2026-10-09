@@ -112,12 +112,13 @@ export const OffersCarousel: React.FC = () => {
                     shouldReduceMotion
                       ? undefined
                       : {
-                          y: -3,
-                          transition: { duration: 0.2, ease: 'easeOut' },
+                          y: -4,
+                          scale: 1.015,
+                          transition: { duration: 0.22, ease: 'easeOut' },
                         }
                   }
                   whileTap={shouldReduceMotion ? undefined : { scale: 0.99 }}
-                  className="w-full h-full relative overflow-hidden rounded-2xl sm:rounded-3xl bg-[#FFFBF7] border border-[#EEDDCC] hover:border-[#FE8E2A]/60 p-4.5 sm:p-5 shadow-[0_3px_14px_-3px_rgba(43,20,8,0.06)] hover:shadow-[0_8px_24px_-4px_rgba(43,20,8,0.12)] flex flex-col justify-between group transition-all duration-200"
+                  className="w-full h-full relative overflow-hidden rounded-2xl sm:rounded-3xl bg-[#FFFBF7] border border-[#EEDDCC] hover:border-[#FE8E2A]/60 p-4.5 sm:p-5 shadow-[0_3px_14px_-3px_rgba(43,20,8,0.06)] hover:shadow-[0_10px_28px_-4px_rgba(43,20,8,0.14)] flex flex-col justify-between group transition-all duration-200"
                 >
                   {/* Top Badges */}
                   <div className="flex items-center justify-between gap-2 mb-3">
@@ -127,15 +128,39 @@ export const OffersCarousel: React.FC = () => {
                     </span>
 
                     {offer.discountValue && (
-                      <span className="px-2.5 py-0.5 rounded-lg bg-[#FE8E2A] text-white text-xs sm:text-[13px] font-bold shadow-2xs whitespace-nowrap">
+                      <motion.span
+                        animate={
+                          shouldReduceMotion
+                            ? undefined
+                            : {
+                                scale: [1, 1.03, 1],
+                                boxShadow: [
+                                  '0 2px 8px -2px rgba(254, 142, 42, 0.35)',
+                                  '0 4px 14px 0px rgba(254, 142, 42, 0.55)',
+                                  '0 2px 8px -2px rgba(254, 142, 42, 0.35)',
+                                ],
+                              }
+                        }
+                        transition={
+                          shouldReduceMotion
+                            ? undefined
+                            : {
+                                duration: 3,
+                                repeat: Infinity,
+                                ease: 'easeInOut',
+                                delay: idx * 0.8,
+                              }
+                        }
+                        className="px-2.5 py-0.5 rounded-lg bg-[#FE8E2A] text-white text-xs sm:text-[13px] font-bold shadow-2xs whitespace-nowrap"
+                      >
                         {offer.discountType === 'PERCENTAGE'
                           ? `${offer.discountValue}% OFF`
                           : `₹${offer.discountValue} OFF`}
-                      </span>
+                      </motion.span>
                     )}
                   </div>
 
-                  {/* Optional Banner Image */}
+                  {/* Optional Banner Image with Hover Zoom */}
                   {offer.bannerImageUrl && (
                     <div className="mb-3 aspect-[16/8] sm:aspect-[16/7] w-full rounded-xl overflow-hidden bg-[#FDF6EE] border border-[#EEDDCC] shrink-0">
                       <img
@@ -146,7 +171,7 @@ export const OffersCarousel: React.FC = () => {
                         onError={(e) => {
                           (e.currentTarget.parentElement as HTMLElement)?.classList.add('hidden');
                         }}
-                        className="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300 ease-out"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
                       />
                     </div>
                   )}
@@ -177,13 +202,23 @@ export const OffersCarousel: React.FC = () => {
 
                     <motion.button
                       type="button"
-                      whileTap={{ scale: 0.97 }}
+                      whileHover={
+                        shouldReduceMotion
+                          ? undefined
+                          : {
+                              y: -1,
+                              scale: 1.02,
+                              boxShadow: '0 4px 14px -2px rgba(254, 142, 42, 0.45)',
+                              transition: { duration: 0.18 },
+                            }
+                      }
+                      whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
                       onClick={scrollToMenu}
-                      className="h-9 sm:h-10 px-3.5 sm:px-4 rounded-xl bg-[#FE8E2A] hover:bg-[#E67616] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer shrink-0"
+                      className="group/btn h-9 sm:h-10 px-3.5 sm:px-4 rounded-xl bg-[#FE8E2A] hover:bg-[#E67616] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition-colors shadow-2xs cursor-pointer shrink-0"
                       aria-label={`Order Now for ${offer.title}`}
                     >
                       <span>Order Now</span>
-                      <ArrowRight size={14} />
+                      <ArrowRight size={14} className="group-hover/btn:translate-x-0.5 transition-transform duration-200" />
                     </motion.button>
                   </div>
                 </motion.div>

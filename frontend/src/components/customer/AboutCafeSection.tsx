@@ -133,11 +133,11 @@ export const AboutCafeSection: React.FC = () => {
                 alt={`${cafeName} Ambience`}
                 loading="lazy"
                 decoding="async"
-                className="w-full h-full object-cover object-center group-hover:scale-102 transition-transform duration-500 will-change-transform"
+                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700 ease-out will-change-transform"
               />
 
-              {/* Subtle Location Tag Pill */}
-              <div className="absolute bottom-3.5 left-3.5 bg-[#2B1408]/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 text-white flex items-center gap-1.5 shadow-sm">
+              {/* Subtle Location Tag Pill with hover lift */}
+              <div className="absolute bottom-3.5 left-3.5 bg-[#2B1408]/85 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 text-white flex items-center gap-1.5 shadow-sm group-hover:-translate-y-1 group-hover:shadow-md transition-all duration-300">
                 <Coffee size={13} className="text-[#FE8E2A]" />
                 <span className="text-[11px] font-semibold">Gandi Maisamma, Hyderabad</span>
               </div>

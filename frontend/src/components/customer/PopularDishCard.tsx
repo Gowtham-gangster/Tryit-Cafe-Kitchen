@@ -76,8 +76,9 @@ export const PopularDishCard: React.FC<PopularDishCardProps> = ({
         shouldReduceMotion
           ? undefined
           : {
-              y: -3,
-              transition: { duration: 0.2, ease: 'easeOut' },
+              y: -4,
+              scale: 1.01,
+              transition: { duration: 0.22, ease: 'easeOut' },
             }
       }
       whileTap={
@@ -89,8 +90,36 @@ export const PopularDishCard: React.FC<PopularDishCardProps> = ({
             }
       }
       onClick={() => setSelectedDishModal(item)}
-      className="group relative bg-[#FFFBF7] rounded-2xl sm:rounded-3xl p-3 sm:p-4 border border-[#EEDDCC] hover:border-[#FE8E2A]/50 shadow-[0_2px_12px_-3px_rgba(43,20,8,0.06)] hover:shadow-[0_8px_24px_-4px_rgba(43,20,8,0.12)] transition-all duration-300 flex flex-col justify-between cursor-pointer h-full select-none"
+      className="group relative bg-[#FFFBF7] rounded-2xl sm:rounded-3xl p-3 sm:p-4 border border-[#EEDDCC] hover:border-[#FE8E2A]/50 shadow-[0_2px_12px_-3px_rgba(43,20,8,0.06)] hover:shadow-[0_10px_28px_-4px_rgba(43,20,8,0.14)] transition-all duration-300 flex flex-col justify-between cursor-pointer h-full select-none overflow-hidden"
     >
+      {/* Subtle One-time Light Highlight Sweep across Card */}
+      {!shouldReduceMotion && (
+        <div
+          className="absolute inset-0 z-[1] overflow-hidden pointer-events-none select-none rounded-2xl sm:rounded-3xl"
+          aria-hidden="true"
+        >
+          <motion.div
+            className="absolute top-0 bottom-0 w-3/5"
+            style={{
+              background:
+                'linear-gradient(90deg, transparent 0%, rgba(254, 142, 42, 0.02) 25%, rgba(254, 142, 42, 0.08) 50%, rgba(254, 142, 42, 0.02) 75%, transparent 100%)',
+              transform: 'skewX(-20deg)',
+            }}
+            initial={{ left: '-80%', opacity: 0 }}
+            whileInView={{
+              left: ['-80%', '160%'],
+              opacity: [0, 1, 0],
+            }}
+            viewport={{ once: true }}
+            transition={{
+              duration: 1.8,
+              ease: 'easeInOut',
+              delay: idx * 0.15 + 0.2,
+            }}
+          />
+        </div>
+      )}
+
       {/* Top Image & Badges */}
       <div>
         <div className="relative aspect-[16/10] w-full rounded-xl sm:rounded-2xl overflow-hidden mb-2.5 bg-[#FDF6EE]">

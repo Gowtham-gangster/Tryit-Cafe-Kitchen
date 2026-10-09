@@ -220,8 +220,10 @@ export const GallerySection: React.FC = () => {
             {CATEGORIES.map((category) => {
               const isActive = activeCategory === category;
               return (
-                <button
+                <motion.button
                   key={category}
+                  whileHover={shouldReduceMotion ? undefined : { y: -1, scale: 1.02 }}
+                  whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
                   onClick={() => setActiveCategory(category)}
                   className={`px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 whitespace-nowrap cursor-pointer select-none ${
                     isActive
@@ -231,7 +233,7 @@ export const GallerySection: React.FC = () => {
                   aria-pressed={isActive}
                 >
                   {category}
-                </button>
+                </motion.button>
               );
             })}
           </div>
@@ -427,23 +429,32 @@ const EditorialCard: React.FC<EditorialCardProps> = ({
       initial={
         shouldReduceMotion
           ? { opacity: 1 }
-          : { opacity: 0, y: 16 }
+          : { opacity: 0, scale: 0.96, y: 18 }
       }
       whileInView={{
         opacity: 1,
+        scale: 1,
         y: 0,
       }}
       viewport={{ once: true, amount: 0.15 }}
       transition={{
-        duration: 0.45,
+        duration: 0.5,
         delay: staggerDelay,
-        ease: 'easeOut',
+        ease: [0.22, 1, 0.36, 1],
       }}
+      whileHover={
+        shouldReduceMotion
+          ? undefined
+          : {
+              y: -4,
+              transition: { duration: 0.22, ease: 'easeOut' },
+            }
+      }
       className="w-full h-full"
     >
       <div
         onClick={onOpen}
-        className="group relative rounded-2xl sm:rounded-3xl overflow-hidden aspect-[4/3] bg-[#FDF6EE] border border-[#EEDDCC] hover:border-[#FE8E2A]/50 shadow-[0_2px_12px_-3px_rgba(43,20,8,0.06)] hover:shadow-[0_8px_24px_-4px_rgba(43,20,8,0.12)] transition-all duration-300 cursor-pointer w-full select-none"
+        className="group relative rounded-2xl sm:rounded-3xl overflow-hidden aspect-[4/3] bg-[#FDF6EE] border border-[#EEDDCC] hover:border-[#FE8E2A]/50 shadow-[0_2px_12px_-3px_rgba(43,20,8,0.06)] hover:shadow-[0_10px_28px_-4px_rgba(43,20,8,0.14)] transition-all duration-300 cursor-pointer w-full select-none"
       >
         <div className="w-full h-full overflow-hidden">
           {item.mediaType === 'VIDEO' ? (
@@ -453,13 +464,13 @@ const EditorialCard: React.FC<EditorialCardProps> = ({
               playsInline
               loop
               autoPlay
-              className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out will-change-transform"
             />
           ) : (
             <SafeImage
               src={item.mediaUrl}
               alt={item.title || 'Tryit Cafe moment'}
-              className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out will-change-transform"
             />
           )}
         </div>
@@ -468,26 +479,26 @@ const EditorialCard: React.FC<EditorialCardProps> = ({
         <div className="absolute inset-0 bg-gradient-to-t from-[#2B1408]/85 via-[#2B1408]/20 to-transparent opacity-85 group-hover:opacity-95 transition-opacity duration-300 p-4 sm:p-5 flex flex-col justify-end text-white pointer-events-none">
           <div className="flex items-center justify-between">
             {/* Category Pill with optional Video Play Icon */}
-            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#FE8E2A] px-2.5 py-0.5 rounded-full bg-[#2B1408]/80 backdrop-blur-xs border border-[#FE8E2A]/30 inline-flex items-center gap-1.5">
+            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#FE8E2A] px-2.5 py-0.5 rounded-full bg-[#2B1408]/80 backdrop-blur-xs border border-[#FE8E2A]/30 inline-flex items-center gap-1.5 transition-transform duration-200 group-hover:-translate-y-0.5">
               {item.mediaType === 'VIDEO' && <Play size={10} className="fill-[#FE8E2A]" />}
               <span>{item.categoryTag}</span>
             </span>
 
-            {/* Interactive "View" Button Badge */}
-            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-white bg-white/20 backdrop-blur-xs px-2.5 py-1 rounded-full border border-white/25 group-hover:bg-[#FE8E2A] group-hover:border-[#FE8E2A] transition-colors duration-200">
+            {/* Interactive "View" Button Badge with Scale & Arrow Float */}
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-white bg-white/20 backdrop-blur-xs px-2.5 py-1 rounded-full border border-white/25 group-hover:bg-[#FE8E2A] group-hover:border-[#FE8E2A] group-hover:scale-[1.04] transition-all duration-200">
               <span>{item.mediaType === 'VIDEO' ? 'Watch' : 'View'}</span>
-              <ArrowUpRight size={12} />
+              <ArrowUpRight size={12} className="group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200" />
             </span>
           </div>
 
-          {/* Real Title & Caption */}
+          {/* Real Title & Caption with subtle translate */}
           {item.title && (
-            <h4 className="text-sm sm:text-base font-bold font-serif text-white mt-2 line-clamp-1">
+            <h4 className="text-sm sm:text-base font-bold font-serif text-white mt-2 line-clamp-1 group-hover:-translate-y-0.5 transition-transform duration-200">
               {item.title}
             </h4>
           )}
           {item.caption && (
-            <p className="text-xs text-stone-200/90 mt-0.5 line-clamp-2">
+            <p className="text-xs text-stone-200/90 mt-0.5 line-clamp-2 group-hover:-translate-y-0.5 transition-transform duration-200">
               {item.caption}
             </p>
           )}

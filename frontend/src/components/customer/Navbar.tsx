@@ -329,27 +329,37 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenProfile }) => {
       </div>
 
       {/* Mobile Drawer Dropdown */}
-      {isMobileMenuOpen && (
-        <div className="lg:hidden border-t border-[#EEDDCC] bg-[#FFFBF7] px-4 py-3 space-y-1 shadow-lg animate-in fade-in slide-in-from-top-2 duration-150">
-          {navItems.map((item) => {
-            const isActive = activeSection === item.id;
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => scrollTo(item.id)}
-                className={`w-full text-left py-3 px-3.5 rounded-xl text-sm font-semibold transition min-h-[44px] flex items-center justify-between ${isActive
-                    ? 'text-[#FE8E2A] bg-[#FFF0DF] font-bold'
-                    : 'text-[#2B1408] hover:bg-[#FFF0DF]/60 hover:text-[#FE8E2A]'
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+            className="lg:hidden border-t border-[#EEDDCC] bg-[#FFFBF7] px-4 py-3 space-y-1 shadow-lg overflow-hidden"
+          >
+            {navItems.map((item) => {
+              const isActive = activeSection === item.id;
+              return (
+                <motion.button
+                  key={item.id}
+                  type="button"
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => scrollTo(item.id)}
+                  className={`w-full text-left py-3 px-3.5 rounded-xl text-sm font-semibold transition min-h-[44px] flex items-center justify-between ${
+                    isActive
+                      ? 'text-[#FE8E2A] bg-[#FFF0DF] font-bold'
+                      : 'text-[#2B1408] hover:bg-[#FFF0DF]/60 hover:text-[#FE8E2A]'
                   }`}
-              >
-                <span>{item.label}</span>
-                {isActive && <span className="w-1.5 h-1.5 rounded-full bg-[#FE8E2A]" />}
-              </button>
-            );
-          })}
-        </div>
-      )}
+                >
+                  <span>{item.label}</span>
+                  {isActive && <span className="w-1.5 h-1.5 rounded-full bg-[#FE8E2A]" />}
+                </motion.button>
+              );
+            })}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };

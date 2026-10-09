@@ -17,7 +17,7 @@ interface FoodImageProps {
 export const FoodImage: React.FC<FoodImageProps> = ({
   src,
   alt,
-  className = 'w-full h-full object-cover object-center',
+  className = 'w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500 ease-out will-change-transform',
   categoryName,
   foodType,
   preset = 'menuCard',

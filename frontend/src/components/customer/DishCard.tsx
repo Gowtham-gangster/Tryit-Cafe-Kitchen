@@ -83,13 +83,41 @@ export const DishCard: React.FC<DishCardProps> = ({
         shouldReduceMotion
           ? undefined
           : hoverEffect === 'zoomOnly'
-          ? { scale: 1.015, transition: { duration: 0.2, ease: 'easeOut' } }
-          : { y: -3, scale: 1.01, transition: { duration: 0.2, ease: 'easeOut' } }
+          ? { scale: 1.02, transition: { duration: 0.22, ease: 'easeOut' } }
+          : { y: -4, scale: 1.01, transition: { duration: 0.22, ease: 'easeOut' } }
       }
       whileTap={shouldReduceMotion ? undefined : { scale: 0.99, transition: { duration: 0.12 } }}
       onClick={() => setSelectedDishModal(currentDish)}
-      className="group relative bg-[#FFFBF7] rounded-2xl sm:rounded-3xl p-2.5 min-[390px]:p-3 sm:p-4 border border-[#EEDDCC] hover:border-[#FE8E2A]/50 shadow-[0_2px_12px_-3px_rgba(43,20,8,0.06)] hover:shadow-[0_8px_24px_-4px_rgba(43,20,8,0.12)] transition-all duration-300 flex flex-col justify-between cursor-pointer h-full select-none overflow-hidden"
+      className="group relative bg-[#FFFBF7] rounded-2xl sm:rounded-3xl p-2.5 min-[390px]:p-3 sm:p-4 border border-[#EEDDCC] hover:border-[#FE8E2A]/50 shadow-[0_2px_12px_-3px_rgba(43,20,8,0.06)] hover:shadow-[0_10px_26px_-4px_rgba(43,20,8,0.14)] transition-all duration-300 flex flex-col justify-between cursor-pointer h-full select-none overflow-hidden"
     >
+      {/* Subtle One-time Light Highlight Sweep on Card Entrance */}
+      {!shouldReduceMotion && (
+        <div
+          className="absolute inset-0 z-[1] overflow-hidden pointer-events-none select-none rounded-2xl sm:rounded-3xl"
+          aria-hidden="true"
+        >
+          <motion.div
+            className="absolute top-0 bottom-0 w-3/5"
+            style={{
+              background:
+                'linear-gradient(90deg, transparent 0%, rgba(254, 142, 42, 0.02) 25%, rgba(254, 142, 42, 0.07) 50%, rgba(254, 142, 42, 0.02) 75%, transparent 100%)',
+              transform: 'skewX(-20deg)',
+            }}
+            initial={{ left: '-80%', opacity: 0 }}
+            whileInView={{
+              left: ['-80%', '160%'],
+              opacity: [0, 1, 0],
+            }}
+            viewport={{ once: true }}
+            transition={{
+              duration: 1.8,
+              ease: 'easeInOut',
+              delay: 0.25,
+            }}
+          />
+        </div>
+      )}
+
       {/* Top Image & Badges */}
       <div className="flex-1 flex flex-col">
         <div className="relative aspect-[1/0.82] sm:aspect-[4/3] w-full rounded-[14px] sm:rounded-2xl overflow-hidden mb-2 min-[390px]:mb-2.5 sm:mb-3 bg-[#FDF6EE] shrink-0">

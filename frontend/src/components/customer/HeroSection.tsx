@@ -3,6 +3,7 @@ import { motion, useScroll, useTransform, useReducedMotion, Variants } from 'fra
 import { Utensils, Sparkles, Heart, Clock, Award } from 'lucide-react';
 import { useSettingsStore } from '../../store/useSettingsStore';
 import { useAuthStore } from '../../store/useAuthStore';
+import { useDesktopTilt } from '../../utils/useDesktopTilt';
 import { cafeConfig } from '../../config/business';
 
 // Canonical permanent static hero assets
@@ -11,6 +12,39 @@ const HERO_IMAGE_MOBILE_SRC = '/assets/Hero_mobile.jpg';
 
 const DESCRIPTION_TEXT =
   'Great food, refreshing drinks, and cozy moments at Tryit Cafe & Kitchen. Explore our menu, find your favorites, and order with ease.';
+
+const SparkleGlint: React.FC<{ shouldReduceMotion?: boolean | null }> = ({ shouldReduceMotion }) => {
+  if (shouldReduceMotion) return null;
+  return (
+    <motion.span
+      className="absolute -top-1 -right-3.5 sm:-top-2 sm:-right-5 inline-flex items-center justify-center text-[#FE8E2A] pointer-events-none select-none z-10"
+      initial={{ opacity: 0, scale: 0.5, x: -3 }}
+      animate={{
+        opacity: [0, 1, 0, 0],
+        scale: [0.5, 1, 0.7, 0.5],
+        x: [-3, 0, 3, 3],
+      }}
+      transition={{
+        duration: 0.65,
+        times: [0, 0.35, 0.7, 1],
+        repeat: Infinity,
+        repeatDelay: 4.8,
+        delay: 0.6,
+        ease: 'easeInOut',
+      }}
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 24 24"
+        width="16"
+        height="16"
+        className="fill-current drop-shadow-[0_0_8px_rgba(254,142,42,0.9)] sm:w-5 sm:h-5"
+      >
+        <path d="M12 0C12 6.627 6.627 12 0 12C6.627 12 12 17.373 12 24C12 17.373 17.373 12 24 12C17.373 12 12 6.627 12 0Z" />
+      </svg>
+    </motion.span>
+  );
+};
 
 const InstagramIcon: React.FC<{ size?: number; className?: string }> = ({ size = 18, className = '' }) => (
   <svg
@@ -59,6 +93,13 @@ export const HeroSection: React.FC = () => {
 
   const { scrollY } = useScroll();
   const bgY = useTransform(scrollY, [0, 400], [0, shouldReduceMotion ? 0 : 8]);
+
+  // Desktop subtle mouse tilt
+  const { onMouseMove, onMouseLeave } = useDesktopTilt<HTMLElement>({
+    maxTilt: 1.5,
+    perspective: 1200,
+    scale: 1,
+  });
 
   const customerFirstName = user?.fullName ? user.fullName.split(' ')[0] : '';
 
@@ -141,6 +182,8 @@ export const HeroSection: React.FC = () => {
   return (
     <section
       id="home"
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
       className="relative overflow-hidden bg-stone-950 text-white hero-mobile-viewport flex flex-col justify-center border-b border-stone-800/80"
     >
       {/* Full-bleed Static Hero Background with Subtle 2.5D Entry Scale & Parallax */}
@@ -212,24 +255,27 @@ export const HeroSection: React.FC = () => {
             )}
           </motion.div>
 
-          {/* 2. Brand Title: Tasteful, balanced heading scale */}
+          {/* 2. Brand Title: Tasteful, balanced heading scale with SparkleGlint */}
           <motion.h1
             variants={headingVariants}
             initial="hidden"
             animate="visible"
-            className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-[1.12] sm:leading-[1.15] mb-2 font-serif"
+            className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-[1.12] sm:leading-[1.15] mb-2 font-serif relative inline-block"
           >
-            {cafeName}
+            <span>{cafeName}</span>
+            <SparkleGlint shouldReduceMotion={shouldReduceMotion} />
           </motion.h1>
 
-          {/* 3. Distinct Tagline */}
+          {/* 3. Distinct Tagline with Shimmer */}
           <motion.p
             variants={taglineVariants}
             initial="hidden"
             animate="visible"
-            className="text-lg sm:text-xl lg:text-2xl font-medium text-[#FE8E2A] mb-3 sm:mb-4 font-serif italic leading-snug"
+            className="text-lg sm:text-xl lg:text-2xl font-medium mb-3 sm:mb-4 font-serif italic leading-snug"
           >
-            &ldquo;Try it until you love it&rdquo;
+            <span className={shouldReduceMotion ? 'text-[#FE8E2A]' : 'tagline-shimmer'}>
+              &ldquo;Try it until you love it&rdquo;
+            </span>
           </motion.p>
 
           {/* 4. Descriptive Subheading: Comfortable line length */}
@@ -242,7 +288,7 @@ export const HeroSection: React.FC = () => {
             {heroSubheading}
           </motion.p>
 
-          {/* 5. Call To Action Buttons: Prominent primary, subtle secondary */}
+          {/* 5. Call To Action Buttons: Prominent primary, subtle secondary with micro-interactions */}
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-start gap-2.5 sm:gap-3.5 mb-5 sm:mb-7 w-full sm:w-auto">
             <motion.button
               variants={exploreBtnVariants}
@@ -253,15 +299,16 @@ export const HeroSection: React.FC = () => {
                   ? undefined
                   : {
                     y: -2,
-                    boxShadow: '0 8px 20px -4px rgba(254, 142, 42, 0.40)',
+                    scale: 1.02,
+                    boxShadow: '0 8px 24px -4px rgba(254, 142, 42, 0.48)',
                     transition: { duration: 0.18 },
                   }
               }
-              whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
+              whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
               onClick={() => scrollToSection('menu')}
-              className="px-6 sm:px-7 py-3 rounded-xl bg-[#FE8E2A] hover:bg-[#E67616] active:bg-[#C65A08] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer h-11 sm:h-12 select-none"
+              className="group px-6 sm:px-7 py-3 rounded-xl bg-[#FE8E2A] hover:bg-[#E67616] active:bg-[#C65A08] text-white font-bold text-sm sm:text-base flex items-center justify-center gap-2 shadow-sm transition-all cursor-pointer h-11 sm:h-12 select-none"
             >
-              <Utensils size={17} className="shrink-0" />
+              <Utensils size={17} className="transition-transform duration-200 group-hover:translate-x-0.5 shrink-0" />
               <span>Explore Menu</span>
             </motion.button>
 
@@ -274,19 +321,21 @@ export const HeroSection: React.FC = () => {
                   ? undefined
                   : {
                     y: -2,
-                    borderColor: 'rgba(255, 255, 255, 0.4)',
-                    backgroundColor: 'rgba(255, 255, 255, 0.14)',
+                    scale: 1.02,
+                    borderColor: 'rgba(254, 142, 42, 0.7)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.16)',
+                    boxShadow: '0 4px 16px -2px rgba(254, 142, 42, 0.25)',
                     transition: { duration: 0.18 },
                   }
               }
-              whileTap={shouldReduceMotion ? undefined : { scale: 0.98 }}
+              whileTap={shouldReduceMotion ? undefined : { scale: 0.97 }}
               href={instagramUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-5 sm:px-6 py-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-semibold text-sm sm:text-base flex items-center justify-center gap-2 backdrop-blur-xs transition-all cursor-pointer h-11 sm:h-12 select-none"
+              className="group px-5 sm:px-6 py-3 rounded-xl bg-white/10 hover:bg-white/15 border border-white/20 text-white font-semibold text-sm sm:text-base flex items-center justify-center gap-2 backdrop-blur-xs transition-all cursor-pointer h-11 sm:h-12 select-none"
               aria-label="Connect Us on Instagram"
             >
-              <InstagramIcon size={16} className="text-[#FE8E2A] shrink-0" />
+              <InstagramIcon size={16} className="text-[#FE8E2A] transition-transform duration-200 group-hover:scale-110 shrink-0" />
               <span>Connect Us</span>
             </motion.a>
           </div>
