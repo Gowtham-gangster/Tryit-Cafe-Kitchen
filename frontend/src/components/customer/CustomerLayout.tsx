@@ -167,8 +167,8 @@ export const CustomerLayout: React.FC = () => {
         </div>
       </Modal>
 
-      {/* 4. Customer Footer */}
-      <Footer />
+      {/* 4. Customer Footer (Excluded on /profile route) */}
+      {!location.pathname.startsWith('/profile') && <Footer />}
 
       {/* 5. Floating Sticky Cart CTA */}
       <FloatingCartCTA />
